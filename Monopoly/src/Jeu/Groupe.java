@@ -24,6 +24,9 @@ public class Groupe {
             if (p.getNbMaison() <=  minMaison) {
                 minMaison = p.getNbMaison();
             }
+            if (p.getNbHotel() == 1) {
+                minMaison =4;
+            }
         }
         return minMaison;
     }
