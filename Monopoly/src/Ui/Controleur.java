@@ -109,7 +109,7 @@ public class Controleur {
 
         //if (this.monopoly.resteMaison()) {
             
-        //}
+        return null;
     }
         
         private void lancePartie() { //Contient la boucle principale pour le lancement de la partie

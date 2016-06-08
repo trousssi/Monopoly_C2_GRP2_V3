@@ -10,8 +10,11 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -114,9 +117,13 @@ public class IhmInscription extends JFrame  {
                     boolean res = IhmBoiteMessage.afficherBoiteDialogue("Souhaitez vous lancer la partie avec " + nbjoueurs + " joueurs ?", "ouinon");
                     if (res) {
                         setVisible(false);
-                        //On lance la fenêtre de jeu
-                        ihmJeu = new IhmJeu(); // A ENLEVER D'ICI 
-                        //observateur.jouer(joueurs);
+                        try {
+                            //On lance la fenêtre de jeu
+                            ihmJeu = new IhmJeu(); // A ENLEVER D'ICI
+                            //observateur.jouer(joueurs);
+                        } catch (IOException ex) {
+                            Logger.getLogger(IhmInscription.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     }
                 }
             }
