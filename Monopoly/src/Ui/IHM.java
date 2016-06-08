@@ -3,17 +3,33 @@ package Ui;
 import Jeu.Carreau;
 import Jeu.Joueur;
 import Jeu.Resultat;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class IHM implements Observateur{
-	public Controleur controleur;
-        public IhmInscription ihmI;
-
-    public IHM(Controleur controleur) {
+	private Controleur controleur;
+        private IhmInscription ihmI;
+        private JFrame w;
+        private IhmJeu ihmJeu;
+                
+    public IHM(Controleur controleur) throws IOException {
         this.controleur = controleur;
         this.controleur.setObservateur(this);
-        this.debutPartie();
+        this.menuEntree();
     }
 public void inscriptionJoueurs () {
         this.ihmI = new IhmInscription();
@@ -200,11 +216,11 @@ public void inscriptionJoueurs () {
         this.controleur.initPartie(joueurs);
     }
 
-    void messageCaseDepart(Joueur joueur) {
+    public void messageCaseDepart(Joueur joueur) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void joueurEnPrison(Joueur j) {
+    public void joueurEnPrison(Joueur j) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

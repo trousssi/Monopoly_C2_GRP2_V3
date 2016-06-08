@@ -5,6 +5,8 @@
  */
 package Ui;
 
+import java.io.IOException;
+
 /**
  *
  * @author trousssi
@@ -12,7 +14,7 @@ package Ui;
 public class Main {
     
     
-     public static void main(String[] args) {
+     public static void main(String[] args) throws IOException {
          Controleur controleur = new Controleur();  
           IHM ihm = new IHM(controleur);
      }
