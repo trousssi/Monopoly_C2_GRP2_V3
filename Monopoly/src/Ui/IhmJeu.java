@@ -120,4 +120,8 @@ public class IhmJeu extends JFrame{
         this.setVisible(true);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
+
+    void setObservateur(IHM aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

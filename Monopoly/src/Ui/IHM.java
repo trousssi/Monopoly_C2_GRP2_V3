@@ -3,120 +3,35 @@ package Ui;
 import Jeu.Carreau;
 import Jeu.Joueur;
 import Jeu.Resultat;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-public class IHM implements Observateur{
+public final class IHM implements Observateur{
 	private Controleur controleur;
         private IhmInscription ihmI;
         private JFrame w;
         private IhmJeu ihmJeu;
-                
+        private IhmMenu ihmMenu;
+          
     public IHM(Controleur controleur) throws IOException {
         this.controleur = controleur;
         this.controleur.setObservateur(this);
         this.menuEntree();
     }
-public void inscriptionJoueurs () {
+    
+    public void inscriptionJoueurs () {
         this.ihmI = new IhmInscription();
         ihmI.afficher();
         ihmI.setObservateur(this);
     }
     
     public void menuEntree() throws IOException {
-        w = new JFrame();
-        w.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        w.setSize(500, 300);
-        w.setVisible(true);
-       
-        Color fond = new Color(206,239,203);
-        w.getContentPane().setBackground(fond);
-        
-        w.setLayout(new BorderLayout());
-        JButton jouer = new JButton("JOUER");
-        JButton inscrire = new JButton("Inscrire les Joueurs");
-        JButton quitter = new JButton("Quitter le Jeu");
-        
-        JLabel logo = new JLabel(new ImageIcon("src/Data/logoMonopoly.jpg"));
-        JPanel panelBoutons = new JPanel();
-        w.add(panelBoutons, BorderLayout.CENTER);
-        
-        JPanel panelSud = new JPanel();
-        w.add(panelSud, BorderLayout.SOUTH);
-        panelSud.setBackground(fond);
-        
-        panelBoutons.setBackground(fond);
-        
-        //Espace entre Boutons
-        JPanel vide1 = new JPanel(); vide1.setPreferredSize(new Dimension(30,0)); vide1.setBackground(fond);
-        JPanel vide2 = new JPanel(); vide2.setPreferredSize(new Dimension(30,0)); vide2.setBackground(fond);
-
-        panelBoutons.add(quitter);panelBoutons.add(vide1);
-        panelBoutons.add(jouer);panelBoutons.add(vide2);
-        panelBoutons.add(inscrire);
-        jouer.setEnabled(false);
-        
-        
-        
-        w.add(logo, BorderLayout.NORTH);
-        
-        jouer.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    ihmJeu = new IhmJeu();
-                } catch (IOException ex) {
-                    Logger.getLogger(IHM.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                        
-            }
-        });
-        inscrire.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                inscriptionJoueurs(); 
-               /* for ( String i : ihmI.getNomJoueurs()) {
-                    System.out.println(i);
-                }*/
-                if (!ihmI.getNomJoueurs().isEmpty()) { //Si les joueurs sont bien inscrits, on peut jouer
-                    jouer.setEnabled(true);
-                    //System.out.println("ok");
-                }
-            }
-        });
-        quitter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                boolean res = IhmBoiteMessage.afficherBoiteDialogue("Etes vous sûr de vouloir quitter?", "ouinon");
-                if (res) { 
-                    IhmBoiteMessage.afficherBoiteDialogue("A bientôt", "info");
-                    w.dispatchEvent(new WindowEvent(w, WindowEvent.WINDOW_CLOSING));//Permet de fermer la fenêtre
-                }
-            }
-        });
-        
-        w.setVisible(true);
+        this.ihmMenu = new IhmMenu();
+        ihmMenu.afficher();
+        ihmMenu.setObservateur(this);       
     }
-    
-    /*public void commeTuVeux(HashSet<String> joueurs) {
-        
-        jouer.setEnabled(true);
-    }*/
-    
     
     
     

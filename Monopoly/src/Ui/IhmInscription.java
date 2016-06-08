@@ -42,7 +42,7 @@ public class IhmInscription extends JFrame  {
         initUIComponents();
     }
     
-     public void setObservateur(Observateur observateur) {
+    public void setObservateur(Observateur observateur) {
         this.observateur = observateur;
     }
     
@@ -107,11 +107,7 @@ public class IhmInscription extends JFrame  {
         retourMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean res = IhmBoiteMessage.afficherBoiteDialogue("Retourner au menu ?", "ouinon");
-                if (res) {
-                    setVisible(false);
-                }
-                
+                setVisible(false);
             }
         });
         valider.addActionListener(new ActionListener() {
