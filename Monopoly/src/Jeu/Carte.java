@@ -14,10 +14,10 @@ public class Carte {
     private String type;
     private String nom;
     private int prix;
-    private int deplacement;
+    private Carreau deplacement;
     private boolean possede;
 
-    public Carte(String type, String nom, int prix, int deplacement) {
+    public Carte(String type, String nom, int prix, Carreau deplacement) {
         this.type = type;
         this.nom = nom;
         this.prix = prix;
@@ -37,7 +37,7 @@ public class Carte {
         return prix;
     }
 
-    public int getDeplacement() {
+    public Carreau getDeplacement() {
         return deplacement;
     }
 
@@ -57,7 +57,7 @@ public class Carte {
         this.prix = prix;
     }
 
-    public void setDeplacement(int deplacement) {
+    public void setDeplacement(Carreau deplacement) {
         this.deplacement = deplacement;
     }
 

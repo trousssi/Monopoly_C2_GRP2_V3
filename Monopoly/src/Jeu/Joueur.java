@@ -105,5 +105,10 @@ public class Joueur {
         public HashSet<ProprieteAConstruire> getProprietesAconstruire() {
             return proprietesAconstruire;
         }
+
+    public void setEnPrison() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
         
 }

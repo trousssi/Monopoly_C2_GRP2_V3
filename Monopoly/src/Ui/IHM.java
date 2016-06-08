@@ -146,4 +146,13 @@ public class IHM implements Observateur{
          public void jouer(ArrayList<String> joueurs) {
             this.controleur.initPartie(joueurs);
         }
+
+    void messageCaseDepart(Joueur joueur) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void joueurEnPrison(Joueur j) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
 }

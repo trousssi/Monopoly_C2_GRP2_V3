@@ -18,8 +18,13 @@ public class Resultat {
     private int prixPropriete =-1;
     private int loyerPropriete =-1;
     private Joueur proprietairePropriete;
-    
+    private Carte carte;
     private Propriete proprieteAchete;
+    private int numeroCarreau =-1;
+    private String nomCarreau;
+
+    
+    
     public Resultat(int prixPropriete, int loyerPropriete, Joueur proprietairePropriete) {
         this.setPrixPropriete(prixPropriete);
         this.setLoyerPropriete(loyerPropriete);
@@ -28,8 +33,6 @@ public class Resultat {
     
     
     //Carreau
-    private int numeroCarreau =-1;
-    private String nomCarreau;
     public Resultat(int numeroCarreau, String nomCarreau) {
         this.setNumeroCarreau(numeroCarreau);
         this.setNomCarreau(nomCarreau);
@@ -43,6 +46,12 @@ public class Resultat {
         this.setNumeroCarreau(-1);
 
     }
+
+    public Resultat(Carte carte) {
+        this.carte = carte;
+    }
+    
+    
     
 
     public Propriete getProprieteAchete() {
@@ -73,6 +82,10 @@ public class Resultat {
         return nomCarreau;
     }
 
+    public Carte getCarte() {
+        return carte;
+    }
+
     
     
 //Setters
@@ -95,5 +108,10 @@ public class Resultat {
     public void setNomCarreau(String nomCarreau) {
         this.nomCarreau = nomCarreau;
     }
+
+    public void setCarte(Carte carte) {
+        this.carte = carte;
+    }
+    
     
 }

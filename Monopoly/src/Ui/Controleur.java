@@ -143,4 +143,66 @@ public class Controleur {
                 ihm.gagne(monopoly.getJoueurs().get(0));
             }
         }
+        
+        public Carreau avancerJoueur(Joueur joueur, int sommeDes) { // Méthode permettant au pion du joueur d'avancer dans le jeu en fonction de la somme des dés lancés.
+        Carreau carreauDep = joueur.getPositionCourante();
+        Carreau carreauArr;
+        carreauArr = monopoly.getCarreau(carreauDep.getNumero()+sommeDes);
+        joueur.setPositionCourante(carreauArr);
+        if (carreauDep.getNumero() > carreauArr.getNumero()) {
+            joueur.crediter(200);
+            ihm.messageCaseDepart(joueur);
+        }
+        return carreauArr;
+    }
+     
+    private void allerEnPrison(Joueur j) {
+        Carreau prison = monopoly.getCarreau(11);
+        j.setPositionCourante(prison);
+        j.setEnPrison();
+        ihm.joueurEnPrison(j);
+    }
+    
+        private void actionCarte(Joueur j, Carte carte) {
+        if ("LI".equals(carte.getType())) { //Carte libéré de prison
+            j.addCartePrison(carte);
+            carte.setPossede(true);
+        } else if ("AR".equals(carte.getType())) { //Carte Debit/Credit d'argent
+            if (carte.getPrix() > 0) {
+                j.crediter(carte.getPrix());
+            } else if (carte.getPrix() < -1){
+                j.payer(Math.abs(carte.getPrix()));
+            } else if (carte.getPrix() == -1) {
+                anniversaire(j);
+            } else {
+                System.out.println("ERREUR CARTE AR");
+            }
+        } else if ("DE".equals(carte.getType())) { //Carte déplacement de joueur
+            if (carte.getDeplacement().getNumero() > 0) {
+                
+            } else if (carte.getDeplacement().getNumero() < 0) {
+                //RES
+            }
+        } else if ("RE".equals(carte.getType())) { //Carte Reparation
+            if (carte.getPrix() == 1) {
+                // RES
+            } else if (carte.getPrix() == 2) {
+                //RES
+            }
+        } else if ("PR".equals(carte.getType())) { //Carte allez en prison
+            //RES
+        }
+    }
+
+    private void anniversaire(Joueur j) {
+        for (Joueur jo : monopoly.getJoueurs()) {
+            if (jo != j) {jo.payer(10);
+            } else if (jo == j) {
+                jo.crediter(10*(monopoly.getJoueurs().size()-1));
+            }
+        }
+    }
+
+
+
 }

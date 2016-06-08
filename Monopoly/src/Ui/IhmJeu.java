@@ -11,6 +11,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,7 +25,7 @@ public class IhmJeu extends JFrame{
     private final IhmPlateau plateau; 
     private final JPanel controle;
     
-    public IhmJeu()  {        
+    public IhmJeu() throws IOException  {        
         plateau = new IhmPlateau();
         controle = new JPanel();
         
