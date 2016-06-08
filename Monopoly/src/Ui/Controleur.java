@@ -113,6 +113,15 @@ public class Controleur {
             }
         }
         
+        public ArrayList<ProprieteAConstruire> peutConstruire (Joueur j) {
+            ArrayList<ProprieteAConstruire> prop = new ArrayList<>();
+            if (monopoly.resteMaison())
+            for (ProprieteAConstruire p : j.getProprietesAconstruire()) {
+                
+            }
+            return null;
+        }
+        
         public String construire(ProprieteAConstruire p, Joueur j) {
         
         if (p.getNbHotel() == 0) { // si il n'y a pas déjà d'hotel sur la case on peut contruire
