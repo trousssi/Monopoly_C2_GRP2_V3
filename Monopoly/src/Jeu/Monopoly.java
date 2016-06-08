@@ -237,4 +237,12 @@ public class Monopoly {
      public boolean resteMaison() {
         return !(Maison == 0);
     }
+
+    public void removeMaison() {
+        this.Maison--;
+    }
+    
+    public void addMaison(int nb) {
+        this.Maison = this.Maison + nb;
+    }
 }

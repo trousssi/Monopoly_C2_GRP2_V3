@@ -4,10 +4,12 @@ public class ProprieteAConstruire extends Propriete {
 	private Groupe groupe;
         private int Maison;
         private int Hotel;
+        private int prixMaison;
 
         public ProprieteAConstruire(int numero, String nomCarreau, int prix, int loyer, Joueur proprietaire, Groupe groupe) {
             super(numero, nomCarreau, prix, loyer, proprietaire);
             this.groupe = groupe;
+            
             this.Maison = 0;
             this.Hotel = 0;
         }
@@ -52,4 +54,18 @@ public class ProprieteAConstruire extends Propriete {
     public int getNbHotel() {
         return this.Hotel;
     }
+
+    public void addMaison() {
+       this.Maison++;
+    }
+    
+    public void removeMaison(int nb) {
+        this.Maison = this.Maison - nb;
+    }
+
+    public int getPrixMaison() {
+        return prixMaison;
+    }
+    
+    
 }

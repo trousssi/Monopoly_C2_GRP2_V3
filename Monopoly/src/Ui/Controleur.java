@@ -89,11 +89,22 @@ public class Controleur {
                 int minMaison = gr.getMinMaison(); // retourne le nb minimum de maison sur les propriété du groupe
                 int nbMaison = p.getNbMaison();
                 if (minMaison == nbMaison) {  // si la propriété posséde le nombre minimal de maison on peut contruire
-                    if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un 
+                    if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un Hotel
                         
                     }
+                    else { // sinon on contruit une maison
+                        this.monopoly.removeMaison();
+                        p.addMaison();
+                        j.payer(p.getPrixMaison());
+                        return "Maison Construite";
+                    }     
+                }else {
+                    return "Construction impossible; Vous devez constuire uniformement";
                 }
+            }else {
+                
             }
+            
         }
 
         //if (this.monopoly.resteMaison()) {
