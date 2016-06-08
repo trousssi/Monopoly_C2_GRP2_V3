@@ -9,10 +9,11 @@ public class ProprieteAConstruire extends Propriete {
         private int prixMaison;
         private ArrayList<Integer> loyer;
 
-        public ProprieteAConstruire(int numero, String nomCarreau, int prix, int loyer, Joueur proprietaire, Groupe groupe) {
-            super(numero, nomCarreau, prix, loyer, proprietaire);
+        public ProprieteAConstruire(int numero, String nomCarreau, int prix, int loyerNu, ArrayList<Integer> loyer, int prixMaison, Joueur proprietaire, Groupe groupe) {
+            super(numero, nomCarreau, prix, loyerNu, proprietaire);
             this.groupe = groupe;
-            
+            this.loyer = loyer;
+            this.prixMaison = prixMaison;
             this.Maison = 0;
             this.Hotel = 0;
         }
