@@ -115,56 +115,80 @@ public class Controleur {
         
         public ArrayList<ProprieteAConstruire> peutConstruire (Joueur j) {
             ArrayList<ProprieteAConstruire> prop = new ArrayList<>();
-            if (monopoly.resteMaison())
-            for (ProprieteAConstruire p : j.getProprietesAconstruire()) {
-                
-            }
-            return null;
+                for (ProprieteAConstruire p : j.getProprietesAconstruire()) {
+                    if (p.getNbHotel() < 1 ) {
+                        if ((p.getNbMaison() < 4 && monopoly.resteMaison()) || (p.getNbMaison() == 4 && monopoly.resteHotel())) {
+                            if (p.possedeToutesPropGroupe(j) && j.peuxPayer(p.getPrixMaison()) && p.getNbMaison() == p.getGroupe().getMinMaison()) {
+                                prop.add(p);
+                            }
+                        }
+                    }
+                }
+            
+            return prop;
         }
         
-        public String construire(ProprieteAConstruire p, Joueur j) {
+        public void construire(ProprieteAConstruire p, Joueur j) {
         
-        if (p.getNbHotel() == 0) { // si il n'y a pas déjà d'hotel sur la case on peut contruire
+            if (peutConstruire(j).contains(p)) {
+                if (p.getNbMaison() < 4) {
+                    p.addMaison();
+                    j.payer(p.getPrixMaison());
+                    monopoly.removeMaison();
+                } else if (p.getNbMaison() == 4) {
+                    p.removeMaison(4);
+                    this.monopoly.addMaison(4);
+                    this.monopoly.removeHotel();
+                    p.addHotel();
+                    j.payer(p.getPrixMaison());
+                }
+            }
+            
+            
+            /*        if (p.getNbMaison() == 4) {
+            
+            }
+            
+            if (p.getNbHotel() == 0) { // si il n'y a pas déjà d'hotel sur la case on peut contruire
             Groupe gr = p.getGroupe();
             if (p.possedeToutesPropGroupe(j)) { // si le joueur possede toute les propriétés du goupe de la propriété on peut construire
-                int minMaison = gr.getMinMaison(); // retourne le nb minimum de maison sur les propriété du groupe
-                int nbMaison = p.getNbMaison();
-                if (minMaison == nbMaison) {  // si la propriété posséde le nombre minimal de maison on peut contruire
-                    if (j.peuxPayer(p.getPrixMaison())) {
-                        
-                        if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un Hotel
-                            if (this.monopoly.resteHotel()) {
-                                p.removeMaison(4);
-                                this.monopoly.addMaison(4);
-                                this.monopoly.removeHotel();
-                                p.addHotel();
-                                j.payer(p.getPrixMaison());
-                            }
-                            else {
-                                return "Plus d'Hotel disponible";
-                            }
-                        } else { // sinon on contruit une maison
-                            if (this.monopoly.resteMaison()) {
-                                this.monopoly.removeMaison();
-                                p.addMaison();
-                                j.payer(p.getPrixMaison());
-                                return "Maison Construite";
-                            }
-                            else {return "Plus de maison disponible";}                                
-                        }
-                        
-                    } else {return "Vous n'avez pas les fonds suffisants";}
-                    
-                } else {return "Construction impossible; Vous devez constuire uniformement";}
-                
-            } else {return "Vous devez posséder toutes les propriétés du groupe.";}   
-        }
-        else {
+            int minMaison = gr.getMinMaison(); // retourne le nb minimum de maison sur les propriété du groupe
+            int nbMaison = p.getNbMaison();
+            if (minMaison == nbMaison) {  // si la propriété posséde le nombre minimal de maison on peut contruire
+            if (j.peuxPayer(p.getPrixMaison())) {
+            
+            if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un Hotel
+            if (this.monopoly.resteHotel()) {
+            p.removeMaison(4);
+            this.monopoly.addMaison(4);
+            this.monopoly.removeHotel();
+            p.addHotel();
+            j.payer(p.getPrixMaison());
+            }
+            else {
+            return "Plus d'Hotel disponible";
+            }
+            } else { // sinon on contruit une maison
+            if (this.monopoly.resteMaison()) {
+            this.monopoly.removeMaison();
+            p.addMaison();
+            j.payer(p.getPrixMaison());
+            return "Maison Construite";
+            }
+            else {return "Plus de maison disponible";}
+            }
+            
+            } else {return "Vous n'avez pas les fonds suffisants";}
+            
+            } else {return "Construction impossible; Vous devez constuire uniformement";}
+            
+            } else {return "Vous devez posséder toutes les propriétés du groupe.";}
+            }
+            else {
             return "il y a déjà un hotel sur la propriété";
-        }
-        
-        return "Erreur Inconu";
-        
+            }
+            
+            return "Erreur Inconu";*/        
             
       
     }
