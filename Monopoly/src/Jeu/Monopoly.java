@@ -102,7 +102,11 @@ public class Monopoly {
                 String caseType = data.get(i)[0]; // Lit le type de la case (1ère chaine de caractere de la ligne) et le stocke dans caseType
                 if(caseType.compareTo("P") == 0){ // Si la case est une Propriété
                     //System.out.println("Propriété :\t" + data.get(i)[2] + "\t@ case " + data.get(i)[1]);
-                    ProprieteAConstruire prop = new ProprieteAConstruire(Integer.parseInt(data.get(i)[1]), data.get(i)[2], Integer.parseInt(data.get(i)[4]), Integer.parseInt(data.get(i)[5]), null, groupes.get(data.get(i)[3]));
+                    ArrayList<Integer> loyer = new ArrayList<>();
+                    for (int n = 6; n<11; n++) {
+                        loyer.add(Integer.parseInt(data.get(i)[n]));
+                    }
+                    ProprieteAConstruire prop = new ProprieteAConstruire(Integer.parseInt(data.get(i)[1]), data.get(i)[2], Integer.parseInt(data.get(i)[4]), Integer.parseInt(data.get(i)[5]), loyer, Integer.parseInt(data.get(i)[11]), null, groupes.get(data.get(i)[3]));
                     carreaux.put(Integer.parseInt(data.get(i)[1]), prop);
                     groupes.get(data.get(i)[3]).addPropriete(prop);
 
