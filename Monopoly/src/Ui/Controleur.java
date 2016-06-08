@@ -10,14 +10,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Controleur {
-	public IHM ihm;
+	private Observateur obs;
 	public Monopoly monopoly;
 
     public Controleur() {
-        this.ihm = new IHM(this);
+        
         this.monopoly = new Monopoly();
 
-         ihm.debutPartie();
+    }
+    
+    public void setObservateur(Observateur obs) {
+        this.obs = obs;
     }
         
         public static final Random RANDOM = new Random();
@@ -61,9 +64,9 @@ public class Controleur {
                     allerEnPrison(j);
                 } else {
                     carreau = this.avancerJoueur(j, sommeDes);
-                    ihm.messageJoueurAvance(j, sommeDes, carreau, true);       
+                    obs.messageJoueurAvance(j, sommeDes, carreau, true);       
                     Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                    this.action(ihm.action(res, j), j, res);
+                    this.action(obs.action(res, j), j, res);
                     nbDouble++;
                 }
             }
@@ -165,7 +168,7 @@ public class Controleur {
                 if (i==monopoly.getJoueurs().size() || i == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
                     i=0;
                     nbTour++;
-                    if (!ihm.debutTour(monopoly.getJoueurs(), nbTour)) { //On doit pouvoir s'arreter
+                    if (!obs.debutTour(monopoly.getJoueurs(), nbTour)) { //On doit pouvoir s'arreter
                         continuer = false;
                     }
 
@@ -178,13 +181,13 @@ public class Controleur {
                 }
                 
                 if (j.getCash() < 0) {          //Si le joueur n'a plus d'argent, il a perdu
-                    ihm.perte(j);
+                    obs.perte(j);
                     monopoly.removeJoueur(j);
                 }
             } while (monopoly.getJoueurs().size() > 1 && continuer);
             
             if (monopoly.getJoueurs().size() == 1) {
-                ihm.gagne(monopoly.getJoueurs().get(0));
+                obs.gagne(monopoly.getJoueurs().get(0));
             }
         }
         
@@ -195,7 +198,7 @@ public class Controleur {
         joueur.setPositionCourante(carreauArr);
         if (carreauDep.getNumero() > carreauArr.getNumero()) {
             joueur.crediter(200);
-            ihm.messageCaseDepart(joueur);
+            obs.messageCaseDepart(joueur);
         }
         return carreauArr;
     }
@@ -204,7 +207,7 @@ public class Controleur {
         Carreau prison = monopoly.getCarreau(11);
         j.setPositionCourante(prison);
         j.setEnPrison();
-        ihm.joueurEnPrison(j);
+        obs.joueurEnPrison(j);
     }
     
         private void actionCarte(Joueur j, Carte carte) {
