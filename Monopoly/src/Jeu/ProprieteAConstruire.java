@@ -69,6 +69,10 @@ public class ProprieteAConstruire extends Propriete {
     public int getPrixMaison() {
         return prixMaison;
     }
+
+    public void addHotel() {
+       this.Hotel++;
+    }
     
     
 }

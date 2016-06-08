@@ -238,6 +238,11 @@ public class Monopoly {
         return !(Maison == 0);
     }
 
+     public boolean resteHotel() {
+        return !(Hotel == 0);
+        
+    }
+
     public void removeMaison() {
         this.Maison--;
     }
@@ -245,4 +250,13 @@ public class Monopoly {
     public void addMaison(int nb) {
         this.Maison = this.Maison + nb;
     }
+
+    public void removeHotel() {
+       this.Hotel--;
+    }
+    
+    public void addHotel() {
+        this.Hotel++;
+    }
+
 }
