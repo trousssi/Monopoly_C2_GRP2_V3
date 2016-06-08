@@ -125,8 +125,7 @@ public class Controleur {
                                 this.monopoly.addMaison(4);
                                 this.monopoly.removeHotel();
                                 p.addHotel();
-                                if (j.peuxPayer(p.getPrixMaison()))
-                                    j.payer(p.getPrixMaison());
+                                j.payer(p.getPrixMaison());
                             }
                             else {
                                 return "Plus d'Hotel disponible";
@@ -135,8 +134,7 @@ public class Controleur {
                             if (this.monopoly.resteMaison()) {
                                 this.monopoly.removeMaison();
                                 p.addMaison();
-                                if (j.peuxPayer(p.getPrixMaison()))
-                                    j.payer(p.getPrixMaison());
+                                j.payer(p.getPrixMaison());
                                 return "Maison Construite";
                             }
                             else {return "Plus de maison disponible";}                                
