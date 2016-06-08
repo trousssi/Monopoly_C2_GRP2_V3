@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class ProprieteAConstruire extends Propriete {
 	private Groupe groupe;
-        private int Maison;
-        private int Hotel;
+        private int maison;
+        private int hotel;
         private int prixMaison;
         private ArrayList<Integer> loyer;
 
@@ -14,8 +14,8 @@ public class ProprieteAConstruire extends Propriete {
             this.groupe = groupe;
             this.loyer = loyer;
             this.prixMaison = prixMaison;
-            this.Maison = 0;
-            this.Hotel = 0;
+            this.maison = 0;
+            this.hotel = 0;
         }
 
         
@@ -26,8 +26,12 @@ public class ProprieteAConstruire extends Propriete {
 	@Override
 	protected Resultat calculLoyer(int sommeDes) { // sommeDes n'est pas utilisé.
             Resultat res = new Resultat();
-            Joueur jProprio = this.getProprietaire();       
-            if (this.possedeToutesPropGroupe(jProprio)) { // Si le proprietaire possède toutes les propriétés du groupe de couleur de la ProprieteAConstruire
+            Joueur jProprio = this.getProprietaire();  
+            if (maison != 0) {
+                res.setLoyerPropriete(loyer.get(maison-1));
+            } else if (hotel != 0) { // Si le proprietaire possède toutes les propriétés du groupe de couleur de la ProprieteAConstruire
+                res.setLoyerPropriete(loyer.get(loyer.size()-1)); 
+            } else if (this.possedeToutesPropGroupe(jProprio)) { // Si le proprietaire possède toutes les propriétés du groupe de couleur de la ProprieteAConstruire
                 res.setLoyerPropriete(this.getLoyer()*2); // Alors on double le loyer nu
             }
             else { 
@@ -52,19 +56,19 @@ public class ProprieteAConstruire extends Propriete {
         }
 
     public int getNbMaison() {
-        return this.Maison;
+        return this.maison;
     }
     
     public int getNbHotel() {
-        return this.Hotel;
+        return this.maison;
     }
 
     public void addMaison() {
-       this.Maison++;
+       this.maison++;
     }
     
     public void removeMaison(int nb) {
-        this.Maison = this.Maison - nb;
+        this.maison = this.maison - nb;
     }
 
     public int getPrixMaison() {
@@ -72,7 +76,7 @@ public class ProprieteAConstruire extends Propriete {
     }
 
     public void addHotel() {
-       this.Hotel++;
+       this.maison++;
     }
     
     
