@@ -13,4 +13,18 @@ import java.util.ArrayList;
  */
 public interface Observateur {
     public void jouer(ArrayList<String> joueurs);
+    
+     public boolean debutTour(ArrayList<Joueur> joueurs, int nbTour);
+    
+    public void perte(Joueur joueur);
+    
+    public void gagne(Joueur joueur);
+    
+    public void messageCaseDepart(Joueur joueur);
+    
+    public void joueurEnPrison(Joueur j);
+    
+    public void messageJoueurAvance(Joueur joueur, int sommeDes, Carreau carreau, boolean desDouble);
+    
+    public int action(Resultat res, Joueur j);
 }
