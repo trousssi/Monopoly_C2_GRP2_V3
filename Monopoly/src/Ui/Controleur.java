@@ -10,14 +10,17 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Controleur {
-	public IHM ihm;
+	private Observateur obs;
 	public Monopoly monopoly;
 
     public Controleur() {
-        this.ihm = new IHM(this);
+        
         this.monopoly = new Monopoly();
 
-         ihm.debutPartie();
+    }
+    
+    public void setObservateur(Observateur obs) {
+        this.obs = obs;
     }
         
         public static final Random RANDOM = new Random();
@@ -61,9 +64,9 @@ public class Controleur {
                     allerEnPrison(j);
                 } else {
                     carreau = this.avancerJoueur(j, sommeDes);
-                    ihm.messageJoueurAvance(j, sommeDes, carreau, true);       
+                    obs.messageJoueurAvance(j, sommeDes, carreau, true);       
                     Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                    this.action(ihm.action(res, j), j, res);
+                    this.action(obs.action(res, j), j, res);
                     nbDouble++;
                 }
             }
@@ -113,42 +116,38 @@ public class Controleur {
         
         if (p.getNbHotel() == 0) { // si il n'y a pas déjà d'hotel sur la case on peut contruire
             Groupe gr = p.getGroupe();
-            if  (p.possedeToutesPropGroupe(j)) { // si le joueur possede toute les propriétés du goupe de la propriété on peut construire
+            if (p.possedeToutesPropGroupe(j)) { // si le joueur possede toute les propriétés du goupe de la propriété on peut construire
                 int minMaison = gr.getMinMaison(); // retourne le nb minimum de maison sur les propriété du groupe
                 int nbMaison = p.getNbMaison();
                 if (minMaison == nbMaison) {  // si la propriété posséde le nombre minimal de maison on peut contruire
-                    if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un Hotel
-                        if (this.monopoly.resteHotel()) {
-                            p.removeMaison(4);
-                            this.monopoly.addMaison(4);
-                            this.monopoly.removeHotel();
-                            p.addHotel();
-                            j.payer(p.getPrixMaison());
-                        }
-                        else {
-                            return "Plus d'Hotel disponible";
+                    if (j.peuxPayer(p.getPrixMaison())) {
+                        
+                        if (minMaison == 4) { // si le nombre minimal de maison est égal à 4 alors on construit un Hotel
+                            if (this.monopoly.resteHotel()) {
+                                p.removeMaison(4);
+                                this.monopoly.addMaison(4);
+                                this.monopoly.removeHotel();
+                                p.addHotel();
+                                j.payer(p.getPrixMaison());
+                            }
+                            else {
+                                return "Plus d'Hotel disponible";
+                            }
+                        } else { // sinon on contruit une maison
+                            if (this.monopoly.resteMaison()) {
+                                this.monopoly.removeMaison();
+                                p.addMaison();
+                                j.payer(p.getPrixMaison());
+                                return "Maison Construite";
+                            }
+                            else {return "Plus de maison disponible";}                                
                         }
                         
-                    }
-                    else { // sinon on contruit une maison
-                        if (this.monopoly.resteMaison()) {
-                            this.monopoly.removeMaison();
-                            p.addMaison();
-                            j.payer(p.getPrixMaison());
-                            return "Maison Construite";
-                        }
-                        else {
-                            return "Plus de maison Disponnible";
-                        }
-                        
-                    }
-                }else {
-                    return "Construction impossible; Vous devez constuire uniformement";
-                }
-            }else {
+                    } else {return "Vous n'avez pas les fonds suffisants";}
+                    
+                } else {return "Construction impossible; Vous devez constuire uniformement";}
                 
-            }
-          
+            } else {return "Vous devez posséder toutes les propriétés du groupe.";}   
         }
         else {
             return "il y a déjà un hotel sur la propriété";
@@ -169,7 +168,7 @@ public class Controleur {
                 if (i==monopoly.getJoueurs().size() || i == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
                     i=0;
                     nbTour++;
-                    if (!ihm.debutTour(monopoly.getJoueurs(), nbTour)) { //On doit pouvoir s'arreter
+                    if (!obs.debutTour(monopoly.getJoueurs(), nbTour)) { //On doit pouvoir s'arreter
                         continuer = false;
                     }
 
@@ -182,13 +181,13 @@ public class Controleur {
                 }
                 
                 if (j.getCash() < 0) {          //Si le joueur n'a plus d'argent, il a perdu
-                    ihm.perte(j);
+                    obs.perte(j);
                     monopoly.removeJoueur(j);
                 }
             } while (monopoly.getJoueurs().size() > 1 && continuer);
             
             if (monopoly.getJoueurs().size() == 1) {
-                ihm.gagne(monopoly.getJoueurs().get(0));
+                obs.gagne(monopoly.getJoueurs().get(0));
             }
         }
         
@@ -199,7 +198,7 @@ public class Controleur {
         joueur.setPositionCourante(carreauArr);
         if (carreauDep.getNumero() > carreauArr.getNumero()) {
             joueur.crediter(200);
-            ihm.messageCaseDepart(joueur);
+            obs.messageCaseDepart(joueur);
         }
         return carreauArr;
     }
@@ -208,7 +207,7 @@ public class Controleur {
         Carreau prison = monopoly.getCarreau(11);
         j.setPositionCourante(prison);
         j.setEnPrison();
-        ihm.joueurEnPrison(j);
+        obs.joueurEnPrison(j);
     }
     
         private void actionCarte(Joueur j, Carte carte) {

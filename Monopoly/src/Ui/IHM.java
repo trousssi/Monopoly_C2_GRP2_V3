@@ -12,6 +12,8 @@ public class IHM implements Observateur{
 
     public IHM(Controleur controleur) {
         this.controleur = controleur;
+        this.controleur.setObservateur(this);
+        this.debutPartie();
     }
 
        public void debutPartie () {
@@ -147,11 +149,11 @@ public class IHM implements Observateur{
             this.controleur.initPartie(joueurs);
         }
 
-    void messageCaseDepart(Joueur joueur) {
+    public void messageCaseDepart(Joueur joueur) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    void joueurEnPrison(Joueur j) {
+    public void joueurEnPrison(Joueur j) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
