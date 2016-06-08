@@ -12,6 +12,8 @@ public class IHM implements Observateur{
 
     public IHM(Controleur controleur) {
         this.controleur = controleur;
+        this.controleur.setObservateur(this);
+        this.debutPartie();
     }
 
        public void debutPartie () {
