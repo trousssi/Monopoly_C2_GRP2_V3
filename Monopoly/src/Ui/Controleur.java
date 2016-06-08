@@ -6,6 +6,7 @@ import Jeu.Groupe;
 import Jeu.Joueur;
 import Jeu.Monopoly;
 import Jeu.ProprieteAConstruire;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -13,7 +14,7 @@ public class Controleur {
 	private Observateur obs;
 	public Monopoly monopoly;
 
-    public Controleur() {
+    public Controleur()  throws IOException{
         
         this.monopoly = new Monopoly();
 

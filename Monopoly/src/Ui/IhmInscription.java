@@ -6,15 +6,12 @@
 package Ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -33,10 +30,8 @@ public class IhmInscription extends JFrame  {
     private JPanel gestionJoueurs;
     private JPanel choix;
     private HashSet<String> nomJoueurs = new HashSet<>();
-    private ArrayList<JLabel> labelJoueurs = new ArrayList<>();
-    private ArrayList<JTextField> champNomJoueurs = new ArrayList<>();
-
-    private IhmJeu ihmJeu;
+    private final ArrayList<JLabel> labelJoueurs = new ArrayList<>();
+    private final ArrayList<JTextField> champNomJoueurs = new ArrayList<>();
     
     
     
@@ -53,9 +48,17 @@ public class IhmInscription extends JFrame  {
     
     private void initUIComponents() {
         this.setLayout((new BorderLayout()));
-        gestionJoueurs = new JPanel(); 
+        gestionJoueurs = new JPanel();
         inscriptions = new JPanel();
         choix = new JPanel();
+        
+        //Couleur de fond
+        Color fond = new Color(206,239,203);
+        this.getContentPane().setBackground(fond);
+        gestionJoueurs.setBackground(fond);
+        inscriptions.setBackground(fond);
+        choix.setBackground(fond);
+        
         ///**NORD**///
         this.add(gestionJoueurs, BorderLayout.NORTH);
         gestionJoueurs.setLayout((new BorderLayout()));
@@ -82,10 +85,10 @@ public class IhmInscription extends JFrame  {
         ///**SUD**///
         this.add(choix, BorderLayout.SOUTH);
         choix.setLayout((new BorderLayout()));
-        JButton jouer = new JButton("Jouer");
-        JButton quitter = new JButton("Quitter");
-        choix.add(jouer, BorderLayout.EAST);
-        choix.add(quitter, BorderLayout.WEST);
+        JButton valider = new JButton("Valider les modifications");
+        JButton retourMenu = new JButton("Retour au Menu");
+        choix.add(valider, BorderLayout.EAST);
+        choix.add(retourMenu, BorderLayout.WEST);
         
         ///**GESTION DES BOUTONS**///
         ajouter.addActionListener(new ActionListener() {
@@ -100,32 +103,27 @@ public class IhmInscription extends JFrame  {
                 removeJoueur();
             }
         });
-        quitter.addActionListener(new ActionListener() {
+        
+        retourMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean res = IhmBoiteMessage.afficherBoiteDialogue("Etes vous sûr de vouloir quitter?", "ouinon");
+                boolean res = IhmBoiteMessage.afficherBoiteDialogue("Retourner au menu ?", "ouinon");
                 if (res) {
-                    quitter();
+                    setVisible(false);
                 }
+                
             }
         });
-        jouer.addActionListener(new ActionListener() {
+        valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                boolean nomJoueursCorrects = vérifierNomJoueurs();
-                if (nomJoueursCorrects) {
-                    boolean res = IhmBoiteMessage.afficherBoiteDialogue("Souhaitez vous lancer la partie avec " + nbjoueurs + " joueurs ?", "ouinon");
-                    if (res) {
-                        setVisible(false);
-                        try {
-                            //On lance la fenêtre de jeu
-                            ihmJeu = new IhmJeu(); // A ENLEVER D'ICI
-                            //observateur.jouer(joueurs);
-                        } catch (IOException ex) {
-                            Logger.getLogger(IhmInscription.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
+                boolean res = vérifierNomJoueurs();
+                if (res) {
+                    IhmBoiteMessage.afficherBoiteDialogue(nbjoueurs + " joueurs inscris.", "info");
+                    nomJoueurs = getNomJoueurs();
+                    
                 }
+
             }
         });
     }   
@@ -161,11 +159,6 @@ public class IhmInscription extends JFrame  {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(400, 250);
         setVisible(true);                        
-    }
-
-    public void quitter() {
-        boolean res = IhmBoiteMessage.afficherBoiteDialogue("A bientôt", "info");
-        this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));//Permet de fermer la fenêtre
     }
     
     public boolean vérifierNomJoueurs() {
