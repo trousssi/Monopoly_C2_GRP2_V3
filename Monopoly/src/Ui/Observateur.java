@@ -5,6 +5,9 @@
  */
 package Ui;
 
+import Jeu.Carreau;
+import Jeu.Joueur;
+import Jeu.Resultat;
 import java.util.ArrayList;
 
 /**
