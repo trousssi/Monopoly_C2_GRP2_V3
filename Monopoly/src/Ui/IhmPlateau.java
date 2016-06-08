@@ -25,6 +25,9 @@ public class IhmPlateau extends Canvas{
     private BufferedImage fondPlateau;
     Observateur observateur;
     private ArrayList<BufferedImage> pions;
+    private int numCarreau;
+    private int nbJoueurs;
+    private int x, y;
     
     public IhmPlateau() throws IOException  {
         super();
@@ -47,7 +50,10 @@ public class IhmPlateau extends Canvas{
         Dimension d = new Dimension(900, 900);
         super.setSize(d);
         super.paint(g);
-        int x =150, y =150, i=0;
+        //x =150; y =150;
+        x = 712 - (74*2);
+            y = 840;
+        int i=0;
         try {
             //PION DE 21x26 espacés de 2 pixels entre eux + y += 13px  pour superposer
             if (true) { //INTEGRER LA CONTRAINTE DU NOMBRE DE JOUEURS
@@ -65,7 +71,19 @@ public class IhmPlateau extends Canvas{
         while (i<6) {
             g.drawImage(pions.get(i), x, y, (ImageObserver) observateur);
             i++;y+=13;
-        }
-       
-     }
+        }   
+    }
+    public void dessiner(int numCarreau, int nbJoueurs) {
+           this.numCarreau = numCarreau;
+           this.nbJoueurs = nbJoueurs;
+           repaint();
+    }
+    public void trouveCoordonnes(int numCarreau) {
+        
+        
+        if (numCarreau <= 11) {
+            x = 712 - (74*numCarreau);
+            y = 840;
+        } 
+    }
 }

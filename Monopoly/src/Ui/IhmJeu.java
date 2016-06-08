@@ -91,8 +91,7 @@ public class IhmJeu extends JFrame{
                 //TODO : Ouvrir popup de confirmation avec le prix de la propriete
             }
         });
-        
-        
+                
     }
     
     private void lancerDes(Resultat res) {//TODO : récupérer le résultat des deux dés, soit avec les deux entiers, soit avec res
