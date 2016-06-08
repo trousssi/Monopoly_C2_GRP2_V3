@@ -1,10 +1,13 @@
 package Jeu;
 
+import java.util.ArrayList;
+
 public class ProprieteAConstruire extends Propriete {
 	private Groupe groupe;
         private int Maison;
         private int Hotel;
         private int prixMaison;
+        private ArrayList<Integer> loyer;
 
         public ProprieteAConstruire(int numero, String nomCarreau, int prix, int loyer, Joueur proprietaire, Groupe groupe) {
             super(numero, nomCarreau, prix, loyer, proprietaire);

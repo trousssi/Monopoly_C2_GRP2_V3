@@ -47,28 +47,55 @@ public class Controleur {
             return RANDOM.nextInt(6)+1;
         }
         
-	private Carreau lancerDésAvancer(Joueur j) {
-            int resDes1 = lancerDes();
-            int resDes2 = lancerDes();
-            int sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
-            if (resDes1 == resDes2) { 
-                Carreau carreau = monopoly.avancerJoueur(j, sommeDes);
-                ihm.messageJoueurAvance(j, sommeDes, carreau, true);       
-                Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                this.action(ihm.action(res, j), j, res, monopoly.pickCartes());
+        private Carreau lancerDésAvancer(Joueur j) {
+            int resDes1 = 0;
+            int resDes2 = 0;
+            Carreau carreau = null;
+            int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
+            int nbDouble = 0;
+            while (resDes1 == resDes2 && nbDouble < 3) {
                 resDes1 = lancerDes();
                 resDes2 = lancerDes();
-                sommeDes = resDes1+resDes2;
+                sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
+                if (nbDouble == 2 && resDes1 == resDes2) {
+                    allerEnPrison(j);
+                } else {
+                    carreau = this.avancerJoueur(j, sommeDes);
+                    ihm.messageJoueurAvance(j, sommeDes, carreau, true);       
+                    Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+                    this.action(ihm.action(res, j), j, res);
+                    nbDouble++;
+                }
             }
-            Carreau carreau = monopoly.avancerJoueur(j, sommeDes);
-            ihm.messageJoueurAvance(j, sommeDes, carreau, false);       //Affiche les infos types : nomJoueur, cash, carreau ...
-            Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-            //ihm.action(res, j);
-            this.action(ihm.action(res, j), j, res, monopoly.pickCartes()); //L'ihm action envoie le cas dans lequel on se trouve sous forme d'entier
             return carreau;
-	}
+        }
         
-        private void action (int cas, Joueur j, Jeu.Resultat res, Carte[] cartes) { // Selon le cas, on gère les actions à faire
+        /*	private Carreau lancerDésAvancer(Joueur j) {
+        int resDes1 = lancerDes();
+        int resDes2 = lancerDes();
+        int sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
+        if (resDes1 == resDes2) {
+        Carreau carreau = monopoly.avancerJoueur(j, sommeDes);
+        ihm.messageJoueurAvance(j, sommeDes, carreau, true);
+        Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+        this.action(ihm.action(res, j), j, res, monopoly.pickCartes());
+        resDes1 = lancerDes();
+        resDes2 = lancerDes();
+        sommeDes = resDes1+resDes2;
+        }
+        Carreau carreau = monopoly.avancerJoueur(j, sommeDes);
+        ihm.messageJoueurAvance(j, sommeDes, carreau, false);       //Affiche les infos types : nomJoueur, cash, carreau ...
+        Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+        //ihm.action(res, j);
+        this.action(ihm.action(res, j), j, res, monopoly.pickCartes()); //L'ihm action envoie le cas dans lequel on se trouve sous forme d'entier
+        return carreau;
+        }*/       
+        
+        private void action (int cas, Joueur j, Jeu.Resultat res) { // Selon le cas, on gère les actions à faire
+            if (res.getCarte() != null) {
+                actionCarte(j, res.getCarte());
+            }
+            
             switch (cas) {
                 case 0:
                     //Il ne se passe rien
@@ -178,19 +205,35 @@ public class Controleur {
                 System.out.println("ERREUR CARTE AR");
             }
         } else if ("DE".equals(carte.getType())) { //Carte déplacement de joueur
-            if (carte.getDeplacement().getNumero() > 0) {
-                
-            } else if (carte.getDeplacement().getNumero() < 0) {
-                //RES
+            if (carte.getPrix() == -3) { 
+                j.setPositionCourante(monopoly.getCarreau((j.getPositionCourante().getNumero())-3));
+            } else {
+                if (carte.getDeplacement().getNumero() < j.getPositionCourante().getNumero()) {
+                    monopoly.avancerJoueur(j, carte.getDeplacement().getNumero()+40);
+                } else if (carte.getDeplacement().getNumero() == 2){
+                    j.setPositionCourante(carte.getDeplacement());
+                } else {
+                    j.setPositionCourante(carte.getDeplacement());
+                }
             }
         } else if ("RE".equals(carte.getType())) { //Carte Reparation
+            int nbMaison = 0;
+            int nbHotel = 0;
             if (carte.getPrix() == 1) {
-                // RES
+                for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+                    nbMaison = nbMaison + prop.getNbMaison();
+                    nbHotel = nbHotel + prop.getNbHotel();
+                }
+                j.payer((nbMaison*40)+(nbHotel*115));
             } else if (carte.getPrix() == 2) {
-                //RES
+                for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+                    nbMaison = nbMaison + prop.getNbMaison();
+                    nbHotel = nbHotel + prop.getNbHotel();
+                }
+                j.payer((nbMaison*25)+(nbHotel*100));
             }
         } else if ("PR".equals(carte.getType())) { //Carte allez en prison
-            //RES
+            allerEnPrison(j);
         }
     }
 
