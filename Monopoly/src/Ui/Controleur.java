@@ -2,7 +2,6 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Carte;
-import Jeu.Groupe;
 import Jeu.Joueur;
 import Jeu.Monopoly;
 import Jeu.ProprieteAConstruire;
