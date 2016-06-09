@@ -1,5 +1,7 @@
 package Jeu;
 
+import java.util.ArrayList;
+
 public abstract class Propriete extends Carreau {
 	private int prix;
 	private int loyer;
@@ -14,7 +16,7 @@ public abstract class Propriete extends Carreau {
 
 
         @Override
-	public Resultat action(Joueur j, int sommeDe, Carte[] cartes) {
+	public Resultat action(Joueur j, int sommeDe, ArrayList<Carte> cartes) {
             // Resultat res = new Resultat();
             Joueur jProprio;
             //int l; //loyer --> voir résultat

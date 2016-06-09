@@ -5,19 +5,14 @@
  */
 package Ui;
 
-import static Ui.Controleur.RANDOM;
 import java.awt.BorderLayout;
 import java.util.HashSet;
 import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -71,47 +66,31 @@ public class IhmInitOrdreJeu extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 lancerDes();
                 afficheLancer();
-                //afficherResultatsDes();
-               // for (int i=0; i<joueurs.size(); i++) {
-                    /**
-                     * AFFICHER LES DES ICI.
-                     */
-                    //panelDes.add(new JButton("lol"));
-                    //System.out.println("lol");
-               // }   
-                
                 lancerDes.setEnabled(false); //Une fois les résultats obtenus on ne peut plus les lancer
-                
             }
         });
     }
 
     private void lancerDes() {
-        
-        
-        
-        //while (!determine) {
-            int de = 0;
-            for(String nomJ : joueurs) {
-                int de1 = RANDOM.nextInt(6)+1;
-                int de2 = RANDOM.nextInt(6)+1;
-                int deTemp = de1+de2;
-                if (deTemp > de) de = deTemp;
-                int [] des= {de1, de2};
-                this.resLancerDes.put(nomJ, des);
-            }
-            int nbMax = 0;
-            for(String nomJ : joueurs) {
-                int[] resdes = this.resLancerDes.get(nomJ);
-                int sommeDes = resdes[0] + resdes[1];
-                if (sommeDes == de) nbMax++;
-            }
-            
-            if (nbMax >= 2) {
-                
-                this.lancerDes();
-            }
-        //}
+        int sommeMaxDes = 0;
+        for(String nomJ : joueurs) {
+            int de1 = RANDOM.nextInt(6)+1;
+            int de2 = RANDOM.nextInt(6)+1;
+            if (de1+de2 > sommeMaxDes) sommeMaxDes = de1+de2;
+            int [] des= {de1, de2};
+            this.resLancerDes.put(nomJ, des);
+        }
+        int nbMax = 0;
+        for(String nomJ : joueurs) {
+            int[] resdes = this.resLancerDes.get(nomJ);
+            int sommeDes = resdes[0] + resdes[1];
+            if (sommeDes == sommeMaxDes) nbMax++;
+        }
+
+        if (nbMax >= 2) {
+
+            this.lancerDes();
+        }
     }
     
     private void afficheLancer() {

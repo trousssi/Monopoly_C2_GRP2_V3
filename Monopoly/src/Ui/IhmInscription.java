@@ -155,7 +155,6 @@ public class IhmInscription extends JFrame  {
      * Rend visible la fenetre
      */
     public void afficher() {
-        setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(400, 250);
         setTitle("Inscription des joueurs");
         setVisible(true);                        

@@ -90,6 +90,12 @@ public class Joueur {
             return nb;
 	}
 
+    public HashSet<Carte> getCartesPrison() {
+        return cartesPrison;
+    }
+
+        
+        
         public int getCash() {
             return cash;
         }
@@ -107,7 +113,18 @@ public class Joueur {
         }
 
     public void setEnPrison() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.enPrison = 0;
+    }
+    
+    public void sorsDePrison() {
+        this.enPrison = -1;
+    }
+    public void tourEnPrison () {
+        this.enPrison++;
+    }
+
+    public int getToursEnPrison() {
+        return enPrison;
     }
 
         

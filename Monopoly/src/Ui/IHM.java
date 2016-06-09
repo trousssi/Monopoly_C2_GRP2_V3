@@ -19,15 +19,16 @@ public final class IHM implements Observateur{
         private IhmJeu ihmJeu;
         private IhmInitOrdreJeu ihmInit;
         private HashSet<String> joueurs;
+        private int numJoueur;
         
           
-    public IHM(Controleur controleur) throws IOException {
+    public IHM(Controleur controleur) {
         this.controleur = controleur;
         this.controleur.setObservateur(this);
         this.menuEntree();
     }
     
-    public void menuEntree() throws IOException {
+    public void menuEntree() {
         this.ihmMenu = new IhmMenu();
         ihmMenu.afficher();
         ihmMenu.setObservateur(this);       
@@ -78,42 +79,44 @@ public final class IHM implements Observateur{
     }
 
 
-    public int action(Resultat res, Joueur j) {
-        Resultat retour = new Resultat();
-
-        if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
-            System.out.println("Carreau = " + res.getNomCarreau() + ", case n° " + res.getNumeroCarreau());
+    public void action(Resultat res, Joueur j,int d1, int d2, int nbdouble) {
+        //Resultat retour = new Resultat();
+        
+        /*if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
+        System.out.println("Carreau = " + res.getNomCarreau() + ", case n° " + res.getNumeroCarreau());
         }
-
+        
         //Propriete --> Acheter ou payer le loyer
         else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
-            System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
-
+        System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
+        
         }
         else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
-            System.out.println("\033[31mVous ne pouvez pas acheter cette propriété\033[0m");
+        System.out.println("\033[31mVous ne pouvez pas acheter cette propriété\033[0m");
         }
         else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
-            String rep = "";
-            while (!"o".equals(rep) && !"n".equals(rep) && rep != null) {
-              System.out.println("Prix = " + "\033[35m" + res.getPrixPropriete()  +" €\033[0m, voulez-vous acheter cette proprieté ? (O/N) ");
-                Scanner sc = new Scanner(System.in);
-                rep = sc.nextLine().toLowerCase();
-            }
-
-            if (rep.charAt(0) == 'o') {     // Le joueur a acheté la propriété
-                System.out.println(j.getPositionCourante().getNomCarreau() + " achetée");
-                System.out.println("\n \n");
-                return 2;//On lance l'achat de la proprieté
-                } 
-            }
-        else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
-            System.out.println("Vous êtes le proprietaire de cette case.");
+        String rep = "";
+        while (!"o".equals(rep) && !"n".equals(rep) && rep != null) {
+        System.out.println("Prix = " + "\033[35m" + res.getPrixPropriete()  +" €\033[0m, voulez-vous acheter cette proprieté ? (O/N) ");
+        Scanner sc = new Scanner(System.in);
+        rep = sc.nextLine().toLowerCase();
         }
+        
+        if (rep.charAt(0) == 'o') {     // Le joueur a acheté la propriété
+        System.out.println(j.getPositionCourante().getNomCarreau() + " achetée");
         System.out.println("\n \n");
+        return 2;//On lance l'achat de la proprieté
+        }
+        }
+        else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
+        System.out.println("Vous êtes le proprietaire de cette case.");
+        }
+        System.out.println("\n \n");*/
+        
+        //return 0;
 
-        return 0;
-
+       this.ihmJeu.afficherInfos(j, res,d1,d2,nbdouble); 
+       
     }
 
     public void perte(Joueur joueur) { //Un joueur perd la partie et est éliminé
@@ -127,9 +130,7 @@ public final class IHM implements Observateur{
         System.out.println("\033[1m-----------------------------------\033[0m");
     }
 
-    public void jouer(ArrayList<String> joueurs) {
-        this.controleur.initPartie(joueurs);
-    }
+    
 
     public void messageCaseDepart(Joueur joueur) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -139,14 +140,15 @@ public final class IHM implements Observateur{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
-    @Override
+   
     public void recupererNomJoueurs(HashSet<String> joueurs) {
         this.joueurs = joueurs;
+        
         this.ihmMenu.activeJouer(joueurs);
     }
 
     public void inscriptionJoueurs () {
-        this.ihmI = new IhmInscription();
+        this.ihmI = new IhmInscription(); 
         ihmI.afficher();
         ihmI.setObservateur(this);
     }    
@@ -159,9 +161,45 @@ public final class IHM implements Observateur{
     }
     
     public void lancerJeu() {
-       this.ihmJeu = new IhmJeu(ihmInit.getNomPremier());
+       this.controleur.initPartie(joueurs,ihmInit.getNomPremier());
+       
+       this.ihmJeu = new IhmJeu();
        this.ihmJeu.setObservateur(this);
        this.ihmJeu.afficher();
-            
+       this.numJoueur = 0;
+       this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur),0);
+       
+       
+    }
+    
+    
+    public void lanceDes(Joueur j, int nbDouble){
+        this.controleur.lancerDesAvancer(j, nbDouble);
+    }
+    
+    public void Reponce(int cas, Joueur j, Jeu.Resultat res) {
+        this.controleur.action(cas, j, res);
+    }
+    
+    public void notification(String message, Joueur j) {
+        this.ihmJeu.notification(message, j);
+    }
+    
+    public void joueurSuivant(){
+        
+        this.numJoueur++;
+        if (numJoueur==this.controleur.getJoueurs().size() || this.numJoueur == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
+            this.numJoueur=0;          
+        }
+        
+        this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
+    }
+    
+    public void rejouer(Joueur j,int nbdouble) {
+        this.ihmJeu.displayJoueur(j, nbdouble);
+    }
+    
+    public boolean sortiePrisonCarte(Joueur j) {
+        return true;
     }
 }

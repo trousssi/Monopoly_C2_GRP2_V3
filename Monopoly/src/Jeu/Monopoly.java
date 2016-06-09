@@ -34,14 +34,6 @@ public class Monopoly {
     }
 
         
-    public Carreau avancerJoueur(Joueur joueur, int sommeDes) { // Méthode permettant au pion du joueur d'avancer dans le jeu en fonction de la somme des dés lancés.
-        Carreau carreau = joueur.getPositionCourante();
-        int numCar = carreau.getNumero();
-        carreau = this.getCarreau(numCar+sommeDes);
-        joueur.setPositionCourante(carreau);
-        return carreau;
-    }
-
 
     public Carreau getCarreau(int numCarreau) {
         numCarreau = numCarreau % 40;
@@ -61,17 +53,19 @@ public class Monopoly {
         joueur = null;
     }
 
-    public Carte[] pickCartes () {
-        boolean possede = false;
+    public ArrayList<Carte> pickCartes () {
+        boolean possede = true;
         Carte chance = null;
         Carte communaute = null;
         while (possede) {
             chance = cartesChance.get((int) (Math.random()*16));
-            communaute = cartesCommu.get((int) ((Math.random()*16)+16));
+            communaute = cartesCommu.get((int) ((Math.random()*16)));
             possede = chance.isPossede();
             if (!possede) possede = communaute.isPossede();
         }
-        Carte[] cartes =  {chance, communaute};
+        ArrayList<Carte> cartes = new ArrayList<>();
+        cartes.add(chance);
+        cartes.add(communaute);
         return cartes;
     }
     private void buildGamePlateau(String dataFilename)
@@ -121,15 +115,25 @@ public class Monopoly {
                     Compagnie compagnie = new Compagnie(Integer.parseInt(data.get(i)[1]), data.get(i)[2], Integer.parseInt(data.get(i)[3]), 0, null);
                     carreaux.put(Integer.parseInt(data.get(i)[1]), compagnie);
                 }
-                else if(caseType.compareTo("AU") == 0){ // Si la case est un Autre Carreau
+                else if(caseType.compareTo("SA") == 0){ // Si la case est un Autre Carreau
                     //System.out.println("Case Autre :\t" + data.get(i)[2] + "\t@ case " + data.get(i)[1]);
-                    AutreCarreau autreCarr = new AutreCarreau(Integer.parseInt(data.get(i)[1]), data.get(i)[2]);
-                    carreaux.put(Integer.parseInt(data.get(i)[1]), autreCarr);
+                    CarreauSansAction carreauSansAction = new CarreauSansAction(Integer.parseInt(data.get(i)[1]), data.get(i)[2]);
+                    carreaux.put(Integer.parseInt(data.get(i)[1]), carreauSansAction);
                 }
                 else if(caseType.compareTo("CA") == 0){ // Si la case est un Autre Carreau
                     //System.out.println("Case Autre :\t" + data.get(i)[2] + "\t@ case " + data.get(i)[1]);
-                    AutreCarreau autreCarr = new AutreCarreau(Integer.parseInt(data.get(i)[1]), data.get(i)[2]);
-                    carreaux.put(Integer.parseInt(data.get(i)[1]), autreCarr);
+                    CarreauCarte carte = new CarreauCarte(Integer.parseInt(data.get(i)[1]), data.get(i)[2]);
+                    carreaux.put(Integer.parseInt(data.get(i)[1]), carte);
+                }
+                else if(caseType.compareTo("CI") == 0){ // Si la case est un Autre Carreau
+                    //System.out.println("Case Autre :\t" + data.get(i)[2] + "\t@ case " + data.get(i)[1]);
+                    CarreauImpot carreauImpot = new CarreauImpot(Integer.parseInt(data.get(i)[1]), data.get(i)[2], Math.abs(Integer.parseInt(data.get(i)[3])));
+                    carreaux.put(Integer.parseInt(data.get(i)[1]), carreauImpot);
+                }
+                else if(caseType.compareTo("PR") == 0){ // Si la case est un Autre Carreau
+                    //System.out.println("Case Autre :\t" + data.get(i)[2] + "\t@ case " + data.get(i)[1]);
+                    CarreauPrison carreauPrison = new CarreauPrison(Integer.parseInt(data.get(i)[1]), data.get(i)[2]);
+                    carreaux.put(Integer.parseInt(data.get(i)[1]), carreauPrison);
                 }
                 else { // S'il y a une erreur de lecture dans le data.
                     //System.err.println("[buildGamePleateau()] : Invalid Data type");
@@ -156,27 +160,33 @@ public class Monopoly {
                     for(int i=0; i<data.size()/2; ++i){
                             String caseType = data.get(i)[0];
                             if(caseType.compareTo("LI") == 0){
-                                    Carte li = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, li);
+                                CarteLiberePrison lib = new CarteLiberePrison(data.get(i)[1]);
+                                    cartesChance.put(i, lib);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("DE") == 0){
-                                    Carte de = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, de);
+                                CarteDeplacement dep = new CarteDeplacement(data.get(i)[1], carreaux.get(Integer.parseInt(data.get(i)[3])));
+                                    cartesChance.put(i, dep);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("RE") == 0){
-                                    Carte re = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, re);
+                                int prixMaison = 0;
+                                int prixHotel = 0;
+                                if (Integer.parseInt(data.get(i)[2]) == 1 ) {
+                                    prixMaison = 40;
+                                    prixHotel = 115;
+                                }
+                                CarteReparation rep = new CarteReparation(data.get(i)[1], prixMaison, prixHotel);
+                                cartesChance.put(i, rep);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("AR") == 0){
-                                    Carte ar = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
+                                    CarteArgent ar = new CarteArgent(data.get(i)[1], Integer.parseInt(data.get(i)[2]));
                                     cartesChance.put(i, ar);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("PR") == 0){
-                                    Carte pr = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
+                                    CartePrison pr = new CartePrison(data.get(i)[1]);
                                     cartesChance.put(i, pr);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
@@ -186,35 +196,39 @@ public class Monopoly {
                     for(int i=16; i<data.size(); ++i){
                             String caseType = data.get(i)[0];
                             if(caseType.compareTo("LI") == 0){
-                                    Carte li = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, li);
+                                CarteLiberePrison lib = new CarteLiberePrison(data.get(i)[1]);
+                                    cartesCommu.put(i-16, lib);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("DE") == 0){
-                                    Carte de = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, de);
+                                CarteDeplacement dep = new CarteDeplacement(data.get(i)[1], carreaux.get(Integer.parseInt(data.get(i)[3])));
+                                    cartesCommu.put(i-16, dep);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("RE") == 0){
-                                    Carte re = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, re);
+                                int prixMaison = 0;
+                                int prixHotel = 0;
+                                if (Integer.parseInt(data.get(i)[2]) == 1 ) {
+                                    prixMaison = 40;
+                                    prixHotel = 115;
+                                }
+                                CarteReparation rep = new CarteReparation(data.get(i)[1], prixMaison, prixHotel);
+                                cartesCommu.put(i-16, rep);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("AR") == 0){
-                                    Carte ar = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, ar);
+                                    CarteArgent ar = new CarteArgent(data.get(i)[1], Integer.parseInt(data.get(i)[2]));
+                                    cartesCommu.put(i-16, ar);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("PR") == 0){
-                                    Carte pr = new Carte(data.get(i)[0], data.get(i)[1], Integer.parseInt(data.get(i)[2]), carreaux.get(Integer.parseInt(data.get(i)[3])));
-                                    cartesChance.put(i, pr);
+                                    CartePrison pr = new CartePrison(data.get(i)[1]);
+                                    cartesCommu.put(i-16, pr);
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else
                                     System.err.println("[buildGamePleateau()] : Invalid Data type");
-                    }
-
-
+                            }
             } 
             catch(FileNotFoundException e){
                     System.err.println("[buildGamePlateau()] : File is not found!");

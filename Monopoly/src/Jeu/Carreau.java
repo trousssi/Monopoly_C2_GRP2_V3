@@ -1,5 +1,7 @@
 package Jeu;
 
+import java.util.ArrayList;
+
 public abstract class Carreau {
     private int numero;
     private String nomCarreau;
@@ -17,6 +19,6 @@ public abstract class Carreau {
         return this.numero;
     }
         
-    public abstract Resultat action(Joueur j, int sommeDes, Carte[] cartes);
+    public abstract Resultat action(Joueur j, int sommeDes, ArrayList<Carte> cartes);
             
 }

@@ -16,7 +16,7 @@ import java.util.HashSet;
  * @author boby
  */
 public interface Observateur {
-    public void jouer(ArrayList<String> joueurs);
+    
     
     public boolean debutTour(ArrayList<Joueur> joueurs, int nbTour);
     
@@ -30,7 +30,7 @@ public interface Observateur {
     
     public void messageJoueurAvance(Joueur joueur, int sommeDes, Carreau carreau, boolean desDouble);
     
-    public int action(Resultat res, Joueur j);
+    public void action(Resultat res, Joueur j, int d1, int d2, int nbdouble);
     
     public void recupererNomJoueurs(HashSet<String> joueurs);
     
@@ -239,4 +239,15 @@ public interface Observateur {
             } 
         } while (i<=nbJoueurs);
     }*/
+    public void lanceDes(Joueur j,int nbDouble);
+    
+    public void Reponce(int cas, Joueur j, Jeu.Resultat res);
+    
+     public void notification(String message,Joueur j);
+     
+     public void joueurSuivant();
+     
+     public void rejouer(Joueur j,int nbdouble);
+     
+    public boolean sortiePrisonCarte(Joueur j);
 }

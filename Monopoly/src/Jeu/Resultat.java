@@ -22,6 +22,11 @@ public class Resultat {
     private Propriete proprieteAchete;
     private int numeroCarreau =-1;
     private String nomCarreau;
+    private boolean deplace;
+    private int deplacement = 0;
+    private boolean anniversaire;
+    private boolean enPrison;
+    private String nomCarte;
 
     
     
@@ -86,6 +91,29 @@ public class Resultat {
         return carte;
     }
 
+    public boolean isDeplace() {
+        return deplace;
+    }
+
+    public String getNomCarte() {
+        return nomCarte;
+    }
+
+    public boolean isAnniversaire() {
+        return anniversaire;
+    }
+
+    public int getDeplacement() {
+        return deplacement;
+    }
+
+    public boolean isEnPrison() {
+        return enPrison;
+    }
+
+    
+    
+    
     
     
 //Setters
@@ -112,6 +140,27 @@ public class Resultat {
     public void setCarte(Carte carte) {
         this.carte = carte;
     }
+
+    public void setDeplace(boolean deplace) {
+        this.deplace = deplace;
+    }
+
+    public void setNomCarte(String nomCarte) {
+        this.nomCarte = nomCarte;
+    }
+
+    public void setAnniversaire(boolean anniversaire) {
+        this.anniversaire = anniversaire;
+    }
+
+    public void setDeplacement(int deplacement) {
+        this.deplacement = deplacement;
+    }
+
+    public void setEnPrison(boolean enPrison) {
+        this.enPrison = enPrison;
+    }
+
     
     
 }
