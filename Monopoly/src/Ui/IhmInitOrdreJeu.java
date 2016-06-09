@@ -29,9 +29,10 @@ public class IhmInitOrdreJeu extends JFrame {
     private final int LONGUEUR_BASE = 400;
     private final int HAUTEUR_PAR_JOUEUR = 70;
     private JButton lancerDes;
-    
+    private JPanel panelDes;
     private HashMap<String, int[]> resLancerDes = new HashMap<>(); 
     public static final Random RANDOM = new Random();
+    
     
     public IhmInitOrdreJeu(HashSet<String> joueurs) {
         super();
@@ -45,7 +46,7 @@ public class IhmInitOrdreJeu extends JFrame {
         lancerDes = new JButton("Lancer les dés");
         
         JPanel panelNom = new JPanel();
-        JPanel panelDes = new JPanel();
+        this.panelDes = new JPanel();
         this.add(panelNom, BorderLayout.WEST);
         this.add(panelDes, BorderLayout.EAST);
 
@@ -74,14 +75,14 @@ public class IhmInitOrdreJeu extends JFrame {
                     //System.out.println("lol");
                // }   
                 
-                //lancerDes.setEnabled(false); //Une fois les résultats obtenus on ne peut plus les lancer
+                lancerDes.setEnabled(false); //Une fois les résultats obtenus on ne peut plus les lancer
                 
             }
         });
     }
 
     private void lancerDes() {
-        boolean determine = false;
+        
         
         
         //while (!determine) {
@@ -102,8 +103,7 @@ public class IhmInitOrdreJeu extends JFrame {
             }
             
             if (nbMax >= 2) {
-                System.out.println("double //////////////////////////////////");
-                determine = true;
+                
                 this.lancerDes();
             }
         //}
@@ -112,13 +112,28 @@ public class IhmInitOrdreJeu extends JFrame {
     private void afficheLancer() {
         for (String NomJ : joueurs) {
             int[] res = this.resLancerDes.get(NomJ);
-            System.out.println(NomJ + "    Dé 1 :" + res[0]+ "  Dé2 :"+ res[1]);
+            int de1 = res[0];
+            int de2 = res[1];
+            System.out.println(NomJ + " :" + de1 + " " + de2);
+            JPanel panelDesJoueur = new JPanel();
+            JPanel panelDe1 = new JPanel();
+            JPanel panelDe2 = new JPanel();
+            this.panelDes.add(panelDesJoueur);
+            panelDesJoueur.add(panelDe1);
+            panelDesJoueur.add(panelDe2);
+            
+            panelDe1.add(new JLabel("" + de1));
+            panelDe2.add(new JLabel("" + de2));
         }
+        
+        this.setVisible(true);
     }
     public void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        setVisible(true);  
+        setVisible(true);
         setTitle("Détermination de l'ordre de jeu");
+        
+        
     }
 
     public void setObservateur(Observateur observateur) {
