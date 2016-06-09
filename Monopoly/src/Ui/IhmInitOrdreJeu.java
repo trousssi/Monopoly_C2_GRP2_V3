@@ -12,9 +12,13 @@ import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -27,7 +31,7 @@ public class IhmInitOrdreJeu extends JFrame {
     private Observateur observateur;
     private HashSet<String> joueurs;
     private final int LONGUEUR_BASE = 400;
-    private final int HAUTEUR_PAR_JOUEUR = 70;
+    private final int HAUTEUR_PAR_JOUEUR = 110;
     private JButton lancerDes;
     private JPanel panelDes;
     private HashMap<String, int[]> resLancerDes = new HashMap<>(); 
@@ -114,7 +118,7 @@ public class IhmInitOrdreJeu extends JFrame {
             int[] res = this.resLancerDes.get(NomJ);
             int de1 = res[0];
             int de2 = res[1];
-            System.out.println(NomJ + " :" + de1 + " " + de2);
+            
             JPanel panelDesJoueur = new JPanel();
             JPanel panelDe1 = new JPanel();
             JPanel panelDe2 = new JPanel();
@@ -122,8 +126,8 @@ public class IhmInitOrdreJeu extends JFrame {
             panelDesJoueur.add(panelDe1);
             panelDesJoueur.add(panelDe2);
             
-            panelDe1.add(new JLabel("" + de1));
-            panelDe2.add(new JLabel("" + de2));
+            panelDe1.add(new JLabel(new ImageIcon("src/Data/"+de1+".png")));
+            panelDe2.add(new JLabel(new ImageIcon("src/Data/"+de2+".png")));
         }
         
         this.setVisible(true);
