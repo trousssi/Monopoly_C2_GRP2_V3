@@ -41,16 +41,22 @@ public class IhmPlateau extends Canvas{
         try {
             pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
             pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
             pions.add(ImageIO.read(new File("src/Data/pionVert.png")));
             pions.add(ImageIO.read(new File("src/Data/pionJaune.png")));
             pions.add(ImageIO.read(new File("src/Data/pionViolet.png")));
             pions.add(ImageIO.read(new File("src/Data/pionOrange.png")));
         } catch (IOException ex) {
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        }     
 
+    }
+    private void initListePositions() {
+        
+        int[] posInit = {786, 786};
+        for(int i = 0; i<nbJoueurs; i++) {
+            pos.add(posInit);
+        }
+        System.out.println("nbJoueurs = " + nbJoueurs + "size = " + pos.size());
     }
     
      /**
@@ -81,18 +87,13 @@ public class IhmPlateau extends Canvas{
         while (i<nbJoueurs) {
             System.out.println("x = " + this.pos.get(0)[0] + "y = " + this.pos.get(0)[1] + i);
             g.drawImage(pions.get(i), this.pos.get(i)[0], this.pos.get(i)[1], (ImageObserver) observateur);
-            i++;this.pos.get(i)[1]+=13;
+            if (i<nbJoueurs) i++;
+            if (i<= 3) this.pos.get(i)[1]+=13;
+            if (i>= 3) this.pos.get(i)[0]+=13;
         }   
     }//Coordonnés du premier carreau x, y = 786
     
-    private void initListePositions() {
-        
-        int[] posInit = {786, 786};
-        for(int i = 0; i<nbJoueurs; i++) {
-            pos.add(posInit);
-        }
-        System.out.println("nbJoueurs = " + nbJoueurs + "size = " + pos.size());
-    }
+    
 
     
     
