@@ -110,7 +110,7 @@ public class IhmInscription extends JFrame  {
                 setVisible(false);
                 observateur.recupererNomJoueurs(nomJoueurs);
             }
-        });
+        });        
         valider.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -118,6 +118,9 @@ public class IhmInscription extends JFrame  {
                 if (res) {
                     IhmBoiteMessage.afficherBoiteDialogue(nbjoueurs + " joueurs inscris.", "info");
                     nomJoueurs = getNomJoueurs();
+                    
+                    setVisible(false);
+                    observateur.recupererNomJoueurs(nomJoueurs);
                 }
 
             }
@@ -154,6 +157,7 @@ public class IhmInscription extends JFrame  {
     public void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(400, 250);
+        setTitle("Inscription des joueurs");
         setVisible(true);                        
     }
     

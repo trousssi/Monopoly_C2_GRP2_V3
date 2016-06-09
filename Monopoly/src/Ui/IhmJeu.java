@@ -28,18 +28,22 @@ public class IhmJeu extends JFrame{
     private JLabel cash;
     private JLabel nomCarte;
     private JButton acheter;
+    private String nomPremier;
+    private Observateur observateur;
     
-    public IhmJeu() throws IOException  {        
+    public IhmJeu(String nomPremier)   {        
         plateau = new IhmPlateau();
         controle = new JPanel();
+        
+        this.nomPremier = nomPremier;
         
         this.setLayout(new BorderLayout());
         this.add(plateau, BorderLayout.CENTER);
         
         this.add(this.controle(), BorderLayout.EAST);
-        
-        afficher();
     }
+    
+    
     
     private JPanel controle() {
         this.controle.setLayout(new GridLayout());
@@ -121,7 +125,7 @@ public class IhmJeu extends JFrame{
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
 
-    void setObservateur(IHM aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    void setObservateur(Observateur observateur) {
+        this.observateur = observateur; //To change body of generated methods, choose Tools | Templates.
     }
 }

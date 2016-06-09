@@ -151,11 +151,17 @@ public final class IHM implements Observateur{
         ihmI.setObservateur(this);
     }    
       
-    public void lancerJeu() {
+    public void ordreDuJeu() {
         this.ihmInit = new IhmInitOrdreJeu(this.joueurs);
         this.ihmInit.setObservateur(this);
         this.ihmInit.afficher();
-        /*this.ihmJeu = new IhmJeu();
-        this.setObservateur(this);*/
+
+    }
+    
+    public void lancerJeu() {
+       this.ihmJeu = new IhmJeu(ihmInit.getNomPremier());
+       this.ihmJeu.setObservateur(this);
+       this.ihmJeu.afficher();
+            
     }
 }

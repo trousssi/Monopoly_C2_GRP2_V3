@@ -29,15 +29,21 @@ public class IhmPlateau extends Canvas{
     private int nbJoueurs;
     private int x, y;
     
-    public IhmPlateau() throws IOException  {
+    public IhmPlateau()   {
         super();
         pions = new ArrayList<>();
-        pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
-        pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
-        pions.add(ImageIO.read(new File("src/Data/pionVert.png")));
-        pions.add(ImageIO.read(new File("src/Data/pionJaune.png")));
-        pions.add(ImageIO.read(new File("src/Data/pionViolet.png")));
-        pions.add(ImageIO.read(new File("src/Data/pionOrange.png")));
+        try {
+            pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionVert.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionJaune.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionViolet.png")));
+            pions.add(ImageIO.read(new File("src/Data/pionOrange.png")));
+        } catch (IOException ex) {
+            Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+        }
+ 
 
     }
     

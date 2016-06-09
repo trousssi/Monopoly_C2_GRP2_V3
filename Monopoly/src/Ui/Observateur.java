@@ -36,5 +36,7 @@ public interface Observateur {
     
     public void inscriptionJoueurs ();
     
+    public void ordreDuJeu();
+    
     public void lancerJeu();
 }

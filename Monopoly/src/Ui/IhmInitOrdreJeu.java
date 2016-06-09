@@ -31,9 +31,10 @@ public class IhmInitOrdreJeu extends JFrame {
     private Observateur observateur;
     private HashSet<String> joueurs;
     private final int LONGUEUR_BASE = 400;
-    private final int HAUTEUR_PAR_JOUEUR = 110;
+    private final int HAUTEUR_PAR_JOUEUR = 150;
     private JButton lancerDes;
     private JPanel panelDes;
+    private JPanel panelNom;
     private HashMap<String, int[]> resLancerDes = new HashMap<>(); 
     public static final Random RANDOM = new Random();
     
@@ -49,13 +50,13 @@ public class IhmInitOrdreJeu extends JFrame {
         this.setLayout(new BorderLayout());
         lancerDes = new JButton("Lancer les dés");
         
-        JPanel panelNom = new JPanel();
+        this.panelNom = new JPanel();
         this.panelDes = new JPanel();
         this.add(panelNom, BorderLayout.WEST);
         this.add(panelDes, BorderLayout.EAST);
 
-        panelNom.setLayout(new GridLayout(joueurs.size()+1, 1));
-        panelDes.setLayout(new GridLayout(joueurs.size()+1, 1));
+        panelNom.setLayout(new GridLayout(joueurs.size()+2, 1));
+        panelDes.setLayout(new GridLayout(joueurs.size()+2, 1));
 
         //En-tête
         panelNom.add(new JLabel("Nom des Joueurs:"));
@@ -114,10 +115,8 @@ public class IhmInitOrdreJeu extends JFrame {
     }
     
     private void afficheLancer() {
-        for (String NomJ : joueurs) {
-            int[] res = this.resLancerDes.get(NomJ);
-            int de1 = res[0];
-            int de2 = res[1];
+        for (String nomJ : joueurs) {
+            int[] res = this.resLancerDes.get(nomJ);
             
             JPanel panelDesJoueur = new JPanel();
             JPanel panelDe1 = new JPanel();
@@ -126,9 +125,20 @@ public class IhmInitOrdreJeu extends JFrame {
             panelDesJoueur.add(panelDe1);
             panelDesJoueur.add(panelDe2);
             
-            panelDe1.add(new JLabel(new ImageIcon("src/Data/"+de1+".png")));
-            panelDe2.add(new JLabel(new ImageIcon("src/Data/"+de2+".png")));
+            panelDe1.add(new JLabel(new ImageIcon("src/Data/"+res[0]+".png")));
+            panelDe2.add(new JLabel(new ImageIcon("src/Data/"+res[1]+".png")));
         }
+        
+        this.panelNom.add(new JLabel(this.getNomPremier() + " commencera la partie."));
+        JButton jouer = new JButton("Lancer le jeu");
+        this.panelDes.add(jouer);
+        
+        jouer.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                observateur.lancerJeu();
+            }
+        });
         
         this.setVisible(true);
     }
@@ -148,6 +158,17 @@ public class IhmInitOrdreJeu extends JFrame {
         this.joueurs = joueurs;
     }
     
-    
+    public String getNomPremier() {
+        int max = 0;
+        String nomPremier = "";
+        for (String nomJ : resLancerDes.keySet()) {            
+            if (resLancerDes.get(nomJ)[0] + resLancerDes.get(nomJ)[1] > max) {
+                max = resLancerDes.get(nomJ)[0] + resLancerDes.get(nomJ)[1];
+                nomPremier = nomJ;
+            }
+        }
+        
+        return nomPremier;
+    }
     
 }
