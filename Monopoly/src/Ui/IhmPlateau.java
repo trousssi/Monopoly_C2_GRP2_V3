@@ -27,10 +27,10 @@ public class IhmPlateau extends Canvas{
     private ArrayList<BufferedImage> pions;
     private int numCarreau;
     private int nbJoueurs = 6;//L'ajouter comme paramètre 
-    private ArrayList<int[]> pos;
+    private ArrayList<int[]> pos;private int x, y;
      //1ère dimension = x, 2ème = y, 3ème = numJoueur
     
-    public IhmPlateau()   {
+    public IhmPlateau() throws InterruptedException   {
         super();
         pions = new ArrayList<>();
         pos = new ArrayList<>();
@@ -98,25 +98,127 @@ public class IhmPlateau extends Canvas{
             g.drawImage(pions.get(i), this.pos.get(i)[0] +dx , this.pos.get(i)[1] + dy, (ImageObserver) observateur);
             dy+=13;
             i++;
-            /*if (i<nbJoueurs) i++;
-            if (i<= 3) this.pos.get(i)[1]+=13;
-            if (i> 3) this.pos.get(i)[0]+=13;*/
-        }   
+            
+        }   try {
+                /*if (i<nbJoueurs) i++;
+                if (i<= 3) this.pos.get(i)[1]+=13;
+                if (i> 3) this.pos.get(i)[0]+=13;*/
+ 
+                dessiner(g, 5, 1, 5);
+ 
+            } catch (InterruptedException ex) {
+                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }//Coordonnés du premier carreau x, y = 786
     
     
 
     
     
-    public void trouveCoordonnes(int numCarreau, int numJoueur) {
-        this.numCarreau = numCarreau;
+   
+    private void dessiner(Graphics g, int numCarreauDest, int numCarreauDep, int numJoueur) throws InterruptedException {
+        int ESPACEMENT = 3;
+        int LARGEUR_PION = 21;
+        int EMPILEMENT = 13;
+        int HAUTEUR_PION = 26;
+        int DECALAGE = 3;
+        int BASE = 786;
+        int compteur;
         
+        int numCarreauCourant = numCarreauDep;
         
-        if (numCarreau <= 11) {
-            this.pos.get(numJoueur)[0] = 786 - (74*numCarreau);
-            this.pos.get(numJoueur)[1] = 786;
-        }
-        
-        repaint();
+        do {
+            numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);//Si on est pas arrivé, on avance
+            compteur = 0;
+            if(numCarreauCourant == 1) {//On arrive à la case départ
+                pos.get(numJoueur)[0] = BASE;// Pour le joueur courant x = 786
+                pos.get(numJoueur)[1] = BASE;// y = 786;
+                
+                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                
+                if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
+                    pos.get(numJoueur)[1] += ESPACEMENT + HAUTEUR_PION; 
+                    pos.get(numJoueur)[0]=BASE;//Utile ?
+                }*/            
+            }
+            else if(numCarreauCourant <= 10) { //LIGNE BAS
+                pos.get(numJoueur)[0] = BASE-74*(numCarreauCourant-1);
+                pos.get(numJoueur)[1] = 844;
+                
+                
+                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                pos.get(numJoueur)[1] += EMPILEMENT;
+                
+                if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
+                    pos.get(numJoueur)[0] += LARGEUR_PION + ESPACEMENT; 
+                    pos.get(numJoueur)[1] = 844;
+                }              */
+            }
+            else if (numCarreauCourant == 11) {//VISITE PRISON 
+                pos.get(numJoueur)[0] = 5;
+                pos.get(numJoueur)[1] = BASE;
+                
+                
+                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                pos.get(numJoueur)[1] += EMPILEMENT;*/
+                
+                
+            }
+            else if (numCarreauCourant <= 20) {//LIGNE GAUCHE
+                pos.get(numJoueur)[0] = 16;
+                pos.get(numJoueur)[1] = BASE-74*(numCarreauCourant-11);
+                
+                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                pos.get(numJoueur)[0] += LARGEUR_PION + ESPACEMENT;
+                
+                if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
+                    pos.get(numJoueur)[1] += EMPILEMENT;
+                }*/
+            }
+            else if (numCarreauCourant == 21) {//PARC GRATUIT
+                pos.get(numJoueur)[0] = 16;
+                pos.get(numJoueur)[1] = 16;
+                
+                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                pos.get(numJoueur)[0] += ESPACEMENT + LARGEUR_PION;
+                
+                if(numJoueur == DECALAGE) {
+                    pos.get(numJoueur)[1] += ESPACEMENT + HAUTEUR_PION; 
+                }*/
+            }
+            else if (numCarreauCourant <= 30) {//LIGNE HAUT
+                pos.get(numJoueur)[0] = 120+74*(numCarreauCourant-22); ;
+                pos.get(numJoueur)[1] = 16;
+                
+                
+            }
+            else if (numCarreauCourant == 31) {//ALLER EN PRISON
+                pos.get(numJoueur)[0] = 786;
+                pos.get(numJoueur)[1] = 16;
+                
+                
+            }
+            else if (numCarreauCourant <= 40) {//LIGNE DROITE
+                pos.get(numJoueur)[0] = 841;
+                pos.get(numJoueur)[1] = 123+74*(numCarreauCourant-32);
+               
+            }
+            for (int[] i : pos) {
+                g.drawImage(pions.get(compteur), i[0], i[1], (ImageObserver) observateur);
+                compteur++;
+            }
+            
+            Thread.sleep(500);
+            g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
+            
+            System.out.println("numCarreauCourant = " + numCarreauSuivant(2) + "numCarreauDest = " + numCarreauDest);
+        } while (numCarreauCourant!=numCarreauDest);
     }
+    
+    private int numCarreauSuivant(int numCar) {
+        if(numCar++ % 40  == 0) 
+            return 1;
+        else return numCar++ % 40;
+    }
+   
 }
