@@ -19,6 +19,7 @@ public final class IHM implements Observateur{
         private IhmJeu ihmJeu;
         private IhmInitOrdreJeu ihmInit;
         private HashSet<String> joueurs;
+        private int numJoueur;
         
           
     public IHM(Controleur controleur) {
@@ -79,9 +80,9 @@ public final class IHM implements Observateur{
 
 
     public void action(Resultat res, Joueur j,int d1, int d2, int nbdouble) {
-        /*Resultat retour = new Resultat();
+        //Resultat retour = new Resultat();
         
-        if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
+        /*if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
         System.out.println("Carreau = " + res.getNomCarreau() + ", case n° " + res.getNumeroCarreau());
         }
         
@@ -110,13 +111,11 @@ public final class IHM implements Observateur{
         else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
         System.out.println("Vous êtes le proprietaire de cette case.");
         }
-        System.out.println("\n \n");
+        System.out.println("\n \n");*/
         
-        return 0;*/
+        //return 0;
 
        this.ihmJeu.afficherInfos(j, res,d1,d2,nbdouble); 
-        
-        
        
     }
 
@@ -167,13 +166,32 @@ public final class IHM implements Observateur{
        this.ihmJeu = new IhmJeu();
        this.ihmJeu.setObservateur(this);
        this.ihmJeu.afficher();
+       this.numJoueur = 0;
+       this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur),0);
        
-       this.ihmJeu.displayJoueur(this.controleur.getPremierJoueur());
        
     }
     
     
-    public void lanceDes(Joueur j){
-        this.controleur.lancerDésAvancer(j);
+    public void lanceDes(Joueur j, int nbDouble){
+        this.controleur.lancerDésAvancer(j, nbDouble);
+    }
+    
+    public void Reponce(int cas, Joueur j, Jeu.Resultat res) {
+        this.controleur.action(cas, j, res);
+    }
+    
+    public void notification(String message) {
+        this.ihmJeu.notification(message);
+    }
+    
+    public void joueurSuivant(){
+        
+        this.numJoueur++;
+        if (numJoueur==this.controleur.getJoueurs().size() || this.numJoueur == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
+            this.numJoueur=0;          
+        }
+        
+        this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
     }
 }
