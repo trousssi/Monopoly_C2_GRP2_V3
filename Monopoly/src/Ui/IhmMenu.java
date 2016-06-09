@@ -126,6 +126,8 @@ public class IhmMenu extends JFrame  {
     public void activeJouer(HashSet<String> joueurs) {
         if (!joueurs.isEmpty()) { //Si les joueurs sont bien inscrits, on peut jouer
             jouer.setEnabled(true);
+        } else {
+            jouer.setEnabled(false);
         }
     }
 }

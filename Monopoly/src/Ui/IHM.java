@@ -152,9 +152,9 @@ public final class IHM implements Observateur{
     }    
       
     public void lancerJeu() {
-        this.ihmInit = new IhmInitOrdreJeu();
-        this.ihmInit.afficher();
+        this.ihmInit = new IhmInitOrdreJeu(this.joueurs);
         this.ihmInit.setObservateur(this);
+        this.ihmInit.afficher();
         /*this.ihmJeu = new IhmJeu();
         this.setObservateur(this);*/
     }
