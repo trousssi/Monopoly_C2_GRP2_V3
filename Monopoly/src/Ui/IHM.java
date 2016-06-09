@@ -181,8 +181,8 @@ public final class IHM implements Observateur{
         this.controleur.action(cas, j, res);
     }
     
-    public void notification(String message) {
-        this.ihmJeu.notification(message);
+    public void notification(String message, Joueur j) {
+        this.ihmJeu.notification(message, j);
     }
     
     public void joueurSuivant(){
@@ -193,5 +193,9 @@ public final class IHM implements Observateur{
         }
         
         this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
+    }
+    
+    public void rejouer(Joueur j,int nbdouble) {
+        this.ihmJeu.displayJoueur(j, nbdouble);
     }
 }

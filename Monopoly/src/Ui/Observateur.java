@@ -44,7 +44,9 @@ public interface Observateur {
     
     public void Reponce(int cas, Joueur j, Jeu.Resultat res);
     
-     public void notification(String message);
+     public void notification(String message,Joueur j);
      
      public void joueurSuivant();
+     
+     public void rejouer(Joueur j,int nbdouble);
 }

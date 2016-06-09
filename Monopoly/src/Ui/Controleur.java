@@ -131,13 +131,13 @@ public class Controleur {
             switch (cas) {
                 case 0:
                     //Il ne se passe rien
-                    this.obs.notification("");
+                    this.obs.notification("", j);
                 break;
                 case 2:
                     //On veut acheter une propriete et on peut le faire
                     j.payer(res.getPrixPropriete());
                     res.getProprieteAchete().setProprietaire(j);
-                    this.obs.notification("Proprieté achetée");
+                    this.obs.notification("Proprieté achetée", j);
                 break;
                     
             }
