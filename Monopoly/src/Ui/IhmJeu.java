@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,48 +29,76 @@ public class IhmJeu extends JFrame{
     private JLabel cash;
     private JLabel nomCarte;
     private JButton acheter;
-    private String nomPremier;
     private Observateur observateur;
+    private JButton lanceDes;
+    private JPanel infos;
     
-    public IhmJeu(String nomPremier)   {        
+    public IhmJeu()   {        
         plateau = new IhmPlateau();
         controle = new JPanel();
         
-        this.nomPremier = nomPremier;
         
         this.setLayout(new BorderLayout());
         this.add(plateau, BorderLayout.CENTER);
         
         this.add(this.controle(), BorderLayout.EAST);
+        this.initJoueur();
     }
     
     
     
     private JPanel controle() {
-        this.controle.setLayout(new GridLayout());
-        this.controle.add(new JLabel("controle"));
-        
+        this.infos = new JPanel();
+        this.controle.add(infos);
+        this.infos.setLayout(new GridLayout(8, 1));
         
         return this.controle;
     }
+    
     private void initJoueur() {
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
         cash = new JLabel();
+        
+        this.infos.add(nomJoueur);       
+        this.infos.add(cash);        
+        this.infos.add(nomCarte);
+        
+    }
+    private void initInfos() {
         acheter = new JButton();
-        this.controle.add(nomJoueur);       
-        this.controle.add(cash);        
-        this.controle.add(nomCarte);
-        this.controle.add(acheter);
+        this.infos.add(acheter);
+    }
+    
+    //Affichera toutes les infos du joueur
+    public void displayJoueur(Joueur j) {
+        lanceDes = new JButton("Lancer les dés");
+        
+        this.nomJoueur.setText("A votre tour " + j.getNom());
+        
+        this.cash.setText("Cash : " + j.getCash());
+        this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
+        
+        JPanel panelDesJoueur = new JPanel();
+        JPanel panelDe1 = new JPanel();
+        JPanel panelDe2 = new JPanel();
+        this.controle.add(panelDesJoueur);
+        panelDesJoueur.add(panelDe1);
+        panelDesJoueur.add(panelDe2);
+        
+        this.infos.add(lanceDes);
+        
+        lanceDes.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                observateur.lanceDes(j);
+            }
+        });
+        
     }
     
     
-    //Affichera toutes les infos du joueur
-    private void displayJoueur(Joueur j, Resultat res) {
-        this.nomJoueur.setText("A votre tour " + j.getNom());
-        
-        this.nomJoueur.setText("Cash : " + j.getCash());
-        this.nomJoueur.setText("Case : " + j.getPositionCourante().getNomCarreau());
+    public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) {
         
         if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
             acheter.setEnabled(false);
@@ -95,22 +124,14 @@ public class IhmJeu extends JFrame{
                 //TODO : Ouvrir popup de confirmation avec le prix de la propriete
             }
         });
-                
+        
+        
+        /*panelDe1.add(new JLabel(new ImageIcon("src/Data/"+res.getDe1+".png")));
+        panelDe2.add(new JLabel(new ImageIcon("src/Data/"+res.getDe2+".png")));*/
+        
     }
     
-    private void lancerDes(Resultat res) {//TODO : récupérer le résultat des deux dés, soit avec les deux entiers, soit avec res
-        JButton lanceDes = new JButton("Lancer les dés");
-        
-        this.controle.add(lanceDes);
-        
-        lanceDes.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //displayDes(de1, de2);
-                lanceDes.setEnabled(false);
-            }
-        });
-        
+    private void lancerDes(Resultat res) {//TODO : récupérer le résultat des deux dés, soit avec les deux entiers, soit avec res 
         
     }
     
@@ -120,7 +141,7 @@ public class IhmJeu extends JFrame{
     
     public void afficher() {
         this.setTitle("Monopoly");
-        this.setSize(1000, 1000);
+        this.setSize(1200, 1000);
         this.setVisible(true);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }

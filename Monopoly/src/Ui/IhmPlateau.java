@@ -79,11 +79,15 @@ public class IhmPlateau extends Canvas{
             i++;y+=13;
         }   
     }
+    
+    
     public void dessiner(int numCarreau, int nbJoueurs) {
            this.numCarreau = numCarreau;
            this.nbJoueurs = nbJoueurs;
            repaint();
     }
+    
+    
     public void trouveCoordonnes(int numCarreau) {
         
         

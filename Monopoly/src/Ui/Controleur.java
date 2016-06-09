@@ -7,13 +7,14 @@ import Jeu.Monopoly;
 import Jeu.ProprieteAConstruire;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 public class Controleur {
 	private Observateur obs;
 	public Monopoly monopoly;
 
-    public Controleur()  throws IOException{
+    public Controleur()  {
         
         this.monopoly = new Monopoly();
 
@@ -31,26 +32,52 @@ public class Controleur {
                
 	}
         
-        public void initPartie (ArrayList<String> joueurs)  {
+        public void initPartie (HashSet<String> joueurs, String nomPremierJoueur)  {
             //ArrayList<String> joueurs = ihm.debutPartie(); //On renvoie le nom des joueurs
             if (joueurs!=null){
                 //while (joueurs.size() < 2 || joueurs.size() > 6) {//On ne prend que des valeurs appartenat à l'intervalle [2; 6]
                 //    joueurs = ihm.debutPartie();
                 //}
+                monopoly.addJoueur(new Joueur(nomPremierJoueur, monopoly.getCarreau(1)));
                 for (String nom : joueurs) {
-                    Joueur joueur = new Joueur(nom, monopoly.getCarreau(1)); //On ajoute les joueurs sur la première case du plateau
-                    monopoly.addJoueur(joueur);
+                    if (nomPremierJoueur != nom) {
+                        Joueur joueur = new Joueur(nom, monopoly.getCarreau(1)); //On ajoute les joueurs sur la première case du plateau
+                        monopoly.addJoueur(joueur);
+                    }
                 }
             }
             
-            this.lancePartie();
+           // this.lancePartie();
         }
+        
+        
         
         public static int lancerDes() {
             return RANDOM.nextInt(6)+1;
         }
         
-        private Carreau lancerDésAvancer(Joueur j) {
+        public Carreau lancerDésAvancer(Joueur j) {
+            /*int resDes1 = 0;
+            int resDes2 = 0;
+            Carreau carreau = null;
+            int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
+            int nbDouble = 0;
+            while (resDes1 == resDes2 && nbDouble < 3) {
+            resDes1 = lancerDes();
+            resDes2 = lancerDes();
+            sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
+            if (nbDouble == 2 && resDes1 == resDes2) {
+            allerEnPrison(j);
+            } else {
+            carreau = this.avancerJoueur(j, sommeDes);
+            obs.messageJoueurAvance(j, sommeDes, carreau, true);
+            Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+            this.action(obs.action(res, j), j, res);
+            nbDouble++;
+            }
+            }
+            return carreau;*/
+            
             int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
@@ -64,9 +91,10 @@ public class Controleur {
                     allerEnPrison(j);
                 } else {
                     carreau = this.avancerJoueur(j, sommeDes);
-                    obs.messageJoueurAvance(j, sommeDes, carreau, true);       
+                    //obs.messageJoueurAvance(j, sommeDes, carreau, true); 
+                    
                     Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                    this.action(obs.action(res, j), j, res);
+                    this.obs.action(res, j, resDes1, resDes2, nbDouble);
                     nbDouble++;
                 }
             }
@@ -299,6 +327,10 @@ public class Controleur {
         }
     }
 
+   
 
+    public Joueur getPremierJoueur() {
+       return this.monopoly.getJoueurs().get(0);
+    }
 
 }

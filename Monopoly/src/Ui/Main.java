@@ -14,8 +14,8 @@ import java.io.IOException;
 public class Main {
     
     
-     public static void main(String[] args) throws IOException {
-         Controleur controleur = new Controleur();  
-          IHM ihm = new IHM(controleur);
-     }
+    public static void main(String[] args) {
+        Controleur controleur = new Controleur();  
+        IHM ihm = new IHM(controleur);
+    }
 }
