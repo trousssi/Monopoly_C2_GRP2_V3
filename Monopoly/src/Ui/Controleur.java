@@ -56,7 +56,7 @@ public class Controleur {
             return RANDOM.nextInt(6)+1;
         }
         
-        public Carreau lancerDésAvancer(Joueur j, int nbDouble) {
+        public Carreau lancerDesAvancer(Joueur j, int nbDouble) {
             /*int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
@@ -104,7 +104,6 @@ public class Controleur {
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
-            int nbDouble = 0;
             boolean desDouble = true;
                 while (desDouble && nbDouble < 3) {
                     resDes1 = lancerDes();
@@ -129,7 +128,7 @@ public class Controleur {
             return carreau;
         }
 
-        }
+        
         
         /*	private Carreau lancerDésAvancer(Joueur j) {
         int resDes1 = lancerDes();
