@@ -26,12 +26,18 @@ public class IhmPlateau extends Canvas{
     Observateur observateur;
     private ArrayList<BufferedImage> pions;
     private int numCarreau;
-    private int nbJoueurs;
-    private int x, y;
+    private int nbJoueurs = 6;//L'ajouter comme paramètre 
+    private ArrayList<int[]> pos;
+     //1ère dimension = x, 2ème = y, 3ème = numJoueur
     
     public IhmPlateau()   {
         super();
         pions = new ArrayList<>();
+        pos = new ArrayList<>();
+        
+        
+        this.initListePositions();
+        
         try {
             pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
             pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
@@ -43,7 +49,7 @@ public class IhmPlateau extends Canvas{
         } catch (IOException ex) {
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
         }
- 
+        
 
     }
     
@@ -56,10 +62,7 @@ public class IhmPlateau extends Canvas{
         Dimension d = new Dimension(900, 900);
         super.setSize(d);
         super.paint(g);
-        //x =150; y =150;
-        x = 712 - (74*2);
-            y = 840;
-        int i=0;
+        
         try {
             //PION DE 21x26 espacés de 2 pixels entre eux + y += 13px  pour superposer
             if (true) { //INTEGRER LA CONTRAINTE DU NOMBRE DE JOUEURS
@@ -74,26 +77,34 @@ public class IhmPlateau extends Canvas{
         // Affichage sur le Canvas
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
         
-        while (i<6) {
-            g.drawImage(pions.get(i), x, y, (ImageObserver) observateur);
-            i++;y+=13;
+        int i=0;
+        while (i<nbJoueurs) {
+            System.out.println("x = " + this.pos.get(0)[0] + "y = " + this.pos.get(0)[1] + i);
+            g.drawImage(pions.get(i), this.pos.get(i)[0], this.pos.get(i)[1], (ImageObserver) observateur);
+            i++;this.pos.get(i)[1]+=13;
         }   
+    }//Coordonnés du premier carreau x, y = 786
+    
+    private void initListePositions() {
+        
+        int[] posInit = {786, 786};
+        for(int i = 0; i<nbJoueurs; i++) {
+            pos.add(posInit);
+        }
+        System.out.println("nbJoueurs = " + nbJoueurs + "size = " + pos.size());
     }
+
     
     
-    public void dessiner(int numCarreau, int nbJoueurs) {
-           this.numCarreau = numCarreau;
-           this.nbJoueurs = nbJoueurs;
-           repaint();
-    }
-    
-    
-    public void trouveCoordonnes(int numCarreau) {
+    public void trouveCoordonnes(int numCarreau, int numJoueur) {
+        this.numCarreau = numCarreau;
         
         
         if (numCarreau <= 11) {
-            x = 712 - (74*numCarreau);
-            y = 840;
-        } 
+            this.pos.get(numJoueur)[0] = 786 - (74*numCarreau);
+            this.pos.get(numJoueur)[1] = 786;
+        }
+        
+        repaint();
     }
 }
