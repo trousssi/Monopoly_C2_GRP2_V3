@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.HashSet;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,8 +27,12 @@ import javax.swing.JPanel;
 public class IhmMenu extends JFrame  {
     private Observateur observateur;
     
-    private IhmJeu ihmJeu;
-    private IhmInscription ihmI;
+   
+    private JButton jouer;
+    private JButton inscrire;
+    private JButton quitter;
+        
+    
         
     public IhmMenu() {
         super();
@@ -55,9 +60,9 @@ public class IhmMenu extends JFrame  {
         this.getContentPane().setBackground(fond);
         
         this.setLayout(new BorderLayout());
-        JButton jouer = new JButton("JOUER");
-        JButton inscrire = new JButton("Inscrire les Joueurs");
-        JButton quitter = new JButton("Quitter le Jeu");
+        jouer = new JButton("JOUER");
+        inscrire = new JButton("Inscrire les Joueurs");
+        quitter = new JButton("Quitter le Jeu");
         
         JLabel logo = new JLabel(new ImageIcon("src/Data/logoMonopoly.jpg"));
         JPanel panelBoutons = new JPanel();
@@ -85,25 +90,17 @@ public class IhmMenu extends JFrame  {
         jouer.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ihmJeu = new IhmJeu();
-                } catch (IOException ex) {
-                    Logger.getLogger(IHM.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                observateur.lancerJeu();
+                
+                
                         
             }
         });
         inscrire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                inscriptionJoueurs(); 
-                for ( String i : ihmI.getNomJoueurs()) {
-                    System.out.println(i);
-                }
-                if (!ihmI.getNomJoueurs().isEmpty()) { //Si les joueurs sont bien inscrits, on peut jouer
-                    jouer.setEnabled(true);
-                    //System.out.println("ok");
-                }
+                observateur.inscriptionJoueurs(); 
+                
             }
 
         });
@@ -126,8 +123,9 @@ public class IhmMenu extends JFrame  {
         this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));//Permet de fermer la fenêtre
     }
     
-    public void inscriptionJoueurs () {
-        this.ihmI = new IhmInscription();
-        ihmI.afficher();
+    public void activeJouer(HashSet<String> joueurs) {
+        if (!joueurs.isEmpty()) { //Si les joueurs sont bien inscrits, on peut jouer
+            jouer.setEnabled(true);
+        }
     }
 }

@@ -5,26 +5,26 @@ import Jeu.Joueur;
 import Jeu.Resultat;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 public final class IHM implements Observateur{
 	private Controleur controleur;
-        private IhmInscription ihmI;
         private JFrame w;
-        private IhmJeu ihmJeu;
         private IhmMenu ihmMenu;
+        private IhmInscription ihmI;
+        private IhmJeu ihmJeu;
+        private IhmInitOrdreJeu ihmInit;
+        private HashSet<String> joueurs;
+        
           
     public IHM(Controleur controleur) throws IOException {
         this.controleur = controleur;
         this.controleur.setObservateur(this);
         this.menuEntree();
-    }
-    
-    public void inscriptionJoueurs () {
-        this.ihmI = new IhmInscription();
-        ihmI.afficher();
-        ihmI.setObservateur(this);
     }
     
     public void menuEntree() throws IOException {
@@ -139,4 +139,23 @@ public final class IHM implements Observateur{
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    @Override
+    public void recupererNomJoueurs(HashSet<String> joueurs) {
+        this.joueurs = joueurs;
+        this.ihmMenu.activeJouer(joueurs);
+    }
+
+    public void inscriptionJoueurs () {
+        this.ihmI = new IhmInscription();
+        ihmI.afficher();
+        ihmI.setObservateur(this);
+    }    
+      
+    public void lancerJeu() {
+        this.ihmInit = new IhmInitOrdreJeu();
+        this.ihmInit.afficher();
+        this.ihmInit.setObservateur(this);
+        /*this.ihmJeu = new IhmJeu();
+        this.setObservateur(this);*/
+    }
 }

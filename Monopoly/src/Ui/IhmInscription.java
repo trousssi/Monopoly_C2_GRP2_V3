@@ -108,6 +108,7 @@ public class IhmInscription extends JFrame  {
             @Override
             public void actionPerformed(ActionEvent e) {
                 setVisible(false);
+                observateur.recupererNomJoueurs(nomJoueurs);
             }
         });
         valider.addActionListener(new ActionListener() {
@@ -117,7 +118,6 @@ public class IhmInscription extends JFrame  {
                 if (res) {
                     IhmBoiteMessage.afficherBoiteDialogue(nbjoueurs + " joueurs inscris.", "info");
                     nomJoueurs = getNomJoueurs();
-                    
                 }
 
             }
