@@ -9,60 +9,34 @@ package Jeu;
  *
  * @author Jérémy
  */
-public class Carte {
+public abstract class Carte {
     
-    private String type;
+
     private String nom;
-    private int prix;
-    private Carreau deplacement;
-    private boolean possede;
 
-    public Carte(String type, String nom, int prix, Carreau deplacement) {
-        this.type = type;
+
+    public Carte(String nom) {
         this.nom = nom;
-        this.prix = prix;
-        this.deplacement = deplacement;
-        possede = false;
     }
 
-    public String getType() {
-        return type;
-    }
+    public abstract Resultat action (Joueur j);
 
+    public Resultat renvoyerNom (Resultat res) {
+        res.setNomCarte(this.nom);
+        return res;
+    }
+    
     public String getNom() {
         return nom;
     }
 
-    public int getPrix() {
-        return prix;
-    }
-
-    public Carreau getDeplacement() {
-        return deplacement;
-    }
-
-    public boolean isPossede() {
-        return possede;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public void setNom(String nom) {
         this.nom = nom;
     }
 
-    public void setPrix(int prix) {
-        this.prix = prix;
-    }
-
-    public void setDeplacement(Carreau deplacement) {
-        this.deplacement = deplacement;
-    }
-
-    public void setPossede(boolean possede) {
-        this.possede = possede;
+    public boolean isPossede() {
+        return false;
     }
     
     
