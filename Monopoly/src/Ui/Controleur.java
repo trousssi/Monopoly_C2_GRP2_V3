@@ -28,7 +28,7 @@ public class Controleur {
         
 	public void jouerUnCoup(Joueur joueur) {
             Carreau car;
-            car = lancerDésAvancer(joueur);
+           // car = lancerDésAvancer(joueur);
                
 	}
         
@@ -56,7 +56,7 @@ public class Controleur {
             return RANDOM.nextInt(6)+1;
         }
         
-        public Carreau lancerDésAvancer(Joueur j) {
+        public Carreau lancerDésAvancer(Joueur j, int nbDouble) {
             /*int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
@@ -82,8 +82,8 @@ public class Controleur {
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
-            int nbDouble = 0;
-            while (resDes1 == resDes2 && nbDouble < 3) {
+            
+            //while (resDes1 == resDes2 && nbDouble < 3) {
                 resDes1 = lancerDes();
                 resDes2 = lancerDes();
                 sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
@@ -94,10 +94,11 @@ public class Controleur {
                     //obs.messageJoueurAvance(j, sommeDes, carreau, true); 
                     
                     Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                    this.obs.action(res, j, resDes1, resDes2, nbDouble);
                     nbDouble++;
+                    this.obs.action(res, j, resDes1, resDes2, nbDouble);
+                    
                 }
-            }
+       //     }
             return carreau;
         }
         
@@ -122,7 +123,7 @@ public class Controleur {
         return carreau;
         }*/       
         
-        private void action (int cas, Joueur j, Jeu.Resultat res) { // Selon le cas, on gère les actions à faire
+        public void action (int cas, Joueur j, Jeu.Resultat res) { // Selon le cas, on gère les actions à faire
             if (res.getCarte() != null) {
                 actionCarte(j, res.getCarte());
             }
@@ -130,11 +131,13 @@ public class Controleur {
             switch (cas) {
                 case 0:
                     //Il ne se passe rien
+                    this.obs.notification("");
                 break;
                 case 2:
                     //On veut acheter une propriete et on peut le faire
                     j.payer(res.getPrixPropriete());
                     res.getProprieteAchete().setProprietaire(j);
+                    this.obs.notification("Proprieté achetée");
                 break;
                     
             }
@@ -237,7 +240,7 @@ public class Controleur {
                 Joueur j = monopoly.getJoueurs().get(i);
 
                 if (continuer) {        //renvoie true si le joueur veut continuer à jouer;
-                    this.lancerDésAvancer(j);
+                   // this.lancerDésAvancer(j);
                     i++;
                 }
                 
@@ -329,8 +332,12 @@ public class Controleur {
 
    
 
-    public Joueur getPremierJoueur() {
-       return this.monopoly.getJoueurs().get(0);
+    public Joueur getJoueur(int numJ) {
+       return this.monopoly.getJoueurs().get(numJ);
+    }
+    
+    public ArrayList<Joueur> getJoueurs() {
+        return this.monopoly.getJoueurs();
     }
 
 }

@@ -40,5 +40,11 @@ public interface Observateur {
     
     public void lancerJeu();
     
-    public void lanceDes(Joueur j);
+    public void lanceDes(Joueur j,int nbDouble);
+    
+    public void Reponce(int cas, Joueur j, Jeu.Resultat res);
+    
+     public void notification(String message);
+     
+     public void joueurSuivant();
 }

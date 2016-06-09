@@ -8,6 +8,7 @@ package Ui;
 import Jeu.Joueur;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 public class IhmJeu extends JFrame{
     private final IhmPlateau plateau; 
     private final JPanel controle;
+    private JPanel panelDes;
     private JLabel nomJoueur;
     private JLabel cash;
     private JLabel nomCarte;
@@ -32,6 +34,8 @@ public class IhmJeu extends JFrame{
     private Observateur observateur;
     private JButton lanceDes;
     private JPanel infos;
+    private int nbdouble;
+    private boolean dDouble ;
     
     public IhmJeu()   {        
         plateau = new IhmPlateau();
@@ -43,6 +47,7 @@ public class IhmJeu extends JFrame{
         
         this.add(this.controle(), BorderLayout.EAST);
         this.initJoueur();
+        this.initInfos();
     }
     
     
@@ -66,12 +71,15 @@ public class IhmJeu extends JFrame{
         
     }
     private void initInfos() {
-        acheter = new JButton();
-        this.infos.add(acheter);
+        
+        
+        //acheter = new JButton();
+        //this.infos.add(acheter);
     }
     
     //Affichera toutes les infos du joueur
-    public void displayJoueur(Joueur j) {
+    public void displayJoueur(Joueur j, int nbdouble) {
+        
         lanceDes = new JButton("Lancer les dés");
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -79,51 +87,103 @@ public class IhmJeu extends JFrame{
         this.cash.setText("Cash : " + j.getCash());
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
         
-        JPanel panelDesJoueur = new JPanel();
-        JPanel panelDe1 = new JPanel();
-        JPanel panelDe2 = new JPanel();
-        this.controle.add(panelDesJoueur);
-        panelDesJoueur.add(panelDe1);
-        panelDesJoueur.add(panelDe2);
+       
         
         this.infos.add(lanceDes);
         
         lanceDes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                observateur.lanceDes(j);
+                observateur.lanceDes(j,nbdouble);
+               // lanceDes.setEnabled(false);
             }
         });
         
     }
     
+    private void MajJoueur(Joueur j) {
+        this.cash.setText("Cash : " + j.getCash());
+        this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
+    }
+    
     
     public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) {
+        this.nbdouble = nbdouble;
+        this.dDouble = d1 == d2;
+        this.MajJoueur(j);
+        this.panelDes = new JPanel();
+        this.infos.add(this.panelDes);
+        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d1+".png")));
+        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d2+".png")));
         
-        if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
-            acheter.setEnabled(false);
-            this.acheter.setText("Cette case n'est pas achetable.");
+        if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
+        }
+        
+        //Propriete --> Acheter ou payer le loyer
+        else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
+            //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
+            this.infos.add(new JLabel("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete()));
+        
+        }
+        else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
+            this.infos.add(new JLabel("\033[31mVous ne pouvez pas acheter \033[0m" + j.getPositionCourante().getNomCarreau()));
+        }
+        else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
+            this.infos.add(new JLabel( "Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?"));
+            JPanel panelRep = new JPanel();
+            this.infos.add(panelRep);
+            JButton oui = new JButton("oui");
+            JButton non = new JButton("non");
+            panelRep.add(oui);
+            panelRep.add(non);
+            
+            oui.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                     observateur.Reponce(2, j, res);
+                     
+                }
+            });
+            
+            non.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    observateur.Reponce(0, j, res);
+                }
+            });
+        }
+      
+       else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
+        this.infos.add(new JLabel("Vous êtes le proprietaire de cette case."));
+       }
+       
+        
+        this.setVisible(true);
+        //this.setVisible(true);
+        /* if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
+        acheter.setEnabled(false);
+        this.acheter.setText("Cette case n'est pas achetable.");
         }
         else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
-            acheter.setEnabled(false);
-            this.acheter.setText("Case déjà acheté, vous payer : " + res.getLoyerPropriete() + " €.");
+        acheter.setEnabled(false);
+        this.acheter.setText("Case déjà acheté, vous payer : " + res.getLoyerPropriete() + " €.");
         }
-        else if (res.getPrixPropriete() == -2) {            
-            acheter.setEnabled(false);
-            this.acheter.setText("Vous n'avez pas les fonds suffisants.");
+        else if (res.getPrixPropriete() == -2) {
+        acheter.setEnabled(false);
+        this.acheter.setText("Vous n'avez pas les fonds suffisants.");
         }
         else if (res.getProprietairePropriete() == j) {
-            this.acheter.setText("Vous possedez déjà cette case ! ");
+        this.acheter.setText("Vous possedez déjà cette case ! ");
         }
         else {
-            this.acheter.setText("Acheter cette propriéte");
+        this.acheter.setText("Acheter cette propriéte");
         }
         acheter.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                //TODO : Ouvrir popup de confirmation avec le prix de la propriete
-            }
-        });
+        @Override
+        public void actionPerformed(ActionEvent e) {
+        //TODO : Ouvrir popup de confirmation avec le prix de la propriete
+        }
+        });*/
         
         
         /*panelDe1.add(new JLabel(new ImageIcon("src/Data/"+res.getDe1+".png")));
@@ -131,12 +191,25 @@ public class IhmJeu extends JFrame{
         
     }
     
-    private void lancerDes(Resultat res) {//TODO : récupérer le résultat des deux dés, soit avec les deux entiers, soit avec res 
+    public void notification(String message) {
+        this.infos.add(new JLabel(message));
         
-    }
-    
-    private void displayDes(int de1, int de2) {
-        //TODO : Afficher le résultat des deux dés et l'ajouter à la fenêtre
+        if (!this.dDouble) {
+            JButton jSuivant = new JButton("Joueur Suivant");
+            this.add(jSuivant);
+            this.nbdouble = 0;
+            jSuivant.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    observateur.joueurSuivant();
+                }
+            });    
+        }
+        else {
+            this.infos.add(new JLabel("Vous avez fait un double, vous pouvez rejouer !!"));
+            JButton rejouer = new JButton("Rejouer");
+            this.add(rejouer);
+        }
     }
     
     public void afficher() {
@@ -149,4 +222,6 @@ public class IhmJeu extends JFrame{
     void setObservateur(Observateur observateur) {
         this.observateur = observateur; //To change body of generated methods, choose Tools | Templates.
     }
+    
+   
 }
