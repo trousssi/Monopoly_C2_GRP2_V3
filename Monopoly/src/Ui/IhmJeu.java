@@ -102,6 +102,8 @@ public class IhmJeu extends JFrame{
             }
         });
         
+        this.setVisible(true);
+        
     }
     
     private void MajJoueur(Joueur j) {

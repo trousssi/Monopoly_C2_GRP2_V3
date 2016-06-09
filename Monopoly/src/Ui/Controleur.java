@@ -78,54 +78,62 @@ public class Controleur {
             }
             return carreau;*/
             
-            /*int resDes1 = 0;
+            
+            
+            
+            /*  int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
             
             //while (resDes1 == resDes2 && nbDouble < 3) {
-                resDes1 = lancerDes();
-                resDes2 = lancerDes();
-                sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
-                if (nbDouble == 2 && resDes1 == resDes2) {
-                    allerEnPrison(j);
-                } else {
-                    carreau = this.avancerJoueur(j, sommeDes);
-                    //obs.messageJoueurAvance(j, sommeDes, carreau, true); 
-                    
-                    Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                    nbDouble++;
-                    this.obs.action(res, j, resDes1, resDes2, nbDouble);
-                    
-                }
-       //     }
+            resDes1 = lancerDes();
+            resDes2 = lancerDes();
+            sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois
+            if (nbDouble == 2 && resDes1 == resDes2) {
+            allerEnPrison(j);
+            } else {
+            carreau = this.avancerJoueur(j, sommeDes);
+            //obs.messageJoueurAvance(j, sommeDes, carreau, true);
+            
+            Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+            nbDouble++;
+            this.obs.action(res, j, resDes1, resDes2, nbDouble);
+            
+            }
+            //     }
             return carreau;*/
+            
+            
+            
+            
             int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
-            int nbDouble = 0;
+            
             boolean desDouble = true;
-                while (desDouble && nbDouble < 3) {
                     resDes1 = lancerDes();
                     resDes2 = lancerDes();
-                    sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois                
+                    sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois 
+                    desDouble = resDes1 == resDes2;               
                     if (nbDouble == 2 && desDouble) {
                         allerEnPrison(j);
-                        desDouble = false;
+                        
                     } else {
-                        desDouble = resDes1 == resDes2;
+                        
                         if (tourEnPrison(j, desDouble)) {
                             carreau = this.avancerJoueur(j, sommeDes);
-                            ihm.messageJoueurAvance(j, sommeDes, carreau, desDouble);                   
+                                            
                             Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
-                            this.action(ihm.action(res, j), j, res);
+                            
                             nbDouble++;
+                             this.obs.action(res, j, resDes1, resDes2, nbDouble);
                         }
                     }
 
                 
-            }
+            
             return carreau;
         }
 
@@ -158,7 +166,7 @@ public class Controleur {
         joueur.setPositionCourante(carreau);
         int numCarArr = joueur.getPositionCourante().getNumero();
         if (numCarArr < numCarDep) {
-            System.out.println("Passage par case départ : 200 €");
+            //System.out.println("Passage par case départ : 200 €");
             joueur.crediter(200);
         }
         return carreau;
