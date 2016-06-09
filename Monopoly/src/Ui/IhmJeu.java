@@ -129,7 +129,7 @@ public class IhmJeu extends JFrame{
         else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
             //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
             this.infos.add(new JLabel("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete()));
-             this.observateur.Reponce(0, j, res);
+            this.observateur.Reponce(0, j, res);
         
         }
         else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
@@ -168,6 +168,9 @@ public class IhmJeu extends JFrame{
        else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
         this.infos.add(new JLabel("Vous êtes le proprietaire de cette case."));
          this.observateur.Reponce(0, j, res);
+       }
+       else {
+           this.observateur.Reponce(0, j, res);
        }
        
        

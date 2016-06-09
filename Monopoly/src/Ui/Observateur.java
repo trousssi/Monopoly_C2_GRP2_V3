@@ -49,4 +49,6 @@ public interface Observateur {
      public void joueurSuivant();
      
      public void rejouer(Joueur j,int nbdouble);
+     
+    public boolean sortiePrisonCarte(Joueur j);
 }

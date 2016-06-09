@@ -56,7 +56,7 @@ public class Controleur {
             return RANDOM.nextInt(6)+1;
         }
         
-        public Carreau lancerDésAvancer(Joueur j, int nbDouble) {
+        public Carreau lancerDesAvancer(Joueur j, int nbDouble) {
             /*int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
@@ -111,7 +111,6 @@ public class Controleur {
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
-            
             boolean desDouble = true;
                     resDes1 = lancerDes();
                     resDes2 = lancerDes();
@@ -137,7 +136,7 @@ public class Controleur {
             return carreau;
         }
 
-        }
+        
         
         /*	private Carreau lancerDésAvancer(Joueur j) {
         int resDes1 = lancerDes();
@@ -355,7 +354,7 @@ public class Controleur {
         boolean utilise = false;
         boolean sorti = false;
         if (j.getToursEnPrison() != -1) {
-            if (j.getCartesPrison().size() > 0) {utilise = ihm.sortiePrisonCarte(j);}
+            if (j.getCartesPrison().size() > 0) {utilise = obs.sortiePrisonCarte(j);}
             if (utilise) {
                 sortirDePrison(j, false);            
                 sorti = true;

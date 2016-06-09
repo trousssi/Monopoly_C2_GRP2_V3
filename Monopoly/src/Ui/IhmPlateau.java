@@ -84,12 +84,23 @@ public class IhmPlateau extends Canvas{
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
         
         int i=0;
+        int dx=0;
+        int dy=0; 
         while (i<nbJoueurs) {
+            
+            if(i==3) {
+                dy=0;
+                dx+=13;
+            }
+            
+            
             System.out.println("x = " + this.pos.get(0)[0] + "y = " + this.pos.get(0)[1] + i);
-            g.drawImage(pions.get(i), this.pos.get(i)[0], this.pos.get(i)[1], (ImageObserver) observateur);
-            if (i<nbJoueurs) i++;
+            g.drawImage(pions.get(i), this.pos.get(i)[0] +dx , this.pos.get(i)[1] + dy, (ImageObserver) observateur);
+            dy+=13;
+            i++;
+            /*if (i<nbJoueurs) i++;
             if (i<= 3) this.pos.get(i)[1]+=13;
-            if (i>= 3) this.pos.get(i)[0]+=13;
+            if (i> 3) this.pos.get(i)[0]+=13;*/
         }   
     }//Coordonnés du premier carreau x, y = 786
     

@@ -174,7 +174,7 @@ public final class IHM implements Observateur{
     
     
     public void lanceDes(Joueur j, int nbDouble){
-        this.controleur.lancerDésAvancer(j, nbDouble);
+        this.controleur.lancerDesAvancer(j, nbDouble);
     }
     
     public void Reponce(int cas, Joueur j, Jeu.Resultat res) {
@@ -197,5 +197,9 @@ public final class IHM implements Observateur{
     
     public void rejouer(Joueur j,int nbdouble) {
         this.ihmJeu.displayJoueur(j, nbdouble);
+    }
+    
+    public boolean sortiePrisonCarte(Joueur j) {
+        return true;
     }
 }
