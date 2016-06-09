@@ -78,7 +78,7 @@ public class Controleur {
             }
             return carreau;*/
             
-            int resDes1 = 0;
+            /*int resDes1 = 0;
             int resDes2 = 0;
             Carreau carreau = null;
             int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
@@ -99,7 +99,36 @@ public class Controleur {
                     
                 }
        //     }
+            return carreau;*/
+            int resDes1 = 0;
+            int resDes2 = 0;
+            Carreau carreau = null;
+            int sommeDes = 0; //Si on a deux dés égaux le joueur joue deux fois
+            int nbDouble = 0;
+            boolean desDouble = true;
+                while (desDouble && nbDouble < 3) {
+                    resDes1 = lancerDes();
+                    resDes2 = lancerDes();
+                    sommeDes = resDes1+resDes2; //Si on a deux dés égaux le joueur joue deux fois                
+                    if (nbDouble == 2 && desDouble) {
+                        allerEnPrison(j);
+                        desDouble = false;
+                    } else {
+                        desDouble = resDes1 == resDes2;
+                        if (tourEnPrison(j, desDouble)) {
+                            carreau = this.avancerJoueur(j, sommeDes);
+                            ihm.messageJoueurAvance(j, sommeDes, carreau, desDouble);                   
+                            Jeu.Resultat res = carreau.action(j,sommeDes, monopoly.pickCartes());
+                            this.action(ihm.action(res, j), j, res);
+                            nbDouble++;
+                        }
+                    }
+
+                
+            }
             return carreau;
+        }
+
         }
         
         /*	private Carreau lancerDésAvancer(Joueur j) {
@@ -122,9 +151,22 @@ public class Controleur {
         this.action(ihm.action(res, j), j, res, monopoly.pickCartes()); //L'ihm action envoie le cas dans lequel on se trouve sous forme d'entier
         return carreau;
         }*/       
+    public Carreau avancerJoueur(Joueur joueur, int sommeDes) { // Méthode permettant au pion du joueur d'avancer dans le jeu en fonction de la somme des dés lancés.
+        Carreau carreau = joueur.getPositionCourante();
+        int numCarDep = carreau.getNumero();
+        carreau = monopoly.getCarreau(numCarDep+sommeDes);
+        joueur.setPositionCourante(carreau);
+        int numCarArr = joueur.getPositionCourante().getNumero();
+        if (numCarArr < numCarDep) {
+            System.out.println("Passage par case départ : 200 €");
+            joueur.crediter(200);
+        }
+        return carreau;
+    }      
+        
         
         public void action (int cas, Joueur j, Jeu.Resultat res) { // Selon le cas, on gère les actions à faire
-            if (res.getCarte() != null) {
+            /*if (res.getCarte() != null) {
                 actionCarte(j, res.getCarte());
             }
             
@@ -141,7 +183,35 @@ public class Controleur {
                 break;
                     
             }
+        }*/
+            if (res.getNomCarte() != null || res.getNomCarreau() != null) {
+                if (res.isDeplace()) {
+                    if (res.getDeplacement() != 0) {
+                        this.avancerJoueur(j, res.getDeplacement());
+                    } else if (res.getDeplacement() == -3) {
+                        j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
+                    }
+                } else if (res.isAnniversaire()) {
+                    this.anniversaire(j);
+                } else if (res.isEnPrison()) {
+                    this.allerEnPrison(j);
+                }
+            }
+            
+            
+            switch (cas) {
+                case 0:
+                    //Il ne se passe rien
+                break;
+                case 2:
+                    //On veut acheter une propriete et on peut le faire
+                    j.payer(res.getPrixPropriete());
+                    res.getProprieteAchete().setProprietaire(j);
+                break;
+                    
+            }
         }
+
         
         public ArrayList<ProprieteAConstruire> peutConstruire (Joueur j) {
             ArrayList<ProprieteAConstruire> prop = new ArrayList<>();
@@ -255,17 +325,6 @@ public class Controleur {
             }
         }
         
-        public Carreau avancerJoueur(Joueur joueur, int sommeDes) { // Méthode permettant au pion du joueur d'avancer dans le jeu en fonction de la somme des dés lancés.
-        Carreau carreauDep = joueur.getPositionCourante();
-        Carreau carreauArr;
-        carreauArr = monopoly.getCarreau(carreauDep.getNumero()+sommeDes);
-        joueur.setPositionCourante(carreauArr);
-        if (carreauDep.getNumero() > carreauArr.getNumero()) {
-            joueur.crediter(200);
-            obs.messageCaseDepart(joueur);
-        }
-        return carreauArr;
-    }
      
     private void allerEnPrison(Joueur j) {
         Carreau prison = monopoly.getCarreau(11);
@@ -274,51 +333,38 @@ public class Controleur {
         obs.joueurEnPrison(j);
     }
     
-        private void actionCarte(Joueur j, Carte carte) {
-        if ("LI".equals(carte.getType())) { //Carte libéré de prison
-            j.addCartePrison(carte);
-            carte.setPossede(true);
-        } else if ("AR".equals(carte.getType())) { //Carte Debit/Credit d'argent
-            if (carte.getPrix() > 0) {
-                j.crediter(carte.getPrix());
-            } else if (carte.getPrix() < -1){
-                j.payer(Math.abs(carte.getPrix()));
-            } else if (carte.getPrix() == -1) {
-                anniversaire(j);
-            } else {
-                System.out.println("ERREUR CARTE AR");
-            }
-        } else if ("DE".equals(carte.getType())) { //Carte déplacement de joueur
-            if (carte.getPrix() == -3) { 
-                j.setPositionCourante(monopoly.getCarreau((j.getPositionCourante().getNumero())-3));
-            } else {
-                if (carte.getDeplacement().getNumero() < j.getPositionCourante().getNumero()) {
-                    monopoly.avancerJoueur(j, carte.getDeplacement().getNumero()+40);
-                } else if (carte.getDeplacement().getNumero() == 2){
-                    j.setPositionCourante(carte.getDeplacement());
-                } else {
-                    j.setPositionCourante(carte.getDeplacement());
-                }
-            }
-        } else if ("RE".equals(carte.getType())) { //Carte Reparation
-            int nbMaison = 0;
-            int nbHotel = 0;
-            if (carte.getPrix() == 1) {
-                for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
-                    nbMaison = nbMaison + prop.getNbMaison();
-                    nbHotel = nbHotel + prop.getNbHotel();
-                }
-                j.payer((nbMaison*40)+(nbHotel*115));
-            } else if (carte.getPrix() == 2) {
-                for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
-                    nbMaison = nbMaison + prop.getNbMaison();
-                    nbHotel = nbHotel + prop.getNbHotel();
-                }
-                j.payer((nbMaison*25)+(nbHotel*100));
-            }
-        } else if ("PR".equals(carte.getType())) { //Carte allez en prison
-            allerEnPrison(j);
+    
+    private void sortirDePrison (Joueur j, boolean paye) {
+        j.sorsDePrison();
+        if (paye) {
+            j.payer(50);
         }
+    }
+    
+
+    
+    private boolean tourEnPrison (Joueur j, boolean dDouble) {
+        boolean utilise = false;
+        boolean sorti = false;
+        if (j.getToursEnPrison() != -1) {
+            if (j.getCartesPrison().size() > 0) {utilise = ihm.sortiePrisonCarte(j);}
+            if (utilise) {
+                sortirDePrison(j, false);            
+                sorti = true;
+            } else if (dDouble) {
+                sortirDePrison(j, false);
+                sorti = true;
+            } else if (j.getToursEnPrison() == 2) {
+                sortirDePrison(j, true);
+                sorti = true;
+            } else {
+                j.tourEnPrison();
+            }
+        } else {
+            sorti = true;
+        }
+        
+        return sorti;
     }
 
     private void anniversaire(Joueur j) {
@@ -329,6 +375,7 @@ public class Controleur {
             }
         }
     }
+
 
    
 
