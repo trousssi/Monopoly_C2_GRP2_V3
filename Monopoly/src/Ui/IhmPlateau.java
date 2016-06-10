@@ -110,7 +110,7 @@ public class IhmPlateau extends Canvas{
     }
     
    
-    private void mouvementPion(Graphics g, Carreau carreauDep, Carreau carreauDest, Joueur j) throws InterruptedException {
+    public void mouvementPion(Carreau carreauDep, Carreau carreauDest, Joueur j) throws InterruptedException {
         int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
         int x = 0, y = 0;
         int numCarreauCourant = carreauDep.getNumero();
