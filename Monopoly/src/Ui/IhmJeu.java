@@ -13,6 +13,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -36,6 +37,10 @@ public class IhmJeu extends JFrame{
     private JPanel infos;
     private int nbdouble;
     private boolean dDouble ;
+    private JLabel labelDe1;
+    private JLabel labelDe2;
+    private JLabel labelInfoCase;
+    
     
     
     public IhmJeu() throws InterruptedException   {        
@@ -56,7 +61,7 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(15, 1));
+        this.infos.setLayout(new GridLayout(11, 1));
         
         return this.controle;
     }
@@ -69,11 +74,21 @@ public class IhmJeu extends JFrame{
         this.infos.add(nomJoueur);       
         this.infos.add(cash);        
         this.infos.add(nomCarte);
-        
+         lanceDes = new JButton("Lancer les dés");
+         this.infos.add(lanceDes);
+         this.lanceDes.setVisible(false);
+         
     }
     private void initInfos() {
+        this.panelDes = new JPanel();
+        this.infos.add(this.panelDes);
+        this.labelDe1 = new JLabel();
+        this.labelDe2 = new JLabel();
+        this.panelDes.add(this.labelDe1);
+        this.panelDes.add(this.labelDe2);
         
-        
+        this.labelInfoCase = new JLabel();
+        this.infos.add(this.labelInfoCase);
         //acheter = new JButton();
         //this.infos.add(acheter);
     }
@@ -82,7 +97,7 @@ public class IhmJeu extends JFrame{
     public void displayJoueur(Joueur j, int nbdouble) {
         
         this.MajJoueur(j);
-        lanceDes = new JButton("Lancer les dés");
+       
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
         
@@ -90,8 +105,9 @@ public class IhmJeu extends JFrame{
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
         
        
+        this.lanceDes.setVisible(true);
+        this.lanceDes.setEnabled(true);
         
-        this.infos.add(lanceDes);
         
         lanceDes.addActionListener(new ActionListener() {
             @Override
@@ -116,10 +132,9 @@ public class IhmJeu extends JFrame{
         this.nbdouble = nbdouble;
         this.dDouble = d1 == d2;
         this.MajJoueur(j);
-        this.panelDes = new JPanel();
-        this.infos.add(this.panelDes);
-        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d1+".png")));
-        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d2+".png")));
+       
+        this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
+        this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
         
         if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
              this.observateur.Reponce(0, j, res);
@@ -128,16 +143,16 @@ public class IhmJeu extends JFrame{
         //Propriete --> Acheter ou payer le loyer
         else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
             //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
-            this.infos.add(new JLabel("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete()));
+            this.labelInfoCase.setText("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete());
             this.observateur.Reponce(0, j, res);
         
         }
         else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
-            this.infos.add(new JLabel("\033[31mVous ne pouvez pas acheter \033[0m" + j.getPositionCourante().getNomCarreau()));
+            this.labelInfoCase.setText("\033[31mVous ne pouvez pas acheter \033[0m" + j.getPositionCourante().getNomCarreau());
              this.observateur.Reponce(0, j, res);
         }
         else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
-            this.infos.add(new JLabel( "Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?"));
+            this.labelInfoCase.setText("Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?");
             JPanel panelRep = new JPanel();
             this.infos.add(panelRep);
             JButton oui = new JButton("oui");
@@ -166,7 +181,7 @@ public class IhmJeu extends JFrame{
         }
       
        else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
-        this.infos.add(new JLabel("Vous êtes le proprietaire de cette case."));
+        this.labelInfoCase.setText("Vous êtes le proprietaire de cette case.");
          this.observateur.Reponce(0, j, res);
        }
        else {
@@ -217,6 +232,7 @@ public class IhmJeu extends JFrame{
             jSuivant.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    jSuivant.setEnabled(false);
                     effacer();
                     observateur.joueurSuivant();
                     
@@ -230,6 +246,7 @@ public class IhmJeu extends JFrame{
             rejouer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    rejouer.setEnabled(false);
                     effacer();
                    observateur.rejouer(j, nbdouble);
                 }
@@ -239,7 +256,11 @@ public class IhmJeu extends JFrame{
     }
     
     public void effacer() {
+        this.labelDe1.setIcon(new Icon());
+        this.labelDe2.setText("");
+        this.labelInfoCase.setText("");
         
+        this.setVisible(true);
     }
     
     public void afficher() {
