@@ -165,32 +165,36 @@ public class IhmJeu extends JFrame{
         this.dDouble = d1 == d2;
         this.MajJoueur(j);
        
+        
+        
         this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
         this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
         
         if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
-            if (res.getNomCarte() != null || res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
+            if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
+                this.labelinfoCarte.setText(res.getNomCarte());
                 if (res.isDeplace()) { // Carte deplacement
                     if (res.getDeplacement() != 0) { // deplacement normal
-                        this.labelinfoCarte.setText(res.getNomCarreau());
+                        
                         this.observateur.Reponce(3, j, res);
                     } else if (res.getDeplacement() == -3) { // reculer de 3 cases
                        
-                       this.labelinfoCarte.setText(res.getNomCarreau());
+                       
                        this.observateur.Reponce(4, j, res);
                 }
                 else if (res.isAnniversaire()) {
                         
-                        this.labelinfoCarte.setText(res.getNomCarreau());
+                        
                         this.observateur.Reponce(5, j, res);
                 } else if (res.isEnPrison()) {
                    
-                    this.labelinfoCarte.setText(res.getNomCarreau()); 
+                   
                     this.observateur.Reponce(6, j, res);
                 }
             }
-             this.observateur.Reponce(0, j, res);
+             
             }
+            this.observateur.Reponce(0, j, res);
         }
         //Propriete --> Acheter ou payer le loyer
         else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
@@ -316,6 +320,8 @@ public class IhmJeu extends JFrame{
         
         this.oui.setVisible(false);
         this.non.setVisible(false);
+        
+        this.labelinfoCarte.setText("");
         
         this.labelInfoReponce.setText("");
         

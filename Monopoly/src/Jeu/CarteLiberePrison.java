@@ -21,7 +21,9 @@ public class CarteLiberePrison extends Carte{
     @Override
     public Resultat action(Joueur j) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         renvoyerNom(res);
+        
         j.addCartePrison(this);
         this.setPossede(true);
         
