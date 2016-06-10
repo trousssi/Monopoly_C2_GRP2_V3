@@ -21,6 +21,7 @@ public class CarteDeplacement extends Carte {
     @Override
     public Resultat action(Joueur j) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         renvoyerNom(res);
         res.setDeplace(true);
         if (this.getDeplacement().getNumero() == -3) { 

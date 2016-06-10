@@ -23,6 +23,7 @@ public class CarreauImpot extends Carreau{
     @Override
     public Resultat action(Joueur j, int sommeDe, ArrayList<Carte> cartes) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         res.setNumeroCarreau(this.getNumero());
         res.setNomCarreau(this.getNomCarreau());
         j.payer(prix);

@@ -20,6 +20,7 @@ public class CarreauPrison extends Carreau{
     @Override
     public Resultat action(Joueur j, int sommeDes, ArrayList<Carte> cartes) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         res.setNomCarreau(this.getNomCarreau());
         res.setNomCarreau(this.getNomCarreau());
         res.setEnPrison(true);

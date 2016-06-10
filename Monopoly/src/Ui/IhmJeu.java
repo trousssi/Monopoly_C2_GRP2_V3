@@ -5,6 +5,7 @@
  */
 package Ui;
 
+import Jeu.Carreau;
 import Jeu.Joueur;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
@@ -13,6 +14,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -24,28 +29,49 @@ import javax.swing.JPanel;
  * @author fallm
  */
 public class IhmJeu extends JFrame{
-    private final IhmPlateau plateau; 
+    //private final IhmPlateau plateau; 
     private final JPanel controle;
     private JPanel panelDes;
     private JLabel nomJoueur;
     private JLabel cash;
     private JLabel nomCarte;
-    private JButton acheter;
     private Observateur observateur;
     private JButton lanceDes;
     private JPanel infos;
     private int nbdouble;
     private boolean dDouble ;
+    private JLabel labelDe1;
+    private JLabel labelDe2;
+    private JLabel labelInfoCase;
+    private JPanel panelRep;
+    private JButton non;
+    private JButton oui;
+    private JLabel labelInfoReponce;
+    private JLabel labelInfoDouble;
+    private JButton jSuivant;
+    private JButton rejouer;
+    private JLabel labelinfoCarte;
+    private Carreau DepartJcourant;
+    private JButton construire;
+    private JLabel labelCaseDep;
+    private int conteurlanceDes;
+    private int conteuroui;
+    private int conteurnon;
+    private int conteurJsuivant = 0;
+    private int conteurRejouer = 0;
+    private int conteurConstruire = 0;
     
-    
-    public IhmJeu() throws InterruptedException   {        
-        plateau = new IhmPlateau();
+    public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
+      //  plateau = new IhmPlateau(noms);
         controle = new JPanel();
         
         
         this.setLayout(new BorderLayout());
-        this.add(plateau, BorderLayout.CENTER);
+       // this.add(plateau, BorderLayout.CENTER);
         
+        conteurlanceDes = 0;
+        this.conteurnon = 0;
+        this.conteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
         this.initJoueur();
         this.initInfos();
@@ -57,7 +83,7 @@ public class IhmJeu extends JFrame{
         this.infos = new JPanel();
         this.controle.add(infos);
         this.infos.setLayout(new GridLayout(15, 1));
-        
+        this.infos.add(new JLabel("                                                                                                                                                                                                                "));
         return this.controle;
     }
     
@@ -69,11 +95,55 @@ public class IhmJeu extends JFrame{
         this.infos.add(nomJoueur);       
         this.infos.add(cash);        
         this.infos.add(nomCarte);
-        
+         lanceDes = new JButton("Lancer les dés");
+         this.infos.add(lanceDes);
+         this.lanceDes.setVisible(false);
+         
     }
     private void initInfos() {
+        this.panelDes = new JPanel();
+        this.infos.add(this.panelDes);
+        this.labelDe1 = new JLabel();
+        this.labelDe2 = new JLabel();
+        this.panelDes.add(this.labelDe1);
+        this.panelDes.add(this.labelDe2);
+        
+        this.labelCaseDep = new JLabel();
+        this.infos.add(this.labelCaseDep);
+        this.labelinfoCarte = new JLabel();
+        this.infos.add(this.labelinfoCarte);
+        
+        this.labelInfoCase = new JLabel();
+        this.infos.add(this.labelInfoCase);
+        
+        panelRep = new JPanel();
+        this.infos.add(panelRep);
+        oui = new JButton("oui");
+        non = new JButton("non");
+        panelRep.add(oui);
+        panelRep.add(non);
+        oui.setVisible(false);
+        non.setVisible(false);
+        
+        this.labelInfoReponce = new JLabel();
+        this.infos.add(this.labelInfoReponce);
+        
+        this.labelInfoDouble = new JLabel();
+        this.infos.add(this.labelInfoDouble);
         
         
+        this.construire = new JButton("Construire");
+        this.infos.add(this.construire);
+        this.construire.setVisible(false);
+        
+        
+        jSuivant = new JButton("Joueur Suivant");
+        this.infos.add(jSuivant);
+        jSuivant.setVisible(false);
+        
+        rejouer = new JButton("Rejouer");
+        this.infos.add(rejouer);
+        rejouer.setVisible(false);
         //acheter = new JButton();
         //this.infos.add(acheter);
     }
@@ -81,8 +151,8 @@ public class IhmJeu extends JFrame{
     //Affichera toutes les infos du joueur
     public void displayJoueur(Joueur j, int nbdouble) {
         
-        this.MajJoueur(j);
-        lanceDes = new JButton("Lancer les dés");
+        
+        this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
         
@@ -90,15 +160,21 @@ public class IhmJeu extends JFrame{
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
         
        
+        this.lanceDes.setVisible(true);
+        this.lanceDes.setEnabled(true);
         
-        this.infos.add(lanceDes);
-        
+        this.lanceDes.removeAll();
         lanceDes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (conteurlanceDes >= 1) {
+                    
+                }
+                else {
+                conteurlanceDes ++;
                 lanceDes.setEnabled(false);
                 observateur.lanceDes(j,nbdouble);
-                
+                }
             }
         });
         
@@ -112,134 +188,240 @@ public class IhmJeu extends JFrame{
     }
     
     
-    public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) {
-        this.nbdouble = nbdouble;
-        this.dDouble = d1 == d2;
-        this.MajJoueur(j);
-        this.panelDes = new JPanel();
-        this.infos.add(this.panelDes);
-        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d1+".png")));
-        this.panelDes.add(new JLabel(new ImageIcon("src/Data/"+d2+".png")));
+    public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) throws InterruptedException {
         
-        if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
-             this.observateur.Reponce(0, j, res);
-        }
-        
-        //Propriete --> Acheter ou payer le loyer
-        else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
-            //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
-            this.infos.add(new JLabel("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete()));
-            this.observateur.Reponce(0, j, res);
-        
-        }
-        else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
-            this.infos.add(new JLabel("\033[31mVous ne pouvez pas acheter \033[0m" + j.getPositionCourante().getNomCarreau()));
-             this.observateur.Reponce(0, j, res);
-        }
-        else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
-            this.infos.add(new JLabel( "Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?"));
-            JPanel panelRep = new JPanel();
-            this.infos.add(panelRep);
-            JButton oui = new JButton("oui");
-            JButton non = new JButton("non");
-            panelRep.add(oui);
-            panelRep.add(non);
             
-            oui.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    oui.setEnabled(false);
-                    non.setEnabled(false);
-                     observateur.Reponce(2, j, res);
-                     
-                }
-            });
             
-            non.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    oui.setEnabled(false);
-                    non.setEnabled(false);
-                    observateur.Reponce(0, j, res);
+            this.nbdouble = nbdouble;
+            this.dDouble = d1 == d2;
+            this.MajJoueur(j);
+            
+           // this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
+            
+            this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
+            this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
+            
+            if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
+                if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
+                    this.labelinfoCarte.setText(res.getNomCarte());
+                    if (res.isDeplace()) { // Carte deplacement
+                        if (res.getDeplacement() != 0) { // deplacement normal
+                            
+                            this.observateur.Reponce(3, j, res);
+                        } else if (res.getDeplacement() == -3) { // reculer de 3 cases
+                            
+                            
+                            this.observateur.Reponce(4, j, res);
+                        }
+                        else if (res.isAnniversaire()) {
+                            
+                            
+                            this.observateur.Reponce(5, j, res);
+                        } else if (res.isEnPrison()) {
+                            
+                            this.labelinfoCarte.setText("Vous Allez en Prison");
+                            this.observateur.Reponce(6, j, res);
+                        }
+                    }
+                    
                 }
-            });
-        }
-      
-       else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
-        this.infos.add(new JLabel("Vous êtes le proprietaire de cette case."));
-         this.observateur.Reponce(0, j, res);
-       }
-       else {
-           this.observateur.Reponce(0, j, res);
-       }
-       
-       
-        this.setVisible(true);
-        //this.setVisible(true);
-        /* if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
-        acheter.setEnabled(false);
-        this.acheter.setText("Cette case n'est pas achetable.");
-        }
-        else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
-        acheter.setEnabled(false);
-        this.acheter.setText("Case déjà acheté, vous payer : " + res.getLoyerPropriete() + " €.");
-        }
-        else if (res.getPrixPropriete() == -2) {
-        acheter.setEnabled(false);
-        this.acheter.setText("Vous n'avez pas les fonds suffisants.");
-        }
-        else if (res.getProprietairePropriete() == j) {
-        this.acheter.setText("Vous possedez déjà cette case ! ");
-        }
-        else {
-        this.acheter.setText("Acheter cette propriéte");
-        }
-        acheter.addActionListener(new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-        //TODO : Ouvrir popup de confirmation avec le prix de la propriete
-        }
-        });*/
+                else if ("Impôt sur le revenu".equals(res.getNomCarreau())) {
+                    this.labelinfoCarte.setText("Vous Payez 200€ d'impots");
+                }
+                else if ("Taxe de Luxe".equals(res.getNomCarreau())) {
+                    this.labelinfoCarte.setText("Vous Payez 100€ de Taxe");
+                }
+                else if (res.isEnPrison()) {
+                    this.labelinfoCarte.setText("Vous Allez en Prison");
+                    this.observateur.Reponce(6, j, res);
+                }
+                this.observateur.Reponce(0, j, res);
+            }
+            //Propriete --> Acheter ou payer le loyer
+            else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
+                //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
+                this.labelInfoCase.setText("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete().getNom());
+                this.observateur.Reponce(0, j, res);
+                
+            }
+            else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
+                this.labelInfoCase.setText("Vous ne pouvez pas acheter " + j.getPositionCourante().getNomCarreau());
+                this.observateur.Reponce(0, j, res);
+            }
+            else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
+                this.labelInfoCase.setText("Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?");
+                
+                oui.setVisible(true);
+                oui.setEnabled(true);
+                non.setVisible(true);
+                non.setEnabled(true);
+                
+                
+                oui.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (conteuroui >= 1) {
+                    
+                        }
+                        else {
+                            conteuroui ++;
+                            oui.setEnabled(false);
+                            non.setEnabled(false);
+                            observateur.Reponce(2, j, res);
+                        }
+                    }
+                });
+                
+                non.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if (conteurnon >= 1) {
+                    
+                        }
+                        else {
+                            conteurnon ++;
+                            oui.setEnabled(false);
+                            non.setEnabled(false);
+                            observateur.Reponce(0, j, res);
+                        }
+                    }
+                });
+            }
+             
+            else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
+                this.labelInfoCase.setText("Vous êtes le proprietaire de cette case.");
+                this.observateur.Reponce(0, j, res);
+            }
+            else {
+                this.observateur.Reponce(0, j, res);
+            }
+            
+            
+            this.setVisible(true);
+            //this.setVisible(true);
+            /* if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
+            acheter.setEnabled(false);
+            this.acheter.setText("Cette case n'est pas achetable.");
+            }
+            else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
+            acheter.setEnabled(false);
+            this.acheter.setText("Case déjà acheté, vous payer : " + res.getLoyerPropriete() + " €.");
+            }
+            else if (res.getPrixPropriete() == -2) {
+            acheter.setEnabled(false);
+            this.acheter.setText("Vous n'avez pas les fonds suffisants.");
+            }
+            else if (res.getProprietairePropriete() == j) {
+            this.acheter.setText("Vous possedez déjà cette case ! ");
+            }
+            else {
+            this.acheter.setText("Acheter cette propriéte");
+            }
+            acheter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+            //TODO : Ouvrir popup de confirmation avec le prix de la propriete
+            }
+            });*/
+            
+            
+            /*panelDe1.add(new JLabel(new ImageIcon("src/Data/"+res.getDe1+".png")));
+            panelDe2.add(new JLabel(new ImageIcon("src/Data/"+res.getDe2+".png")));*/
         
         
-        /*panelDe1.add(new JLabel(new ImageIcon("src/Data/"+res.getDe1+".png")));
-        panelDe2.add(new JLabel(new ImageIcon("src/Data/"+res.getDe2+".png")));*/
+        
         
     }
     
     public void notification(String message, Joueur j) {
-        this.infos.add(new JLabel(message));
+        this.labelInfoReponce.setText(message);
         this.MajJoueur(j);
         if (!this.dDouble) {
-            JButton jSuivant = new JButton("Joueur Suivant");
-            this.infos.add(jSuivant);
+            jSuivant.setVisible(true);
+            jSuivant.setEnabled(true);
             this.nbdouble = 0;
             jSuivant.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    effacer();
-                    observateur.joueurSuivant();
-                    
+                    if (conteurJsuivant >= 1) {
+                     
+                    }
+                    else {
+                        conteurJsuivant ++;
+                         effacer();
+                        jSuivant.setEnabled(false);
+                   
+                        observateur.joueurSuivant(j);
+                    }
                 }
             });    
         }
         else {
-            this.infos.add(new JLabel("Vous avez fait un double, vous pouvez rejouer !!"));
-            JButton rejouer = new JButton("Rejouer");
-            this.infos.add(rejouer);
+            this.labelInfoDouble.setText("Vous avez fait un double, vous pouvez rejouer !!");
+            rejouer.setVisible(true);
+            rejouer.setEnabled(true);
             rejouer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    effacer();
-                   observateur.rejouer(j, nbdouble);
+                    if (conteurRejouer >= 1) {
+                    
+                    }
+                    else {
+                        conteurRejouer ++;
+                        effacer();
+                        rejouer.setEnabled(false);
+                        observateur.rejouer(j, nbdouble);
+                    }
                 }
             });
         }
+        this.construire.setVisible(true);
          this.setVisible(true);
     }
     
     public void effacer() {
+        /*this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
+        this.labelDe2.setIcon(new ImageIcon("src/Data/deVide.png"));
+        this.labelInfoCase.setText("");
         
+        this.oui.setVisible(false);
+        this.non.setVisible(false);
+        
+        this.labelCaseDep.setText("");
+        
+        this.labelinfoCarte.setText("");
+        
+        this.labelInfoReponce.setText("");
+        
+        
+        this.labelInfoDouble.setText("");
+        
+        this.construire.setVisible(false);
+        
+        this.jSuivant.setVisible(false);
+        
+        this.rejouer.setVisible(false);*/
+        
+        this.infos.removeAll();
+        this.initJoueur();
+        this.initInfos();
+        
+        this.conteurlanceDes = 0;
+        this.conteuroui = 0;
+        this.conteurnon = 0;
+        this.conteurJsuivant = 0;
+        this.conteurRejouer = 0;
+        this.conteurConstruire = 0;
+        this.setVisible(true);
+    }
+    
+    public void messageCaseDepart(Joueur j){
+        this.labelCaseDep.setText("Vous passez par la case Départ, recevez 200€");
+        
+    }
+    
+    public void sortiePrison() {
+        this.labelCaseDep.setText("Vous êtes sorti de prison");
     }
     
     public void afficher() {

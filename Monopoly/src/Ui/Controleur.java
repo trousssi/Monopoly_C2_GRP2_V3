@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Controleur {
 	private Observateur obs;
@@ -54,6 +55,9 @@ public class Controleur {
         
         public static int lancerDes() {
             return RANDOM.nextInt(6)+1;
+            //Scanner sc = new Scanner(System.in);
+            //return sc.nextInt();
+            
         }
         
         public Carreau lancerDesAvancer(Joueur j, int nbDouble) {
@@ -165,7 +169,7 @@ public class Controleur {
         joueur.setPositionCourante(carreau);
         int numCarArr = joueur.getPositionCourante().getNumero();
         if (numCarArr < numCarDep) {
-            //System.out.println("Passage par case départ : 200 €");
+            this.obs.messageCaseDepart(joueur);
             joueur.crediter(200);
         }
         return carreau;
@@ -191,19 +195,19 @@ public class Controleur {
                     
             }
         }*/
-            if (res.getNomCarte() != null || res.getNomCarreau() != null) {
-                if (res.isDeplace()) {
-                    if (res.getDeplacement() != 0) {
-                        this.avancerJoueur(j, res.getDeplacement());
-                    } else if (res.getDeplacement() == -3) {
-                        j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
-                    }
-                } else if (res.isAnniversaire()) {
-                    this.anniversaire(j);
-                } else if (res.isEnPrison()) {
-                    this.allerEnPrison(j);
-                }
+            /*if (res.getNomCarte() != null || res.getNomCarreau() != null) {
+            if (res.isDeplace()) {
+            if (res.getDeplacement() != 0) {
+            this.avancerJoueur(j, res.getDeplacement());
+            } else if (res.getDeplacement() == -3) {
+            j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
             }
+            } else if (res.isAnniversaire()) {
+            this.anniversaire(j);
+            } else if (res.isEnPrison()) {
+            this.allerEnPrison(j);
+            }
+            }*/
             
             
             switch (cas) {
@@ -218,7 +222,28 @@ public class Controleur {
                     this.obs.notification("Proprieté achetée", j);
                     
                 break;
+                
+                case 3:
+                    //on veut déplacer le joueur sur une case
+                    this.avancerJoueur(j, res.getDeplacement());
+
+                break;
+                case 4:
+                    //on veut reculer le joueur de 3 cases
+                    j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
+                   
+                break;
+                case 5:
+                    // Carte Anniversaire
+                    this.anniversaire(j);
                     
+                break;
+                case 6:
+                    // Carte Allez en prison
+                    this.allerEnPrison(j);
+                    
+                    break;
+                   
             }
         }
 
@@ -335,12 +360,16 @@ public class Controleur {
             }
         }
         
+    public void perte(Joueur joueur) {
+        monopoly.removeJoueur(joueur);
+    }
+        
      
     private void allerEnPrison(Joueur j) {
         Carreau prison = monopoly.getCarreau(11);
         j.setPositionCourante(prison);
         j.setEnPrison();
-        obs.joueurEnPrison(j);
+        
     }
     
     
@@ -349,6 +378,7 @@ public class Controleur {
         if (paye) {
             j.payer(50);
         }
+        this.obs.sortiePrison();
     }
     
 
