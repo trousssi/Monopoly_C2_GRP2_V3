@@ -248,24 +248,24 @@ public class Controleur {
         }
 
         
-        public ArrayList<ProprieteAConstruire> peutConstruire (Joueur j) {
-            ArrayList<ProprieteAConstruire> prop = new ArrayList<>();
-                for (ProprieteAConstruire p : j.getProprietesAconstruire()) {
-                    if (p.getNbHotel() < 1 ) {
-                        if ((p.getNbMaison() < 4 && monopoly.resteMaison()) || (p.getNbMaison() == 4 && monopoly.resteHotel())) {
-                            if (p.possedeToutesPropGroupe(j) && j.peuxPayer(p.getPrixMaison()) && p.getNbMaison() == p.getGroupe().getMinMaison()) {
-                                prop.add(p);
-                            }
+        public boolean peutConstruire (Joueur j, ProprieteAConstruire prop) {
+            boolean peut = false;
+            if (j.getProprietesAconstruire().contains(prop)) {
+                if (prop.getNbHotel() < 1 ) {
+                    if ((prop.getNbMaison() < 4 && monopoly.resteMaison()) || (prop.getNbMaison() == 4 && monopoly.resteHotel())) {
+                        if (prop.possedeToutesPropGroupe(j) && j.peuxPayer(prop.getPrixMaison()) && prop.getNbMaison() == prop.getGroupe().getMinMaison()) {
+                            peut = true;
                         }
                     }
                 }
+            }
             
-            return prop;
+            return peut;
         }
         
         public void construire(ProprieteAConstruire p, Joueur j) {
         
-            if (peutConstruire(j).contains(p)) {
+            if (peutConstruire(j, p)) {
                 if (p.getNbMaison() < 4) {
                     p.addMaison();
                     j.payer(p.getPrixMaison());
