@@ -54,6 +54,7 @@ public class IhmJeu extends JFrame{
     private JLabel labelinfoCarte;
     private Carreau DepartJcourant;
     private JButton construire;
+    private JLabel labelCaseDep;
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
         plateau = new IhmPlateau(noms);
@@ -73,7 +74,7 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(13, 1));
+        this.infos.setLayout(new GridLayout(14, 1));
         
         return this.controle;
     }
@@ -99,6 +100,8 @@ public class IhmJeu extends JFrame{
         this.panelDes.add(this.labelDe1);
         this.panelDes.add(this.labelDe2);
         
+        this.labelCaseDep = new JLabel();
+        this.infos.add(this.labelCaseDep);
         this.labelinfoCarte = new JLabel();
         this.infos.add(this.labelinfoCarte);
         
@@ -203,11 +206,21 @@ public class IhmJeu extends JFrame{
                             this.observateur.Reponce(5, j, res);
                         } else if (res.isEnPrison()) {
                             
-                            
+                            this.labelinfoCarte.setText("Vous Allez en Prison");
                             this.observateur.Reponce(6, j, res);
                         }
                     }
                     
+                }
+                else if ("Impôt sur le revenu".equals(res.getNomCarreau())) {
+                    this.labelinfoCarte.setText("Vous Payez 200€ d'impots");
+                }
+                else if ("Taxe de Luxe".equals(res.getNomCarreau())) {
+                    this.labelinfoCarte.setText("Vous Payez 100€ de Taxe");
+                }
+                else if (res.isEnPrison()) {
+                    this.labelinfoCarte.setText("Vous Allez en Prison");
+                    this.observateur.Reponce(6, j, res);
                 }
                 this.observateur.Reponce(0, j, res);
             }
@@ -340,6 +353,8 @@ public class IhmJeu extends JFrame{
         this.oui.setVisible(false);
         this.non.setVisible(false);
         
+        this.labelCaseDep.setText("");
+        
         this.labelinfoCarte.setText("");
         
         this.labelInfoReponce.setText("");
@@ -353,6 +368,11 @@ public class IhmJeu extends JFrame{
         
         
         this.setVisible(true);
+    }
+    
+    public void messageCaseDepart(Joueur j){
+        this.labelCaseDep.setText("Vous passez par la case Départ, recevez 200€");
+        
     }
     
     public void afficher() {

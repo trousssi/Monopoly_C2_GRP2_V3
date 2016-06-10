@@ -26,7 +26,7 @@ public interface Observateur {
     
     public void messageCaseDepart(Joueur joueur);
     
-    public void joueurEnPrison(Joueur j);
+
     
     public void messageJoueurAvance(Joueur joueur, int sommeDes, Carreau carreau, boolean desDouble);
     

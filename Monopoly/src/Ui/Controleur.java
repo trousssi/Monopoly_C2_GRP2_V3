@@ -169,7 +169,7 @@ public class Controleur {
         joueur.setPositionCourante(carreau);
         int numCarArr = joueur.getPositionCourante().getNumero();
         if (numCarArr < numCarDep) {
-            //System.out.println("Passage par case départ : 200 €");
+            this.obs.messageCaseDepart(joueur);
             joueur.crediter(200);
         }
         return carreau;
@@ -365,7 +365,7 @@ public class Controleur {
         Carreau prison = monopoly.getCarreau(11);
         j.setPositionCourante(prison);
         j.setEnPrison();
-        obs.joueurEnPrison(j);
+        
     }
     
     

@@ -137,11 +137,10 @@ public final class IHM implements Observateur{
     
 
     public void messageCaseDepart(Joueur joueur) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    public void joueurEnPrison(Joueur j) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        this.ihmJeu.messageCaseDepart(joueur);
+        
+        
     }
 
    
@@ -158,6 +157,7 @@ public final class IHM implements Observateur{
     }    
       
     public void ordreDuJeu() {
+        this.ihmMenu.setVisible(false);
         this.ihmInit = new IhmInitOrdreJeu(this.joueurs);
         this.ihmInit.setObservateur(this);
         this.ihmInit.afficher();
@@ -166,7 +166,7 @@ public final class IHM implements Observateur{
     
     public void lancerJeu() {
        this.controleur.initPartie(joueurs,ihmInit.getNomPremier());
-       
+       this.ihmInit.setVisible(false);
             try {
                 this.ihmJeu = new IhmJeu(this.joueurs);
             } catch (InterruptedException ex) {
