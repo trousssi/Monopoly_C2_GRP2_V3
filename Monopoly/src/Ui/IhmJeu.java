@@ -164,8 +164,8 @@ public class IhmJeu extends JFrame{
     }
     
     
-    public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) {
-        try {
+    public void afficherInfos(Joueur j, Resultat res, int d1 , int d2, int nbdouble) throws InterruptedException {
+        
             
             
             this.nbdouble = nbdouble;
@@ -284,9 +284,7 @@ public class IhmJeu extends JFrame{
             panelDe2.add(new JLabel(new ImageIcon("src/Data/"+res.getDe2+".png")));*/
         
         
-        } catch (InterruptedException ex) {
-            Logger.getLogger(IhmJeu.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         
     }
     

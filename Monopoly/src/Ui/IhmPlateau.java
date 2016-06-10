@@ -106,7 +106,10 @@ public class IhmPlateau extends Canvas{
         
         // Affichage sur le Canvas
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
-        mouvementPion(g, joueurs.get(0).getPositionCourante(), joueurs.get(0).getPositionCourante(), joueurs.get(0));
+        mouvementPion(joueurs.get(0).getPositionCourante(), joueurs.get(0).getPositionCourante(), joueurs.get(0));
+        
+        g.drawImage(pions.get(numJoueur), getPositionJoueur(numJoueur).x, getPositionJoueur(numJoueur).y, (ImageObserver) observateur);
+
     }
     
    
@@ -156,7 +159,7 @@ public class IhmPlateau extends Canvas{
             int numJ=0;
             while (numJ<nbJoueurs) {
                 Point posJoueur = getPositionJoueur(numJ);
-                positionnePionSurCase(g, numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
+                positionnePionSurCase(numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
                 
                 System.out.println("numJ:" + numJ + "|numCarreauCourant:" + numCarreauCourant + " |nbJoueursSurCase:" 
                         + nbJoueursParCases.get(numCarreauCourant) + " |posJoueur.x:" + posJoueur.x + " |posJoueur.y:" + posJoueur.y);
@@ -179,7 +182,7 @@ public class IhmPlateau extends Canvas{
         else return numCar++ % 40;
     }
     
-    private void positionnePionSurCase(Graphics g, int numJoueur, int numCase, int nbJoueurCase, int xPion1, int yPion1) {
+    private void positionnePionSurCase(int numJoueur, int numCase, int nbJoueurCase, int xPion1, int yPion1) {
         int ESPACEMENT = 2; // Espacement en pixel entre 2 pion cote à cote
         int LARGEUR_PION = 21; // Largeur d'un pion en pixels
         int EMPILEMENT = 13; // Décalage en pixels entre deux pions qui s'empilent vers le bas
@@ -249,7 +252,6 @@ public class IhmPlateau extends Canvas{
         }
         
         setPosition(numJoueur, xPion1, yPion1);
-        g.drawImage(pions.get(numJoueur), getPositionJoueur(numJoueur).x, getPositionJoueur(numJoueur).y, (ImageObserver) observateur);
     }
    
     public Point getPositionJoueur(int numJoueur) {
