@@ -22,7 +22,7 @@ public class Test {
     public static void main(String[] args) throws IOException, InterruptedException {
         buildCartes("src/Data/cartes.txt");
         //buildGamePlateau("src/Data/data.txt");
-        IhmJeu jeu = new IhmJeu();
+        //IhmJeu jeu = new IhmJeu();
         
     }
     
