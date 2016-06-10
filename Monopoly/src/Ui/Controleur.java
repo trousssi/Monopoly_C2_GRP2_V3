@@ -191,19 +191,19 @@ public class Controleur {
                     
             }
         }*/
-            if (res.getNomCarte() != null || res.getNomCarreau() != null) {
-                if (res.isDeplace()) {
-                    if (res.getDeplacement() != 0) {
-                        this.avancerJoueur(j, res.getDeplacement());
-                    } else if (res.getDeplacement() == -3) {
-                        j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
-                    }
-                } else if (res.isAnniversaire()) {
-                    this.anniversaire(j);
-                } else if (res.isEnPrison()) {
-                    this.allerEnPrison(j);
-                }
+            /*if (res.getNomCarte() != null || res.getNomCarreau() != null) {
+            if (res.isDeplace()) {
+            if (res.getDeplacement() != 0) {
+            this.avancerJoueur(j, res.getDeplacement());
+            } else if (res.getDeplacement() == -3) {
+            j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
             }
+            } else if (res.isAnniversaire()) {
+            this.anniversaire(j);
+            } else if (res.isEnPrison()) {
+            this.allerEnPrison(j);
+            }
+            }*/
             
             
             switch (cas) {
@@ -218,7 +218,28 @@ public class Controleur {
                     this.obs.notification("Proprieté achetée", j);
                     
                 break;
+                
+                case 3:
+                    //on veut déplacer le joueur sur une case
+                    this.avancerJoueur(j, res.getDeplacement());
+
+                break;
+                case 4:
+                    //on veut reculer le joueur de 3 cases
+                    j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
+                   
+                break;
+                case 5:
+                    // Carte Anniversaire
+                    this.anniversaire(j);
                     
+                break;
+                case 6:
+                    // Carte Allez en prison
+                    this.allerEnPrison(j);
+                    
+                    break;
+                   
             }
         }
 
