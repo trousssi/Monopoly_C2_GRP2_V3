@@ -38,7 +38,7 @@ public class IhmJeu extends JFrame{
     private boolean dDouble ;
     
     
-    public IhmJeu()   {        
+    public IhmJeu() throws InterruptedException   {        
         plateau = new IhmPlateau();
         controle = new JPanel();
         

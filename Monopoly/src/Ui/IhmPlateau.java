@@ -8,6 +8,7 @@ package Ui;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -27,13 +28,14 @@ public class IhmPlateau extends Canvas{
     private ArrayList<BufferedImage> pions;
     private int numCarreau;
     private int nbJoueurs = 6;//L'ajouter comme paramètre 
-    private ArrayList<int[]> pos;private int x, y;
+    private ArrayList<Point> pos;
+    private int x, y;
      //1ère dimension = x, 2ème = y, 3ème = numJoueur
     
     public IhmPlateau() throws InterruptedException   {
         super();
         pions = new ArrayList<>();
-        pos = new ArrayList<>();
+        pos = new ArrayList<>(); //Liste des positions de chaque joueur 
         
         
         this.initListePositions();
@@ -52,17 +54,19 @@ public class IhmPlateau extends Canvas{
     }
     private void initListePositions() {
         
-        int[] posInit = {786, 786};
+        Point posInit = new Point(786, 786);
         for(int i = 0; i<nbJoueurs; i++) {
             pos.add(posInit);
         }
         System.out.println("nbJoueurs = " + nbJoueurs + "size = " + pos.size());
     }
     
-     /**
-     * Dessine le contenu du canvas, c'est-à-dire l'icone
-     * @param g un contexte graphique
-     */
+    
+    
+    /**
+    * Dessine le contenu du canvas, c'est-à-dire l'icone
+    * @param g un contexte graphique
+    */
     @Override
     public void paint(Graphics g) {
         Dimension d = new Dimension(900, 900);
@@ -86,7 +90,7 @@ public class IhmPlateau extends Canvas{
         int i=0;
         int dx=0;
         int dy=0; 
-        while (i<nbJoueurs) {
+        /*while (i<nbJoueurs) {
             
             if(i==3) {
                 dy=0;
@@ -99,12 +103,12 @@ public class IhmPlateau extends Canvas{
             dy+=13;
             i++;
             
-        }   try {
+        }*/   try {
                 /*if (i<nbJoueurs) i++;
                 if (i<= 3) this.pos.get(i)[1]+=13;
                 if (i> 3) this.pos.get(i)[0]+=13;*/
  
-                dessiner(g, 5, 1, 5);
+                mouvementPion(g, 1, 5, 0);
  
             } catch (InterruptedException ex) {
                 Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
@@ -116,102 +120,111 @@ public class IhmPlateau extends Canvas{
     
     
    
-    private void dessiner(Graphics g, int numCarreauDest, int numCarreauDep, int numJoueur) throws InterruptedException {
-        int ESPACEMENT = 3;
-        int LARGEUR_PION = 21;
-        int EMPILEMENT = 13;
-        int HAUTEUR_PION = 26;
-        int DECALAGE = 3;
-        int BASE = 786;
+    private void mouvementPion(Graphics g, int numCarreauDep, int numCarreauDest, int numJoueur) throws InterruptedException {
+        int ESPACEMENT = 2; // Espacement en pixel entre 2 pion cote à cote
+        int LARGEUR_PION = 21; // Largeur d'un pion en pixels
+        int EMPILEMENT = 13; // Décalage en pixels entre deux pions qui s'empilent vers le bas
+        int HAUTEUR_PION = 26; // Hauteur d'un pion en pixels
+        int CHANGE_LIGNE = 3; // Conctante définissant le nombre de pions par ligne 
+        int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
         int compteur;
-        
+        int x = 0, y = 0;
         int numCarreauCourant = numCarreauDep;
         
         do {
-            numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);//Si on est pas arrivé, on avance
-            compteur = 0;
             if(numCarreauCourant == 1) {//On arrive à la case départ
-                pos.get(numJoueur)[0] = BASE;// Pour le joueur courant x = 786
-                pos.get(numJoueur)[1] = BASE;// y = 786;
-                
-                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
+                x = BASE;// Pour le joueur courant x = 786
+                y = BASE;// y = 786;
+                 
+                /*g.drawImage(pions.get(numJoueur), x, y, (ImageObserver) observateur);
                 
                 if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
-                    pos.get(numJoueur)[1] += ESPACEMENT + HAUTEUR_PION; 
-                    pos.get(numJoueur)[0]=BASE;//Utile ?
+                    y += ESPACEMENT + HAUTEUR_PION; 
+                    x=BASE;//Utile ?
                 }*/            
             }
             else if(numCarreauCourant <= 10) { //LIGNE BAS
-                pos.get(numJoueur)[0] = BASE-74*(numCarreauCourant-1);
-                pos.get(numJoueur)[1] = 844;
+                x = BASE-74*(numCarreauCourant-1);
+                y = 844;
                 
                 
-                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
-                pos.get(numJoueur)[1] += EMPILEMENT;
+                /*g.drawImage(pions.get(numJoueur), x, y, (ImageObserver) observateur);
+                y += EMPILEMENT;
                 
                 if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
-                    pos.get(numJoueur)[0] += LARGEUR_PION + ESPACEMENT; 
-                    pos.get(numJoueur)[1] = 844;
+                    x += LARGEUR_PION + ESPACEMENT; 
+                    y = 844;
                 }              */
             }
             else if (numCarreauCourant == 11) {//VISITE PRISON 
-                pos.get(numJoueur)[0] = 5;
-                pos.get(numJoueur)[1] = BASE;
+                x = 5;
+                y = BASE;
                 
                 
-                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
-                pos.get(numJoueur)[1] += EMPILEMENT;*/
+                /*g.drawImage(pions.get(numJoueur), x, y, (ImageObserver) observateur);
+                y += EMPILEMENT;*/
                 
                 
             }
             else if (numCarreauCourant <= 20) {//LIGNE GAUCHE
-                pos.get(numJoueur)[0] = 16;
-                pos.get(numJoueur)[1] = BASE-74*(numCarreauCourant-11);
+                x = 16;
+                y = BASE-74*(numCarreauCourant-11);
                 
-                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
-                pos.get(numJoueur)[0] += LARGEUR_PION + ESPACEMENT;
+                /*g.drawImage(pions.get(numJoueur), x, y, (ImageObserver) observateur);
+                x += LARGEUR_PION + ESPACEMENT;
                 
                 if(numJoueur == DECALAGE) {//Pour le 3 eme joueur il y a un décalage
-                    pos.get(numJoueur)[1] += EMPILEMENT;
+                    y += EMPILEMENT;
                 }*/
             }
             else if (numCarreauCourant == 21) {//PARC GRATUIT
-                pos.get(numJoueur)[0] = 16;
-                pos.get(numJoueur)[1] = 16;
+                x = 16;
+                y = 16;
                 
-                /*g.drawImage(pions.get(numJoueur), pos.get(numJoueur)[0], pos.get(numJoueur)[1], (ImageObserver) observateur);
-                pos.get(numJoueur)[0] += ESPACEMENT + LARGEUR_PION;
+                /*g.drawImage(pions.get(numJoueur), x, y, (ImageObserver) observateur);
+                x += ESPACEMENT + LARGEUR_PION;
                 
                 if(numJoueur == DECALAGE) {
-                    pos.get(numJoueur)[1] += ESPACEMENT + HAUTEUR_PION; 
+                    y += ESPACEMENT + HAUTEUR_PION; 
                 }*/
             }
             else if (numCarreauCourant <= 30) {//LIGNE HAUT
-                pos.get(numJoueur)[0] = 120+74*(numCarreauCourant-22); ;
-                pos.get(numJoueur)[1] = 16;
+                x = 120+74*(numCarreauCourant-22);
+                y = 16;
                 
                 
             }
             else if (numCarreauCourant == 31) {//ALLER EN PRISON
-                pos.get(numJoueur)[0] = 786;
-                pos.get(numJoueur)[1] = 16;
+                x = 786;
+                y = 16;
                 
                 
             }
             else if (numCarreauCourant <= 40) {//LIGNE DROITE
-                pos.get(numJoueur)[0] = 841;
-                pos.get(numJoueur)[1] = 123+74*(numCarreauCourant-32);
+                x = 841;
+                y = 123+74*(numCarreauCourant-32);
                
             }
-            for (int[] i : pos) {
-                g.drawImage(pions.get(compteur), i[0], i[1], (ImageObserver) observateur);
+            
+            compteur = 0;
+            for (Point posJoueur : pos) {
+                g.drawImage(pions.get(compteur), posJoueur.x, posJoueur.y, (ImageObserver) observateur);
+                System.out.println("Compteur:" + compteur + "|X:" + posJoueur.x + "|" + "Y:" + posJoueur.y);
                 compteur++;
             }
             
             Thread.sleep(500);
             g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
             
-            System.out.println("numCarreauCourant = " + numCarreauSuivant(2) + "numCarreauDest = " + numCarreauDest);
+            System.out.println("numCarreauCourant = " + numCarreauCourant + "|numCarreauSuivant = " + numCarreauSuivant(numCarreauCourant) + "|numCarreauDest = " + numCarreauDest);
+            
+            pos.get(numJoueur).x = x;
+            pos.get(numJoueur).y = y;
+            System.out.println("Numjoueur = " + numJoueur + " |X=" + x + " |Y=" + y);
+            System.out.println(" ");
+            
+            
+            numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);//Si on est pas arrivé, on avance
         } while (numCarreauCourant!=numCarreauDest);
     }
     

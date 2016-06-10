@@ -116,7 +116,7 @@ public class IhmInscription extends JFrame  {
             public void actionPerformed(ActionEvent e) {
                 boolean res = vérifierNomJoueurs();
                 if (res) {
-                    IhmBoiteMessage.afficherBoiteDialogue(nbjoueurs + " joueurs inscris.", "info");
+                    IhmBoiteMessage.afficherBoiteDialogue(nbjoueurs + " joueurs inscrits.", "info");
                     nomJoueurs = getNomJoueurs();
                     
                     setVisible(false);
