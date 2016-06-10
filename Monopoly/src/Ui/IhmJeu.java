@@ -14,6 +14,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Icon;
@@ -53,8 +54,8 @@ public class IhmJeu extends JFrame{
     private JLabel labelinfoCarte;
     private Carreau DepartJcourant;
     
-    public IhmJeu() throws InterruptedException   {        
-        plateau = new IhmPlateau();
+    public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
+        plateau = new IhmPlateau(noms);
         controle = new JPanel();
         
         
@@ -172,7 +173,7 @@ public class IhmJeu extends JFrame{
             this.dDouble = d1 == d2;
             this.MajJoueur(j);
             
-            this.plateau.mouvementPion( this.DepartJcourant , j.getPositionCourante(), j);
+            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
             
             this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
             this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));

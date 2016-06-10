@@ -18,6 +18,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,35 +26,43 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author fallm
+ * @author vivierlo
  */
 public class IhmPlateau extends Canvas{
+    private int x, y;
+    
+    
     private BufferedImage fondPlateau;
     Observateur observateur;
-    private ArrayList<BufferedImage> pions;
-    private int numCarreau;
-    private int nbJoueurs;//L'ajouter comme paramètre 
-    private ArrayList<Point> pos;
-    private int x, y;
+    
+    private ArrayList<BufferedImage> pions; //Liste des pions
+    private HashMap<String, Integer> joueurs; //Liste des joueurs avec String: nom joueur et Integer: numéro Carreau courant
     private ArrayList<Integer> nbJoueursParCases;
-     //1ère dimension = x, 2ème = y, 3ème = numJoueur
-    private HashSet<String> nomJoueurs;
-    private ArrayList<Joueur> joueurs;
+    
+    private HashMap<String, Integer> joueurCourant;
+    private int numCarreauCourant;
+    private int numCarreauDestination;
+    private int nbJoueurs;
+    private String nomJoueurCourant;
     
     
     
     
-    public IhmPlateau() throws InterruptedException   {
+    public IhmPlateau(HashSet<String> noms) throws InterruptedException   {
         super();
         pions = new ArrayList<>();
-        pos = new ArrayList<>(); //Liste des positions de chaque joueu
-        joueurs = new ArrayList<>();
+        joueurs = new HashMap<>();
+        joueurCourant = new HashMap<>();
         nbJoueursParCases = new ArrayList<>();
-        nomJoueurs = new HashSet<>();
-        observateur.recupererNomJoueurs(nomJoueurs);
+        nbJoueurs = joueurs.size();
         
-        this.init();
         
+        //Initialisation des joueurs
+        for (String nomJ : noms) {
+            joueurs.put(nomJ, 1); //positionnés sur le carreau de départ
+        }
+        
+        //Initialisation des pions
         try {
             pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
             pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
@@ -63,31 +72,19 @@ public class IhmPlateau extends Canvas{
             pions.add(ImageIO.read(new File("src/Data/pionOrange.png")));
         } catch (IOException ex) {
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-        }     
-
-    }
-    private void init() {
-        nbJoueurs = nomJoueurs.size();
-        Point posInit = new Point(786, 786);
-        for(int i = 0; i<nbJoueurs; i++) {
-            pos.add(posInit);
-        }
+        } 
         
+        /**
+         * Initialisation des coordonnées des pions.
+        */
+        
+        //Initialisation du nombre de joueurs par case
         for(int i= 1; i<=40; i++) {
             nbJoueursParCases.add(0);
         }
-        nbJoueursParCases.set(0, nbJoueurs); // Tous les joueurs sur la case départ
-        for (String nomJ : nomJoueurs) {
-            joueurs.add(new Joueur(nomJ, new Carreau(1, nomJ) {
-                @Override
-                public Resultat action(Joueur j, int sommeDes, ArrayList<Carte> cartes) {
-                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-            }));
-        }
+        nbJoueursParCases.set(0, nbJoueurs); // Tous les joueurs sont sur la case départ
+        
     }
-    
-    
     
     /**
     * Dessine le contenu du canvas, c'est-à-dire l'icone
@@ -104,76 +101,80 @@ public class IhmPlateau extends Canvas{
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        // Affichage sur le Canvas
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
-        mouvementPion(joueurs.get(0).getPositionCourante(), joueurs.get(0).getPositionCourante(), joueurs.get(0));
-        
-        g.drawImage(pions.get(numJoueur), getPositionJoueur(numJoueur).x, getPositionJoueur(numJoueur).y, (ImageObserver) observateur);
-
+        /*
+            while (joueurCourant.getPositionCourante()!=destination) {
+                avancerPion()
+                //Changement de case
+                nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)-1);
+                numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);
+                nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)+1);
+            }*/
+        Point p = new Point(); 
+        while (numCarreauCourant!=numCarreauDestination) {
+            try {
+                p = avancerPion(joueurCourant);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            int i = joueurs.get(nomJoueurCourant);
+            g.drawImage(pions.get(i), p.x, p.y, (ImageObserver) observateur);
+        }
     }
     
-   
-    public void mouvementPion(Carreau carreauDep, Carreau carreauDest, Joueur j) throws InterruptedException {
+    //Donne les coordonnées précises du pion après qu'il ai avancé
+    public Point avancerPion(HashMap<String, Integer> j) throws InterruptedException {
         int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
         int x = 0, y = 0;
-        int numCarreauCourant = carreauDep.getNumero();
+        //int numCarreauCourant = j.get(nomJoueurCourant).intValue();
         
-        
-        
-        while (numCarreauCourant!=carreauDest.getNumero()+1) {
-            
-            if(numCarreauCourant == 1) {//CASE DEPART
-                x = BASE;// Pour le joueur courant x = 786
-                y = BASE;// y = 786;
-            }
-            else if(numCarreauCourant <= 10) { //LIGNE BAS
-                x = BASE-74*(numCarreauCourant-1);
-                y = 844;
-            }
-            else if (numCarreauCourant == 11) {//VISITE PRISON 
-                x = 5;
-                y = BASE;
-            }
-            else if (numCarreauCourant <= 20) {//LIGNE GAUCHE
-                x = 16;
-                y = BASE-74*(numCarreauCourant-11);
-            }
-            else if (numCarreauCourant == 21) {//PARC GRATUIT
-                x = 16;
-                y = 16;
-            }
-            else if (numCarreauCourant <= 30) {//LIGNE HAUT
-                x = 120+74*(numCarreauCourant-22);
-                y = 16;
-            }
-            else if (numCarreauCourant == 31) {//ALLER EN PRISON
-                x = 786;
-                y = 16;
-            }
-            else if (numCarreauCourant <= 40) {//LIGNE DROITE
-                x = 841;
-                y = 123+74*(numCarreauCourant-32);
-            }
-            pos.set(joueurs.indexOf(j), new Point(x, y));
-            
-            int numJ=0;
-            while (numJ<nbJoueurs) {
-                Point posJoueur = getPositionJoueur(numJ);
-                positionnePionSurCase(numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
-                
-                System.out.println("numJ:" + numJ + "|numCarreauCourant:" + numCarreauCourant + " |nbJoueursSurCase:" 
-                        + nbJoueursParCases.get(numCarreauCourant) + " |posJoueur.x:" + posJoueur.x + " |posJoueur.y:" + posJoueur.y);
-                numJ++;
-            }
-             System.out.println("||||||||||||||");
-            Thread.sleep(500);
-            //g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
-            
-            //Changement de case
-            nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)-1);
-            numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);
-            nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)+1);
+        if(numCarreauCourant == 1) {//CASE DEPART
+            x = BASE;// Pour le joueur courant x = 786
+            y = BASE;// y = 786;
         }
+        else if(numCarreauCourant <= 10) { //LIGNE BAS
+            x = BASE-74*(numCarreauCourant-1);
+            y = 844;
+        }
+        else if (numCarreauCourant == 11) {//VISITE PRISON 
+            x = 5;
+            y = BASE;
+        }
+        else if (numCarreauCourant <= 20) {//LIGNE GAUCHE
+            x = 16;
+            y = BASE-74*(numCarreauCourant-11);
+        }
+        else if (numCarreauCourant == 21) {//PARC GRATUIT
+            x = 16;
+            y = 16;
+        }
+        else if (numCarreauCourant <= 30) {//LIGNE HAUT
+            x = 120+74*(numCarreauCourant-22);
+            y = 16;
+        }
+        else if (numCarreauCourant == 31) {//ALLER EN PRISON
+            x = 786;
+            y = 16;
+        }
+        else if (numCarreauCourant <= 40) {//LIGNE DROITE
+            x = 841;
+            y = 123+74*(numCarreauCourant-32);
+        }
+        positionnePionSurCase(numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), x, y);
+
+        return new Point(x,y);
+        /*int numJ=0;
+        while (numJ<nbJoueurs) {
+            Point posJoueur = getPositionJoueur(numJ);
+            positionnePionSurCase(numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
+
+            System.out.println("numJ:" + numJ + "|numCarreauCourant:" + numCarreauCourant + " |nbJoueursSurCase:" 
+                    + nbJoueursParCases.get(numCarreauCourant) + " |posJoueur.x:" + posJoueur.x + " |posJoueur.y:" + posJoueur.y);
+            numJ++;
+        }
+         System.out.println("||||||||||||||");*/
+        //g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
+
     }
     
     private int numCarreauSuivant(int numCar) {
@@ -182,7 +183,8 @@ public class IhmPlateau extends Canvas{
         else return numCar++ % 40;
     }
     
-    private void positionnePionSurCase(int numJoueur, int numCase, int nbJoueurCase, int xPion1, int yPion1) {
+    //Sélectionne les coordonnées d'affichage du pion sur la case
+    private void positionnePionSurCase(int numCase, int nbJoueurCase, int xPion1, int yPion1) {
         int ESPACEMENT = 2; // Espacement en pixel entre 2 pion cote à cote
         int LARGEUR_PION = 21; // Largeur d'un pion en pixels
         int EMPILEMENT = 13; // Décalage en pixels entre deux pions qui s'empilent vers le bas
@@ -251,16 +253,15 @@ public class IhmPlateau extends Canvas{
             }
         }
         
-        setPosition(numJoueur, xPion1, yPion1);
     }
    
-    public Point getPositionJoueur(int numJoueur) {
+    /*public Point getPositionJoueur(int numJoueur) {
         return pos.get(numJoueur);
     }
     
     public void setPosition(int numJ, int x, int y) {
         pos.set(numJ, new Point (x,y));
-    }
+    }*/
     
     /*public void dessinerPions() {
         int numJ=0;
@@ -285,4 +286,10 @@ public class IhmPlateau extends Canvas{
         this.joueurs = joueurs;
     }*/
 
+    public void recupDonneesJoueur(Joueur j, Carreau positionCourante, Carreau anciennePosition) {
+        numCarreauCourant = anciennePosition.getNumero();
+        nomJoueurCourant = j.getNom();
+        joueurCourant.put(nomJoueurCourant, numCarreauCourant);
+        numCarreauDestination = positionCourante.getNumero();
+    }
 }
