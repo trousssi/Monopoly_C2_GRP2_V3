@@ -24,6 +24,7 @@ public class CarteReparation  extends Carte{
     @Override
     public Resultat action(Joueur j) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         renvoyerNom(res);
         int nbMaison = 0;
         int nbHotel = 0;

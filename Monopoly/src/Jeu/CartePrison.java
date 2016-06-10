@@ -18,6 +18,7 @@ public class CartePrison extends Carte {
     @Override
     public Resultat action(Joueur j) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         renvoyerNom(res);
         res.setEnPrison(true);
         return res;

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
+import java.util.Scanner;
 
 public class Controleur {
 	private Observateur obs;
@@ -53,7 +54,10 @@ public class Controleur {
         
         
         public static int lancerDes() {
-            return RANDOM.nextInt(6)+1;
+            //return RANDOM.nextInt(6)+1;
+            Scanner sc = new Scanner(System.in);
+            return sc.nextInt();
+            
         }
         
         public Carreau lancerDesAvancer(Joueur j, int nbDouble) {

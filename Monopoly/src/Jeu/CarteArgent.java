@@ -21,6 +21,7 @@ public class CarteArgent extends Carte {
     @Override
     public Resultat action(Joueur j) {
         Resultat res = new Resultat();
+        res.setNomCarreau(j.getPositionCourante().getNomCarreau());
         renvoyerNom(res);
         if (this.getPrix() > 0) {
             j.crediter(this.getPrix());
