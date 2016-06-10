@@ -29,13 +29,12 @@ import javax.swing.JPanel;
  * @author fallm
  */
 public class IhmJeu extends JFrame{
-    private final IhmPlateau plateau; 
+    //private final IhmPlateau plateau; 
     private final JPanel controle;
     private JPanel panelDes;
     private JLabel nomJoueur;
     private JLabel cash;
     private JLabel nomCarte;
-    private JButton acheter;
     private Observateur observateur;
     private JButton lanceDes;
     private JPanel infos;
@@ -55,15 +54,24 @@ public class IhmJeu extends JFrame{
     private Carreau DepartJcourant;
     private JButton construire;
     private JLabel labelCaseDep;
+    private int conteurlanceDes;
+    private int conteuroui;
+    private int conteurnon;
+    private int conteurJsuivant = 0;
+    private int conteurRejouer = 0;
+    private int conteurConstruire = 0;
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
-        plateau = new IhmPlateau(noms);
+      //  plateau = new IhmPlateau(noms);
         controle = new JPanel();
         
         
         this.setLayout(new BorderLayout());
-        this.add(plateau, BorderLayout.CENTER);
+       // this.add(plateau, BorderLayout.CENTER);
         
+        conteurlanceDes = 0;
+        this.conteurnon = 0;
+        this.conteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
         this.initJoueur();
         this.initInfos();
@@ -74,8 +82,8 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(14, 1));
-        
+        this.infos.setLayout(new GridLayout(15, 1));
+        this.infos.add(new JLabel("                                                                                                                                                                                                                "));
         return this.controle;
     }
     
@@ -143,7 +151,7 @@ public class IhmJeu extends JFrame{
     //Affichera toutes les infos du joueur
     public void displayJoueur(Joueur j, int nbdouble) {
         
-        this.MajJoueur(j);
+        
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -155,13 +163,18 @@ public class IhmJeu extends JFrame{
         this.lanceDes.setVisible(true);
         this.lanceDes.setEnabled(true);
         
-        
+        this.lanceDes.removeAll();
         lanceDes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (conteurlanceDes >= 1) {
+                    
+                }
+                else {
+                conteurlanceDes ++;
                 lanceDes.setEnabled(false);
                 observateur.lanceDes(j,nbdouble);
-                
+                }
             }
         });
         
@@ -183,7 +196,7 @@ public class IhmJeu extends JFrame{
             this.dDouble = d1 == d2;
             this.MajJoueur(j);
             
-            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
+           // this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
             
             this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
             this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
@@ -247,19 +260,30 @@ public class IhmJeu extends JFrame{
                 oui.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        oui.setEnabled(false);
-                        non.setEnabled(false);
-                        observateur.Reponce(2, j, res);
-                        
+                        if (conteuroui >= 1) {
+                    
+                        }
+                        else {
+                            conteuroui ++;
+                            oui.setEnabled(false);
+                            non.setEnabled(false);
+                            observateur.Reponce(2, j, res);
+                        }
                     }
                 });
                 
                 non.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        oui.setEnabled(false);
-                        non.setEnabled(false);
-                        observateur.Reponce(0, j, res);
+                        if (conteurnon >= 1) {
+                    
+                        }
+                        else {
+                            conteurnon ++;
+                            oui.setEnabled(false);
+                            non.setEnabled(false);
+                            observateur.Reponce(0, j, res);
+                        }
                     }
                 });
             }
@@ -319,11 +343,16 @@ public class IhmJeu extends JFrame{
             jSuivant.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                     effacer();
-                    jSuivant.setEnabled(false);
+                    if (conteurJsuivant >= 1) {
+                     
+                    }
+                    else {
+                        conteurJsuivant ++;
+                         effacer();
+                        jSuivant.setEnabled(false);
                    
-                    observateur.joueurSuivant(j);
-                    
+                        observateur.joueurSuivant(j);
+                    }
                 }
             });    
         }
@@ -334,10 +363,15 @@ public class IhmJeu extends JFrame{
             rejouer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    effacer();
-                    rejouer.setEnabled(false);
+                    if (conteurRejouer >= 1) {
                     
-                   observateur.rejouer(j, nbdouble);
+                    }
+                    else {
+                        conteurRejouer ++;
+                        effacer();
+                        rejouer.setEnabled(false);
+                        observateur.rejouer(j, nbdouble);
+                    }
                 }
             });
         }
@@ -346,7 +380,7 @@ public class IhmJeu extends JFrame{
     }
     
     public void effacer() {
-        this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
+        /*this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
         this.labelDe2.setIcon(new ImageIcon("src/Data/deVide.png"));
         this.labelInfoCase.setText("");
         
@@ -362,11 +396,22 @@ public class IhmJeu extends JFrame{
         
         this.labelInfoDouble.setText("");
         
+        this.construire.setVisible(false);
+        
         this.jSuivant.setVisible(false);
         
-        this.rejouer.setVisible(false);
+        this.rejouer.setVisible(false);*/
         
+        this.infos.removeAll();
+        this.initJoueur();
+        this.initInfos();
         
+        this.conteurlanceDes = 0;
+        this.conteuroui = 0;
+        this.conteurnon = 0;
+        this.conteurJsuivant = 0;
+        this.conteurRejouer = 0;
+        this.conteurConstruire = 0;
         this.setVisible(true);
     }
     
@@ -376,7 +421,7 @@ public class IhmJeu extends JFrame{
     }
     
     public void sortiePrison() {
-        this.labelCaseDep.setText("Vous êtes sortie de prison");
+        this.labelCaseDep.setText("Vous êtes sorti de prison");
     }
     
     public void afficher() {
