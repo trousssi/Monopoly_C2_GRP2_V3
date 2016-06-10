@@ -322,7 +322,7 @@ public class IhmJeu extends JFrame{
                      effacer();
                     jSuivant.setEnabled(false);
                    
-                    observateur.joueurSuivant();
+                    observateur.joueurSuivant(j);
                     
                 }
             });    
@@ -373,6 +373,10 @@ public class IhmJeu extends JFrame{
     public void messageCaseDepart(Joueur j){
         this.labelCaseDep.setText("Vous passez par la case Départ, recevez 200€");
         
+    }
+    
+    public void sortiePrison() {
+        this.labelCaseDep.setText("Vous êtes sortie de prison");
     }
     
     public void afficher() {

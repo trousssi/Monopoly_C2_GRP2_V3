@@ -360,6 +360,10 @@ public class Controleur {
             }
         }
         
+    public void perte(Joueur joueur) {
+        monopoly.removeJoueur(joueur);
+    }
+        
      
     private void allerEnPrison(Joueur j) {
         Carreau prison = monopoly.getCarreau(11);
@@ -374,6 +378,7 @@ public class Controleur {
         if (paye) {
             j.payer(50);
         }
+        this.obs.sortiePrison();
     }
     
 

@@ -193,14 +193,26 @@ public final class IHM implements Observateur{
         this.ihmJeu.notification(message, j);
     }
     
-    public void joueurSuivant(){
-        
-        this.numJoueur++;
-        if (numJoueur==this.controleur.getJoueurs().size() || this.numJoueur == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
-            this.numJoueur=0;          
+    public void joueurSuivant(Joueur j){
+        if (j.getCash() < 0) {
+            this.controleur.perte(j);
+            
         }
         
-        this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
+        if (controleur.getJoueurs().size() > 1) {
+
+
+            this.numJoueur++;
+            if (numJoueur==this.controleur.getJoueurs().size() || this.numJoueur == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
+                this.numJoueur=0;          
+            }
+
+            this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
+            }
+        else {
+            this.ihmJeu.setVisible(false);
+            IhmBoiteMessage.afficherBoiteDialogue(this.controleur.getJoueur(0).getNom() + " a Gagné !!", "info");
+        }
     }
     
     public void rejouer(Joueur j,int nbdouble) {
@@ -209,5 +221,9 @@ public final class IHM implements Observateur{
     
     public boolean sortiePrisonCarte(Joueur j) {
         return true;
+    }
+    
+    public void sortiePrison() {
+        this.ihmJeu.sortiePrison();
     }
 }
