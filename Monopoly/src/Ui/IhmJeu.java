@@ -53,6 +53,7 @@ public class IhmJeu extends JFrame{
     private JButton rejouer;
     private JLabel labelinfoCarte;
     private Carreau DepartJcourant;
+    private JButton construire;
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
         plateau = new IhmPlateau(noms);
@@ -72,7 +73,7 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(12, 1));
+        this.infos.setLayout(new GridLayout(13, 1));
         
         return this.controle;
     }
@@ -118,6 +119,12 @@ public class IhmJeu extends JFrame{
         
         this.labelInfoDouble = new JLabel();
         this.infos.add(this.labelInfoDouble);
+        
+        
+        this.construire = new JButton("Construire");
+        this.infos.add(this.construire);
+        this.construire.setVisible(false);
+        
         
         jSuivant = new JButton("Joueur Suivant");
         this.infos.add(jSuivant);
@@ -321,6 +328,7 @@ public class IhmJeu extends JFrame{
                 }
             });
         }
+        this.construire.setVisible(true);
          this.setVisible(true);
     }
     
