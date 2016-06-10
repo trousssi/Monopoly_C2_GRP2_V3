@@ -5,6 +5,10 @@
  */
 package Ui;
 
+import Jeu.Carreau;
+import Jeu.Carte;
+import Jeu.Joueur;
+import Jeu.Resultat;
 import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -14,6 +18,7 @@ import java.awt.image.ImageObserver;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -27,17 +32,25 @@ public class IhmPlateau extends Canvas{
     Observateur observateur;
     private ArrayList<BufferedImage> pions;
     private int numCarreau;
-    private int nbJoueurs = 4;//L'ajouter comme paramètre 
+    private int nbJoueurs;//L'ajouter comme paramètre 
     private ArrayList<Point> pos;
     private int x, y;
     private ArrayList<Integer> nbJoueursParCases;
      //1ère dimension = x, 2ème = y, 3ème = numJoueur
+    private HashSet<String> nomJoueurs;
+    private ArrayList<Joueur> joueurs;
+    
+    
+    
     
     public IhmPlateau() throws InterruptedException   {
         super();
         pions = new ArrayList<>();
-        pos = new ArrayList<>(); //Liste des positions de chaque joueur 
+        pos = new ArrayList<>(); //Liste des positions de chaque joueu
+        joueurs = new ArrayList<>();
         nbJoueursParCases = new ArrayList<>();
+        nomJoueurs = new HashSet<>();
+        observateur.recupererNomJoueurs(nomJoueurs);
         
         this.init();
         
@@ -54,6 +67,7 @@ public class IhmPlateau extends Canvas{
 
     }
     private void init() {
+        nbJoueurs = nomJoueurs.size();
         Point posInit = new Point(786, 786);
         for(int i = 0; i<nbJoueurs; i++) {
             pos.add(posInit);
@@ -63,6 +77,14 @@ public class IhmPlateau extends Canvas{
             nbJoueursParCases.add(0);
         }
         nbJoueursParCases.set(0, nbJoueurs); // Tous les joueurs sur la case départ
+        for (String nomJ : nomJoueurs) {
+            joueurs.add(new Joueur(nomJ, new Carreau(1, nomJ) {
+                @Override
+                public Resultat action(Joueur j, int sommeDes, ArrayList<Carte> cartes) {
+                    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            }));
+        }
     }
     
     
@@ -76,8 +98,7 @@ public class IhmPlateau extends Canvas{
         Dimension d = new Dimension(900, 900);
         super.setSize(d);
         super.paint(g);
-        
-        try { 
+        try {
             fondPlateau = ImageIO.read(new File("src/Data/plateau.jpg"));
         } catch (IOException ex) {
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
@@ -85,24 +106,18 @@ public class IhmPlateau extends Canvas{
         
         // Affichage sur le Canvas
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
-        
-        try {
-            mouvementPion(g, 1, 5, 0);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        mouvementPion(g, joueurs.get(0).getPositionCourante(), joueurs.get(0).getPositionCourante(), joueurs.get(0));
     }
     
    
-    private void mouvementPion(Graphics g, int numCarreauDep, int numCarreauDest, int numJoueur) throws InterruptedException {
+    private void mouvementPion(Graphics g, Carreau carreauDep, Carreau carreauDest, Joueur j) throws InterruptedException {
         int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
-        int compteur;
         int x = 0, y = 0;
-        int numCarreauCourant = numCarreauDep;
+        int numCarreauCourant = carreauDep.getNumero();
         
         
         
-        while (numCarreauCourant!=numCarreauDest+1) {
+        while (numCarreauCourant!=carreauDest.getNumero()+1) {
             
             if(numCarreauCourant == 1) {//CASE DEPART
                 x = BASE;// Pour le joueur courant x = 786
@@ -136,8 +151,7 @@ public class IhmPlateau extends Canvas{
                 x = 841;
                 y = 123+74*(numCarreauCourant-32);
             }
-            compteur = 0;
-            pos.set(numJoueur, new Point(x, y));
+            pos.set(joueurs.indexOf(j), new Point(x, y));
             
             int numJ=0;
             while (numJ<nbJoueurs) {
@@ -260,4 +274,13 @@ public class IhmPlateau extends Canvas{
         Thread.sleep(500);
         //g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
     }*/
+
+    /**public void setObservateur(Observateur observateur) {
+        this.observateur = observateur;
+    }
+
+    public void setJoueurs(HashSet<String> joueurs) {
+        this.joueurs = joueurs;
+    }*/
+
 }
