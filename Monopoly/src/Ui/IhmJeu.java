@@ -152,8 +152,8 @@ public class IhmJeu extends JFrame{
     
     //Affichera toutes les infos du joueur
     public void displayJoueur(Joueur j, int nbdouble) {
-        IhmMonopoly test = new IhmMonopoly(j);
-        this.add(test, BorderLayout.WEST);
+        //IhmMonopoly test = new IhmMonopoly(j);
+        //this.add(test, BorderLayout.WEST);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
