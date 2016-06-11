@@ -185,7 +185,7 @@ public final class IHM implements Observateur{
         this.controleur.lancerDesAvancer(j, nbDouble);
     }
     
-    public void Reponce(int cas, Joueur j, Jeu.Resultat res) {
+    public void Reponse(int cas, Joueur j, Jeu.Resultat res) {
         this.controleur.action(cas, j, res);
     }
     

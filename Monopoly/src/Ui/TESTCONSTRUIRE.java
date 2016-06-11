@@ -17,25 +17,25 @@ import java.util.ArrayList;
  * @author Jérémy
  */
 public class TESTCONSTRUIRE {
-    private IhmPropriete ihmPropriete;
+    private IhmMonopoly mono;
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Joueur j = new Joueur("JTest", new CarreauSansAction(1, "testcarreau"));
-        ArrayList<Integer> prix = new ArrayList<>();
+        
+        /*        ArrayList<Integer> prix = new ArrayList<>();
         prix.add(5);
         prix.add(10);
         prix.add(15);
         Groupe bleuFonce = new Groupe(CouleurPropriete.bleuFonce);
-
+        
         ProprieteAConstruire prop = new ProprieteAConstruire(1, "PROP swxcwxcwxcwxcwxcwxcwxcxwcwxc1", 50, 20, prix, 50, j, bleuFonce);
         ProprieteAConstruire prop2 = new ProprieteAConstruire(1, "PROP 2", 50, 20, prix, 10, j, bleuFonce);
         ArrayList<ProprieteAConstruire> props = new ArrayList<>();
         props.add(prop);
         props.add(prop2);
         IhmPropriete ihmPropriete2 = new IhmPropriete(j, props);
-        // TODO code application logic here
-    }
+    // TODO code application logic here*/    }
     
 }

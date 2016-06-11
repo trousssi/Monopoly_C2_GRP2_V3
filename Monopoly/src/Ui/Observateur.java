@@ -42,7 +42,7 @@ public interface Observateur {
     
     public void lanceDes(Joueur j,int nbDouble);
     
-    public void Reponce(int cas, Joueur j, Jeu.Resultat res);
+    public void Reponse(int cas, Joueur j, Jeu.Resultat res);
     
      public void notification(String message,Joueur j);
      
