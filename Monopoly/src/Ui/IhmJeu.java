@@ -61,7 +61,7 @@ public class IhmJeu extends JFrame{
     private int conteurRejouer = 0;
     private int conteurConstruire = 0;
     
-    public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
+    public IhmJeu(HashSet<String> joueurs) throws InterruptedException   {        
       //  plateau = new IhmPlateau(noms);
         controle = new JPanel();
         
@@ -88,6 +88,7 @@ public class IhmJeu extends JFrame{
     }
     
     private void initJoueur() {
+        
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
         cash = new JLabel();
@@ -150,15 +151,14 @@ public class IhmJeu extends JFrame{
     
     //Affichera toutes les infos du joueur
     public void displayJoueur(Joueur j, int nbdouble) {
-        
-        
+        IhmMonopoly test = new IhmMonopoly(j);
+        this.add(test, BorderLayout.WEST);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
         
-        this.cash.setText("Cash : " + j.getCash());
-        this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
-        
+        /*        this.cash.setText("Cash : " + j.getCash());
+        this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());*/        
        
         this.lanceDes.setVisible(true);
         this.lanceDes.setEnabled(true);
@@ -207,20 +207,20 @@ public class IhmJeu extends JFrame{
                     if (res.isDeplace()) { // Carte deplacement
                         if (res.getDeplacement() != 0) { // deplacement normal
                             
-                            this.observateur.Reponce(3, j, res);
+                            this.observateur.Reponse(3, j, res);
                         } else if (res.getDeplacement() == -3) { // reculer de 3 cases
                             
                             
-                            this.observateur.Reponce(4, j, res);
+                            this.observateur.Reponse(4, j, res);
                         }
                         else if (res.isAnniversaire()) {
                             
                             
-                            this.observateur.Reponce(5, j, res);
+                            this.observateur.Reponse(5, j, res);
                         } else if (res.isEnPrison()) {
                             
                             this.labelinfoCarte.setText("Vous Allez en Prison");
-                            this.observateur.Reponce(6, j, res);
+                            this.observateur.Reponse(6, j, res);
                         }
                     }
                     
@@ -233,20 +233,20 @@ public class IhmJeu extends JFrame{
                 }
                 else if (res.isEnPrison()) {
                     this.labelinfoCarte.setText("Vous Allez en Prison");
-                    this.observateur.Reponce(6, j, res);
+                    this.observateur.Reponse(6, j, res);
                 }
-                this.observateur.Reponce(0, j, res);
+                this.observateur.Reponse(0, j, res);
             }
             //Propriete --> Acheter ou payer le loyer
             else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
                 //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
                 this.labelInfoCase.setText("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete().getNom());
-                this.observateur.Reponce(0, j, res);
+                this.observateur.Reponse(0, j, res);
                 
             }
             else if(res.getPrixPropriete() == -2) { // Cas où le joueur n'a pas assez d'argent pour acheter la propriété
                 this.labelInfoCase.setText("Vous ne pouvez pas acheter " + j.getPositionCourante().getNomCarreau());
-                this.observateur.Reponce(0, j, res);
+                this.observateur.Reponse(0, j, res);
             }
             else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
                 this.labelInfoCase.setText("Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?");
@@ -267,7 +267,7 @@ public class IhmJeu extends JFrame{
                             conteuroui ++;
                             oui.setEnabled(false);
                             non.setEnabled(false);
-                            observateur.Reponce(2, j, res);
+                            observateur.Reponse(2, j, res);
                         }
                     }
                 });
@@ -282,7 +282,7 @@ public class IhmJeu extends JFrame{
                             conteurnon ++;
                             oui.setEnabled(false);
                             non.setEnabled(false);
-                            observateur.Reponce(0, j, res);
+                            observateur.Reponse(0, j, res);
                         }
                     }
                 });
@@ -290,10 +290,10 @@ public class IhmJeu extends JFrame{
              
             else if (res.getProprietairePropriete() == j){ // Cas où le joueur tombe sur une case qu'il a déjà acheté
                 this.labelInfoCase.setText("Vous êtes le proprietaire de cette case.");
-                this.observateur.Reponce(0, j, res);
+                this.observateur.Reponse(0, j, res);
             }
             else {
-                this.observateur.Reponce(0, j, res);
+                this.observateur.Reponse(0, j, res);
             }
             
             
