@@ -35,7 +35,7 @@ import javax.swing.Timer;
 public class IhmPlateau extends JPanel{
     private int x, y;
     
-    private Timer timer;
+    Timer timer;
     private BufferedImage fondPlateau;
     Observateur observateur;
     
@@ -99,34 +99,35 @@ public class IhmPlateau extends JPanel{
         
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
         
-        this.initListeCase();//Il y 0 joueurs à dessiner sur la première case
+        this.initListeCase();//Il y 0 joueurs à dessiner pour le moment
         Point p;
         System.out.println("anim = "+ animationEnCours);
-        if (!animationEnCours) {//Tous les joueurs sont su la première case
+        if (!animationEnCours) {//Si on ne fait pas d'animation
             for (String nomJ : joueurs.keySet()) {
-                nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner
-                p = trouveCoordonneesCase((nomJ), 0);
-                p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
+                nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
+                p = trouveCoordonneesCase((nomJ), 0);//On trouve les coordonnées du pion
+                p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
                 
-                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);    
+                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);//On dessine le pion avec les coordonnées calculées
             }
+            
         }
                 
         else if (animationEnCours) {
-            System.out.println("ANIMATION ! ");
             for (String nomJ : joueurs.keySet()) {
-                nbJoueursParCases[joueurs.get(nomJ)-1]++;//On va dessiner un joueur sur la bonne case
+                //On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
                 if (nomJoueurCourant.equals(nomJ)) {
-                    p = trouveCoordonneesCase((nomJ), 1);//On met le mode avancer si le joueur doit bouger
-                    //nbJoueursParCases[joueurs.get(nomJ)-1]--;
+                    nbJoueursParCases[joueurs.get(nomJ)-1]--;//Le joueur ne sera plus sur cette case
+                    p = trouveCoordonneesCase((nomJ), 1);//Ce joueur doit avancer
+                    nbJoueursParCases[joueurs.get(nomJ)-1]++;//Il a avancer sur celle-ci
                 }
                 else {
-                    p = trouveCoordonneesCase((nomJ), 0);                                   
+                    nbJoueursParCases[joueurs.get(nomJ)-1]++;
+                    p = trouveCoordonneesCase((nomJ), 0);
                 }
-                System.out.println("J : "+(joueurs.get(nomJ)-1));
                 p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
                 
-                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);    
+                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);                  
             }
         }
         
@@ -144,6 +145,7 @@ public class IhmPlateau extends JPanel{
         if (mode == 1) { //Si on doit avancer
             numCase = this.numCarreauSuivant(numCase);//La case doit être la suivante
             joueurs.replace(nomJ, numCase);//Le joueur doit être mit à jour
+            System.out.println("Joueur = " + nomJ + "case = " + numCase);
         }
         
         if(numCase == 1) {//CASE DEPART
@@ -183,9 +185,11 @@ public class IhmPlateau extends JPanel{
     }
     
     private int numCarreauSuivant(int numCar) {
-        if(numCar++ % 41  == 0) 
+        int carreauSuivant = numCar+1;
+        carreauSuivant = carreauSuivant % 41;
+        if(carreauSuivant  == 0) 
             return 1;
-        else return numCar++ % 41;
+        else return carreauSuivant;
     }
     
     //Sélectionne les coordonnées d'affichage du pion sur la case
@@ -268,7 +272,6 @@ public class IhmPlateau extends JPanel{
         int numCarreauDestination = positionCourante.getNumero();
         
         animationEnCours = true;
-        //Tant que le joueur n'est pas sur la bonne case
         System.out.println("nomJoueurCourant = " + nomJoueurCourant + "numCarreauDestination" + numCarreauDestination);
         timer = new Timer(+400, new ActionListener() {
                 @Override

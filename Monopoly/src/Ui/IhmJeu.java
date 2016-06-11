@@ -84,7 +84,7 @@ public class IhmJeu extends JFrame{
         this.infos = new JPanel();
         this.controle.add(infos);
         this.infos.setLayout(new GridLayout(15, 1));
-        this.infos.add(new JLabel("                                                                                                                                                                                                                "));
+        this.infos.add(new JLabel("---------          Contrôle             -----------"));
         return this.controle;
     }
     
@@ -153,7 +153,7 @@ public class IhmJeu extends JFrame{
     //Affichera toutes les infos du joueur
     public void displayJoueur(Joueur j, int nbdouble) {
         IhmMonopoly test = new IhmMonopoly(j);
-        this.add(test, BorderLayout.WEST);
+        //this.add(test, BorderLayout.WEST);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -429,7 +429,8 @@ public class IhmJeu extends JFrame{
     
     public void afficher() {
         this.setTitle("Monopoly");
-        this.setSize(1200, 1000);
+        this.setSize(1300, 1000);
+        controle.setSize(400, 1000);
         this.setVisible(true);
         this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
     }
