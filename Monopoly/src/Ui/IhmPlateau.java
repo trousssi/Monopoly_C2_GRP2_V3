@@ -13,6 +13,8 @@ import java.awt.Canvas;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.io.File;
@@ -23,68 +25,60 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
  * @author vivierlo
  */
-public class IhmPlateau extends Canvas{
+public class IhmPlateau extends JPanel{
     private int x, y;
     
-    
+    private Timer timer;
     private BufferedImage fondPlateau;
     Observateur observateur;
     
-    private ArrayList<BufferedImage> pions; //Liste des pions
+    private HashMap<String, BufferedImage> pions; //Liste des pions
     private HashMap<String, Integer> joueurs; //Liste des joueurs avec String: nom joueur et Integer: numéro Carreau courant
-    private ArrayList<Integer> nbJoueursParCases;
-    
-    private HashMap<String, Integer> joueurCourant;
-    private int numCarreauCourant = 1;
-    private int numCarreauDestination = 1;
-    private int nbJoueurs;
+    private int[] nbJoueursParCases;
     private String nomJoueurCourant;
-    int xFinal = 0;
-    int yFinal = 0;
     
-    
+    private boolean animationEnCours;
     
     public IhmPlateau(HashSet<String> noms) throws InterruptedException   {
         super();
-        pions = new ArrayList<>();
+        pions = new HashMap<>();
         joueurs = new HashMap<>();
-        joueurCourant = new HashMap<>();
-        nbJoueursParCases = new ArrayList<>();
+        nbJoueursParCases = new int[40];
         
-        
+        String couleur[] ={"Rouge", "Bleu", "Vert", "Jaune", "Violet", "Orange"};
+        int numCouleur = 0;
         //Initialisation des joueurs
-        for (String nomJ : noms) {
-            joueurs.put(nomJ, 1); //positionnés sur le carreau de départ
-        }
-        
-        nbJoueurs = joueurs.size();
-        //Initialisation des pions
-        try {
-            pions.add(ImageIO.read(new File("src/Data/pionRouge.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionBleu.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionVert.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionJaune.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionViolet.png")));
-            pions.add(ImageIO.read(new File("src/Data/pionOrange.png")));
-        } catch (IOException ex) {
-            Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-        } 
-        
-        /**
-         * Initialisation des coordonnées des pions.
-        */
+        for (String nomJ : noms) {            
+            try {
+                joueurs.put(nomJ, 1); //positionnés sur le carreau de départ
+                pions.put(nomJ, ImageIO.read(new File("src/Data/pion" + couleur[numCouleur] + ".png")));
+                numCouleur++;
+            } catch (IOException ex) {
+                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }    
         
         //Initialisation du nombre de joueurs par case
-        for(int i= 1; i<=40; i++) {
-            nbJoueursParCases.add(0);
+        this.initListeCase();
+    }
+    
+    //private void trouveNbJoueursParCase() {
+        //for (String nomJ : joueurs.keySet()) {
+            //nbJoueursParCases[joueurs.get(nomJ)]++;//On ajoute 1 pour la case où se trouve un joueur
+        //}
+    //}
+    
+    private void initListeCase() {
+        for(int i= 0; i<40; i++) {
+            nbJoueursParCases[i] = 0;
         }
-        nbJoueursParCases.set(0, nbJoueurs); // Tous les joueurs sont sur la case départ
-        System.out.println("nbJoueursParCases = "+nbJoueursParCases+"joueurCourant= "+joueurCourant+"numCarreauCourant = "+numCarreauCourant+"numCarreauDestination = "+numCarreauDestination);
     }
     
     /**
@@ -92,10 +86,10 @@ public class IhmPlateau extends Canvas{
     * @param g un contexte graphique
     */
     @Override
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
         Dimension d = new Dimension(900, 900);
         super.setSize(d);
-        super.paint(g);
+        super.paintComponent(g);
         
         try {
             fondPlateau = ImageIO.read(new File("src/Data/plateau.jpg"));
@@ -104,121 +98,53 @@ public class IhmPlateau extends Canvas{
         }
         
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
-        /*
-            while (joueurCourant.getPositionCourante()!=destination) {
-                avancerPion()
-                //Changement de case
-                nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)-1);
-                numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);
-                nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)+1);
-            }*/
-        Point p = new Point(); 
-        //if (joueurs.get(nomJoueurCourant) == null)numCarreauCourant--;
-        while (numCarreauCourant!=numCarreauDestination && joueurs.get(nomJoueurCourant) != null) {
-            try {
-                p = avancerPion(joueurCourant);
-                        System.out.println("nbJoueursParCases = "+nbJoueursParCases+"joueurCourant= "+joueurCourant+"numCarreauCourant = "+numCarreauCourant+"numCarreauDestination = "+numCarreauDestination);
-
-                //Changement de case
-                nbJoueursParCases.set(numCarreauCourant-2, nbJoueursParCases.get(numCarreauCourant-2)-1);//Case courante
-                nbJoueursParCases.set(numCarreauCourant-1, nbJoueursParCases.get(numCarreauCourant-1)+1);//case suivante
-            } catch (InterruptedException ex) {
-                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            int i = joueurs.get(nomJoueurCourant);//i = numCase
-            System.out.println("nbJoueursParCases = "+nbJoueursParCases+"joueurCourant= "+joueurCourant+"numCarreauCourant = "+numCarreauCourant+"numCarreauDestination = "+numCarreauDestination);
-            g.drawImage(pions.get(i), p.x, p.y, (ImageObserver) observateur);
-            xFinal = p.x;
-            yFinal = p.y;
-            try {
-                Thread.sleep(500);
-                
-            } catch (InterruptedException ex) {
-                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            System.out.println("///////////// " + numCarreauCourant + "\\\\\\\\\\\\\\");
-            
-            repaint();
-        }
-        int compteurJoueursParCase = 1; //nbJoueursParCases.get(joueurs.get(nomJ)-1)
         
-        if (numCarreauCourant ==numCarreauDestination && joueurs.get(nomJoueurCourant) != null) {
-            Point pFinal = new Point();
-            
-            System.out.println("PAINT");
+        this.initListeCase();//Il y 0 joueurs à dessiner sur la première case
+        Point p;
+        System.out.println("anim = "+ animationEnCours);
+        if (!animationEnCours) {//Tous les joueurs sont su la première case
             for (String nomJ : joueurs.keySet()) {
-                pFinal = this.positionne(joueurs.get(nomJ));
-                pFinal = positionnePionSurCase(joueurs.get(nomJ), compteurJoueursParCase, pFinal.x, pFinal.y);
-                if (compteurJoueursParCase <= nbJoueursParCases.get(joueurs.get(nomJ)-1)) compteurJoueursParCase++;
-                g.drawImage(pions.get(joueurs.get(nomJ)), pFinal.x, pFinal.y, (ImageObserver) observateur);
-                System.out.println("NomJ = " + nomJ + "case = " + joueurs.get(nomJ) + "pion = " + pFinal);
+                nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner
+                p = trouveCoordonneesCase((nomJ), 0);
+                p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
+                
+                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);    
             }
-            
-            g.drawImage(pions.get(joueurs.get(nomJoueurCourant)), xFinal, yFinal, (ImageObserver) observateur);
         }
+                
+        else if (animationEnCours) {
+            System.out.println("ANIMATION ! ");
+            for (String nomJ : joueurs.keySet()) {
+                nbJoueursParCases[joueurs.get(nomJ)-1]++;//On va dessiner un joueur sur la bonne case
+                if (nomJoueurCourant.equals(nomJ)) {
+                    p = trouveCoordonneesCase((nomJ), 1);//On met le mode avancer si le joueur doit bouger
+                    //nbJoueursParCases[joueurs.get(nomJ)-1]--;
+                }
+                else {
+                    p = trouveCoordonneesCase((nomJ), 0);                                   
+                }
+                System.out.println("J : "+(joueurs.get(nomJ)-1));
+                p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
+                
+                g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);    
+            }
+        }
+        
     }
     
-    //Donne les coordonnées précises du pion après qu'il ai avancé
-    public Point avancerPion(HashMap<String, Integer> j) throws InterruptedException {
-        int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
-        int x = 0, y = 0;
-        
-        
-        //Sélectionne les coordonnées précises de 
-        if(numCarreauCourant == 1) {//CASE DEPART
-            x = BASE;// Pour le joueur courant x = 786
-            y = BASE;// y = 786;
-        }
-        else if(numCarreauCourant <= 10) { //LIGNE BAS
-            x = BASE-74*(numCarreauCourant-1);
-            y = 844;
-        }
-        else if (numCarreauCourant == 11) {//VISITE PRISON 
-            x = 5;
-            y = BASE;
-        }
-        else if (numCarreauCourant <= 20) {//LIGNE GAUCHE
-            x = 16;
-            y = BASE-74*(numCarreauCourant-11);
-        }
-        else if (numCarreauCourant == 21) {//PARC GRATUIT
-            x = 16;
-            y = 16;
-        }
-        else if (numCarreauCourant <= 30) {//LIGNE HAUT
-            x = 120+74*(numCarreauCourant-22);
-            y = 16;
-        }
-        else if (numCarreauCourant == 31) {//ALLER EN PRISON
-            x = 786;
-            y = 16;
-        }
-        else if (numCarreauCourant <= 40) {//LIGNE DROITE
-            x = 841;
-            y = 123+74*(numCarreauCourant-32);
-        }
-        numCarreauCourant = this.numCarreauSuivant(numCarreauCourant);
-        return positionnePionSurCase(numCarreauCourant, nbJoueursParCases.get(numCarreauCourant-1), x, y);
-
-        
-        /*int numJ=0;
-        while (numJ<nbJoueurs) {
-            Point posJoueur = getPositionJoueur(numJ);
-            positionnePionSurCase(numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
-
-            System.out.println("numJ:" + numJ + "|numCarreauCourant:" + numCarreauCourant + " |nbJoueursSurCase:" 
-                    + nbJoueursParCases.get(numCarreauCourant) + " |posJoueur.x:" + posJoueur.x + " |posJoueur.y:" + posJoueur.y);
-            numJ++;
-        }
-         System.out.println("||||||||||||||");*/
-        //g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
-
-    }
     
-    private Point positionne(int numCase) {
+    
+    //Donne les coordonnées précises du pion après qu'il ai avancé 
+    //public Point avancerPion(HashMap<String, Integer> j) throws InterruptedException {
+    public Point trouveCoordonneesCase(String nomJ, int mode) { 
         int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
         int x = 0, y = 0;        
+        int numCase = joueurs.get(nomJ);
+        
+        if (mode == 1) { //Si on doit avancer
+            numCase = this.numCarreauSuivant(numCase);//La case doit être la suivante
+            joueurs.replace(nomJ, numCase);//Le joueur doit être mit à jour
+        }
         
         if(numCase == 1) {//CASE DEPART
             x = BASE;// Pour le joueur courant x = 786
@@ -252,7 +178,7 @@ public class IhmPlateau extends Canvas{
             x = 841;
             y = 123+74*(numCase-32);
         }
-        System.out.println("numCase = " + numCase + " nb = " + nbJoueursParCases.get(numCase-1));
+        
         return new Point(x, y);
     }
     
@@ -331,46 +257,36 @@ public class IhmPlateau extends Canvas{
                 }  
             }
         }
+        
+        
         return new Point(xPion1,yPion1);
     }
-   
-    /*public Point getPositionJoueur(int numJoueur) {
-        return pos.get(numJoueur);
-    }
-    
-    public void setPosition(int numJ, int x, int y) {
-        pos.set(numJ, new Point (x,y));
-    }*/
-    
-    /*public void dessinerPions() {
-        int numJ=0;
-        while (numJ<nbJoueurs) {
-            Point posJoueur = getPositionJoueur(numJ);
-            positionnePionSurCase(g, numJ, numCarreauCourant, nbJoueursParCases.get(numCarreauCourant), posJoueur.x, posJoueur.y);
-
-            System.out.println("numJ:" + numJ + "|numCarreauCourant:" + numCarreauCourant + " |nbJoueursSurCase:" 
-                    + nbJoueursParCases.get(numCarreauCourant) + " |posJoueur.x:" + posJoueur.x + " |posJoueur.y:" + posJoueur.y);
-            numJ++;
-        }
-         System.out.println("||||||||||||||");
-        Thread.sleep(500);
-        //g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur);
-    }*/
-
-    /**public void setObservateur(Observateur observateur) {
-        this.observateur = observateur;
-    }
-
-    public void setJoueurs(HashSet<String> joueurs) {
-        this.joueurs = joueurs;
-    }*/
 
     public void recupDonneesJoueur(Joueur j, Carreau positionCourante, Carreau anciennePosition) {
-        numCarreauCourant = anciennePosition.getNumero();
+        //numCarreauCourant = anciennePosition.getNumero();
         nomJoueurCourant = j.getNom();
-        joueurCourant.put(nomJoueurCourant, numCarreauCourant);
-        numCarreauDestination = positionCourante.getNumero();
+        int numCarreauDestination = positionCourante.getNumero();
         
-        repaint();
+        animationEnCours = true;
+        //Tant que le joueur n'est pas sur la bonne case
+        System.out.println("nomJoueurCourant = " + nomJoueurCourant + "numCarreauDestination" + numCarreauDestination);
+        timer = new Timer(+400, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Test");
+                    if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
+                        System.out.println("FinTest");
+                        timer.stop();
+                        animationEnCours = false;
+                    }
+                    else {
+                        repaint();
+                    } 
+                }
+        });
+        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {
+            System.out.println("START Timer");
+            timer.start();
+        }
     }
 }

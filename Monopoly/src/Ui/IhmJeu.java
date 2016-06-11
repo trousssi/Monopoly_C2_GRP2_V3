@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  * @author fallm
  */
 public class IhmJeu extends JFrame{
-    //private final IhmPlateau plateau; 
+    private final IhmPlateau plateau; 
     private final JPanel controle;
     private JPanel panelDes;
     private JLabel nomJoueur;
@@ -62,12 +62,13 @@ public class IhmJeu extends JFrame{
     private int conteurConstruire = 0;
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
-      //  plateau = new IhmPlateau(noms);
+        plateau = new IhmPlateau(noms);
+
         controle = new JPanel();
         
         
         this.setLayout(new BorderLayout());
-       // this.add(plateau, BorderLayout.CENTER);
+        this.add(plateau, BorderLayout.CENTER);
         
         conteurlanceDes = 0;
         this.conteurnon = 0;
@@ -196,7 +197,7 @@ public class IhmJeu extends JFrame{
             this.dDouble = d1 == d2;
             this.MajJoueur(j);
             
-           // this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
+            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
             
             this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
             this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
@@ -298,6 +299,8 @@ public class IhmJeu extends JFrame{
             
             
             this.setVisible(true);
+            //plateau.createBufferStrategy(2);
+
             //this.setVisible(true);
             /* if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) {
             acheter.setEnabled(false);
