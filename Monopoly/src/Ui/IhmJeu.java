@@ -197,7 +197,7 @@ public class IhmJeu extends JFrame{
             this.dDouble = d1 == d2;
             this.MajJoueur(j);
             
-            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
+            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant, res.isEnPrison());
             
             this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
             this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));
