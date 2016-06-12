@@ -53,7 +53,7 @@ public class IhmInscription extends JFrame  {
         choix = new JPanel();
         
         //Couleur de fond
-        Color fond = new Color(206,239,203);
+        Color fond = new Color(218,233,212);
         this.getContentPane().setBackground(fond);
         gestionJoueurs.setBackground(fond);
         inscriptions.setBackground(fond);

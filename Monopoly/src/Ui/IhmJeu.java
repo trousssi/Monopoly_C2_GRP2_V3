@@ -66,11 +66,14 @@ public class IhmJeu extends JFrame{
     private int conteurConstruire = 0;
     private JLabel nbmaison;
     private JLabel nbhotel;
+    private Color fond = new Color(218,233,212);
+
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
         plateau = new IhmPlateau(noms);
-
+        this.getContentPane().setBackground(fond);
         controle = new JPanel();
+        controle.setBackground(fond);
         
         
         this.setLayout(new BorderLayout());
@@ -82,6 +85,7 @@ public class IhmJeu extends JFrame{
         this.add(this.controle(), BorderLayout.EAST);
         
         JPanel panelJoueur = new JPanel();
+        panelJoueur.setBackground(fond);
         this.nbmaison = new JLabel();
         this.nbhotel = new JLabel();
         
@@ -107,6 +111,7 @@ public class IhmJeu extends JFrame{
     
     private JPanel controle() {
         this.infos = new JPanel();
+        infos.setBackground(fond);
         this.controle.add(infos);
         this.infos.setLayout(new GridLayout(16, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
@@ -116,7 +121,8 @@ public class IhmJeu extends JFrame{
     private void initJoueur() {
         
         
-        
+        this.getContentPane().setBackground(fond);
+
    
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
@@ -131,7 +137,9 @@ public class IhmJeu extends JFrame{
          
     }
     private void initInfos() {
+        
         this.panelDes = new JPanel();
+        panelDes.setBackground(fond);
         this.infos.add(this.panelDes);
         this.labelDe1 = new JLabel();
         this.labelDe2 = new JLabel();
@@ -149,6 +157,7 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelInfoCase);
         
         panelRep = new JPanel();
+        panelRep.setBackground(fond);
         this.infos.add(panelRep);
         oui = new JButton("oui");
         non = new JButton("non");
@@ -164,6 +173,7 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelInfoDouble);
         
         JPanel boutonsProp = new JPanel();
+        boutonsProp.setBackground(fond);
         boutonsProp.setLayout(new GridLayout(1,2));
         this.infos.add(boutonsProp);
         this.construire = new JButton("Construire");
