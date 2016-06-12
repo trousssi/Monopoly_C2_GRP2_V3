@@ -82,6 +82,11 @@ public class IhmJeu extends JFrame{
         this.add(this.controle(), BorderLayout.EAST);
         
         JPanel panelJoueur = new JPanel();
+        this.nbmaison = new JLabel();
+        this.nbhotel = new JLabel();
+        
+        panelJoueur.add(nbmaison);
+        panelJoueur.add(nbhotel);
         this.add(panelJoueur, BorderLayout.SOUTH);
         
         String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
@@ -103,18 +108,14 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(18, 1));
+        this.infos.setLayout(new GridLayout(16, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
         return this.controle;
     }
     
     private void initJoueur() {
         
-        this.nbmaison = new JLabel();
-        this.nbhotel = new JLabel();
         
-        this.infos.add(nbmaison);
-        this.infos.add(nbhotel);
         
    
         nomJoueur = new JLabel();
@@ -223,8 +224,8 @@ public class IhmJeu extends JFrame{
     private void MajJoueur(Joueur j) {
         this.cash.setText("Cash : " + j.getCash());
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
-        this.nbmaison.setText("Maison disponibles : " + this.observateur.getNbMaison());
-        this.nbhotel.setText("Hotel disponibles : " + this.observateur.getNbHotel());
+        this.nbmaison.setText("Maison disponibles : " + this.observateur.getNbMaison() + "  ");
+        this.nbhotel.setText("Hotel disponibles : " + this.observateur.getNbHotel()+"   ");
     }
     
     
