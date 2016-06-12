@@ -5,6 +5,7 @@ import Jeu.Carte;
 import Jeu.Joueur;
 import Jeu.Monopoly;
 import Jeu.ProprieteAConstruire;
+import Jeu.Resultat;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -132,6 +133,11 @@ public class Controleur {
                             
                             nbDouble++;
                              this.obs.action(res, j, resDes1, resDes2, nbDouble);
+                        }
+                        else {
+                            Resultat res = new Resultat();
+                            res.setEnPrison(true);
+                            this.obs.action(res, j, resDes1, resDes2, nbDouble);
                         }
                     }
 
