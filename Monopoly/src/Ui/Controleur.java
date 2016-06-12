@@ -55,9 +55,9 @@ public class Controleur {
         
         
         public static int lancerDes() {
-            //return RANDOM.nextInt(6)+1;
-            Scanner sc = new Scanner(System.in);
-            return sc.nextInt();
+            return RANDOM.nextInt(6)+1;
+            //Scanner sc = new Scanner(System.in);
+            //return sc.nextInt();
             
         }
         
