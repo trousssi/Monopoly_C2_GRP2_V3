@@ -116,11 +116,7 @@ public class IhmJeu extends JFrame{
         this.infos.add(nbmaison);
         this.infos.add(nbhotel);
         
-        this.nbmaison = new JLabel();
-        this.nbhotel = new JLabel();
-        
-        this.infos.add(nbmaison);
-        this.infos.add(nbhotel);
+   
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
         cash = new JLabel();
