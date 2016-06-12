@@ -432,5 +432,13 @@ public class Controleur {
     public ArrayList<Joueur> getJoueurs() {
         return this.monopoly.getJoueurs();
     }
+    
+    public int getNbMaison() {
+        return this.monopoly.getMaison();
+    }
+    
+    public int getNbHotel() {
+        return this.monopoly.getHotel();
+    }
 
 }

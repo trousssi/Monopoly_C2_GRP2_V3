@@ -232,4 +232,12 @@ public final class IHM implements Observateur{
     public boolean peutConstruire(Joueur j, ProprieteAConstruire prop) {
         return controleur.peutConstruire(j, prop);
     }
+    
+    public int getNbMaison() {
+        return this.controleur.getNbMaison();
+    }
+    
+    public int getNbHotel() {
+        return this.controleur.getNbHotel();
+    }
 }
