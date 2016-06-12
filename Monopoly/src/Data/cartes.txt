@@ -1,29 +1,29 @@
-LI,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.,0,11
+LI,Vous êtes libéré de prison. Cette carte peut être conservée|jusqu'à ce qu'elle soit utilisée.,0,11
 DE,Reculez de trois cases,0,-3
-RE,Vous êtes imposés pour les réparations de voirie à raison de : 40 € par maison et 115€ par hôtel.,1,0
+RE,Vous êtes imposés pour les réparations de voirie|à raison de : 40 € par maison et 115€ par hôtel.,1,0
 AR,Amende pour excès de vitesse : 15€,-15,0
-RE,Faites des réparations dans toutes vos maisons : versez pour chaque maison 25€ et pour chaque hôtel 100€,2,0
+RE,Faites des réparations dans toutes vos maisons : versez |pour chaque maison 25€ et pour chaque hôtel 100€,2,0
 AR,Amende pour ivresse : 20€,-20,0
 DE,Avancez jusqu'à la case Départ,0,1
-PR,Allez en prison. Avancez tout droit en prison. Ne passez pas par la case Départ. Ne recevez pas 200€,0,11
-DE,Rendez-vous à l'Avenue Henri-Martin. Si vous passez par la case Départ. Recevez 200€,0,25
-DE,Allez à la gare de Lyon. Si vous passez par la case Départ. Recevez 200€.,0,16
+PR,Allez en prison. Avancez tout droit en prison. Ne passez pas|par la case Départ. Ne recevez pas 200€,0,11
+DE,Rendez-vous à l'Avenue Henri-Martin. Si vous passez par |la case Départ. Recevez 200€,0,25
+DE,Allez à la gare de Lyon. Si vous passez par la case Départ.|Recevez 200€.,0,16
 AR,Payez pour frais de scolarité : 150€,-150,0
-AR,Vous avez gagné le prix de mots croisés. Recevez 100€,100,0
+AR,Vous avez gagné le prix de mots croisés.|Recevez 100€,100,0
 AR,La Banque vous verse un dividende de 50€,50,0
 DE,Rendez-vous à la Rue de la Paix.,0,40
-AR,Votre immeuble et votre prêt rapportent. Vous devez toucher 150€,150,0
-DE,Accédez au Boulevard de la Villette. Si vous passez par la case Départ. Recevez 200€,0,12
-LI,Vous êtes libéré de prison. Cette carte peut être conservée jusqu'à ce qu'elle soit utilisée.,0,0
+AR,Votre immeuble et votre prêt rapportent.|Vous devez toucher 150€,150,0
+DE,Accédez au Boulevard de la Villette.|Si vous passez par la case Départ. Recevez 200€,0,12
+LI,Vous êtes libéré de prison. Cette carte peut être conservée|jusqu'à ce qu'elle soit utilisée.,0,0
 AR,Payez une amende de 10€,-10,0
-AR,C'est votre anniversaire. Chaque joueur doit vous donner 10€,-1,0
+AR,C'est votre anniversaire.|Chaque joueur doit vous donner 10€,-1,0
 AR,Erreur de la banque en votre faveur. Recevez 200€,200,0
 DE,Retournez à Belleville,0,2
 AR,Payez la note du médecin,-50,0
 AR,Les contributions vous remboursent la somme de 20€,20,0
 AR,Payez à l'hôpital 100€,-100,0
 AR,Vous héritez : 100€,100,0
-PR,Allez en prison. Avancez tout droit en prison. Ne passez pas par la case Départ. Ne recevez pas 200€,0,0
+PR,Allez en prison. Avancez tout droit en prison. Ne passez pas|par la case Départ. Ne recevez pas 200€,0,0
 AR,Payez votre Police d'Assurance : 50€,-50,0
 AR,La vente de votre stock vous rapporte : 50€,50,0
 DE,Avancez jusqu'à la case Départ.,0,1
