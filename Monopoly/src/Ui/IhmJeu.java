@@ -51,6 +51,7 @@ public class IhmJeu extends JFrame{
     private JButton jSuivant;
     private JButton rejouer;
     private JLabel labelinfoCarte;
+    private JLabel labelinfoCarte2;
     private Carreau DepartJcourant;
     private JButton construire;
     private JLabel labelCaseDep;
@@ -83,7 +84,7 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(15, 1));
+        this.infos.setLayout(new GridLayout(16, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
         return this.controle;
     }
@@ -114,6 +115,8 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelCaseDep);
         this.labelinfoCarte = new JLabel();
         this.infos.add(this.labelinfoCarte);
+        this.labelinfoCarte2 = new JLabel();
+        this.infos.add(this.labelinfoCarte2);
         
         this.labelInfoCase = new JLabel();
         this.infos.add(this.labelInfoCase);
@@ -204,7 +207,12 @@ public class IhmJeu extends JFrame{
             
             if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
-                    this.labelinfoCarte.setText(res.getNomCarte());
+                    if  (res.getNomCarte().length() > 52) {
+                        this.labelinfoCarte.setText(res.getNomCarte().substring(0, 53));
+                        this.labelinfoCarte2.setText(res.getNomCarte().substring(53, 104));
+                    } else {
+                       this.labelinfoCarte.setText(res.getNomCarte());
+                    }
                     if (res.isDeplace()) { // Carte deplacement
                         if (res.getDeplacement() != 0) { // deplacement normal
                             
@@ -241,7 +249,7 @@ public class IhmJeu extends JFrame{
             //Propriete --> Acheter ou payer le loyer
             else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
                 //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
-                this.labelInfoCase.setText("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete().getNom());
+                this.labelInfoCase.setText("Vous avez Payé " + res.getLoyerPropriete() + "€" + " à " + res.getProprietairePropriete().getNom());
                 this.observateur.Reponse(0, j, res);
                 
             }
