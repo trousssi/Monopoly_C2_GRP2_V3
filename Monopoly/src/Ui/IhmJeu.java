@@ -7,6 +7,7 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
+import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -213,8 +214,9 @@ public class IhmJeu extends JFrame{
             
             if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
-                    if  (res.getNomCarte().contains("|")) {
-                        String[] nomCarteTronque = res.getNomCarte().split("|");
+                    if  (res.getNomCarte().contains("!")) {
+                        String[] nomCarteTronque = res.getNomCarte().split("!");
+                        System.out.println(nomCarteTronque[0]);
                         this.labelinfoCarte.setText(nomCarteTronque[0]);
                         this.labelinfoCarte2.setText(nomCarteTronque[1]);
                     } else {
@@ -393,9 +395,24 @@ public class IhmJeu extends JFrame{
                 }
             });
         }
+        
         this.construire.setVisible(true);
+        this.construire.setEnabled(false);
+        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
         this.afficherProp.setVisible(true);
-         this.setVisible(true);
+        this.afficherProp.setEnabled(false);
+        this.afficherProp.setToolTipText("Vous ne possédez pas de propriétés");
+        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+            if (observateur.peutConstruire(j, prop)) {
+                this.construire.setEnabled(true);
+                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
+            }
+        }
+        if (j.getProprietesAconstruire().size() > 0 || j.getGares().size() > 0 || j.getCompagnies().size() > 0) {
+            this.afficherProp.setEnabled(true);
+            this.afficherProp.setToolTipText("Affichez vos propriétés");
+        }
+        this.setVisible(true);
     }
     
     public void effacer() {

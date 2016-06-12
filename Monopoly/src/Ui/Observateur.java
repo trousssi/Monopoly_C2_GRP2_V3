@@ -7,6 +7,7 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
+import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -44,12 +45,14 @@ public interface Observateur {
     
     public void Reponse(int cas, Joueur j, Jeu.Resultat res);
     
-     public void notification(String message,Joueur j);
+    public void notification(String message,Joueur j);
      
-     public void joueurSuivant(Joueur j);
+    public void joueurSuivant(Joueur j);
      
-     public void rejouer(Joueur j,int nbdouble);
-     
+    public void rejouer(Joueur j,int nbdouble);
+    
+    public boolean peutConstruire (Joueur j, ProprieteAConstruire prop);
+    
     public boolean sortiePrisonCarte(Joueur j);
     
     public void sortiePrison();
