@@ -33,10 +33,14 @@ import javax.swing.Timer;
  * @author vivierlo
  */
 public class IhmPlateau extends JPanel{
-    private int x, y;
     
     Timer timer;
     private BufferedImage fondPlateau;
+    private BufferedImage maison;
+    private BufferedImage hotelHorizontal;
+    private BufferedImage hotelVertical;
+    
+    
     Observateur observateur;
     
     private HashMap<String, BufferedImage> pions; //Liste des pions
@@ -44,18 +48,20 @@ public class IhmPlateau extends JPanel{
     private int[] nbJoueursParCases;
     private String nomJoueurCourant;
     
+    private HashMap<Integer, Integer> maisons;//Clé = numéro de la case, value = nombre de maisons
     private boolean prisonnier = false;
     private boolean animationEnCours;
     
-    public IhmPlateau(HashSet<String> noms) throws InterruptedException   {
+    public IhmPlateau(HashSet<String> noms) {
         super();
         pions = new HashMap<>();
         joueurs = new HashMap<>();
+        maisons = new HashMap<>();
         nbJoueursParCases = new int[40];
         
         String couleur[] ={"Rouge", "Bleu", "Vert", "Jaune", "Violet", "Orange"};
         int numCouleur = 0;
-        //Initialisation des joueurs
+        //Initialisation des joueurs et des images de pions
         for (String nomJ : noms) {            
             try {
                 joueurs.put(nomJ, 1); //positionnés sur le carreau de départ
@@ -68,6 +74,24 @@ public class IhmPlateau extends JPanel{
         
         //Initialisation du nombre de joueurs par case
         this.initListeCase();
+        
+        //Chargement des images
+        try {
+            maison = ImageIO.read(new File("src/Data/maison.png"));
+            hotelHorizontal = ImageIO.read(new File("src/Data/hotel_horizontal.png"));
+            hotelVertical = ImageIO.read(new File("src/Data/hotel_vertical.png"));
+        } catch (IOException ex) {
+            Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        /**
+        ** Test Maison. (à supprimer)
+        */
+        ajoutMaison(2); 
+        ajoutMaison(27); ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27); //--> 5 maisons = Hotel
+        ajoutMaison(14);ajoutMaison(14);
+        ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);
+        ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);
     }
     
     //private void trouveNbJoueursParCase() {
@@ -99,18 +123,36 @@ public class IhmPlateau extends JPanel{
         }
         
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
+        //dessinage des maisons
+        Point p = new Point();
+        for(int numCase : maisons.keySet()) {//Pour toute les cases
+            if (maisons.get(numCase) == 5) {//Dans ce cas on doit construire un hotel
+                p = trouveCoordonneesMaison(numCase, 0);
+                if (p.x == 91 || p.x == 785) {//Les lignes gauche et droite ont un hotel vertical 
+                    g.drawImage(hotelVertical, p.x, p.y, (ImageObserver) observateur);
+                } else {
+                    g.drawImage(hotelHorizontal, p.x, p.y, (ImageObserver) observateur);
+                }
+            }
+            else {
+                for (int i = 0; i< maisons.get(numCase); i++) {//et toutes les maisons
+                    p = trouveCoordonneesMaison(numCase, i);
+                    g.drawImage(maison, p.x, p.y, (ImageObserver) observateur);
+                }
+            }
+        }
         
+        //dessin du plateau
         this.initListeCase();//Il y 0 joueurs à dessiner pour le moment
-        Point p;
         if (!animationEnCours) {//Si on ne fait pas d'animation
-            for (String nomJ : joueurs.keySet()) {
+            for (String nomJ : joueurs.keySet()) {//On dessine tous les joueurs
                 nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
                 p = trouveCoordonneesCase((nomJ), 0);//On trouve les coordonnées du pion
                 p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
                 
                 g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);//On dessine le pion avec les coordonnées calculées
             }
-            if (prisonnier) {
+            if (prisonnier) {//
                 joueurs.replace(nomJoueurCourant, 11);
                 nbJoueursParCases[joueurs.get(nomJoueurCourant)-1]--;
                 p = trouveCoordonneesCase((nomJoueurCourant), 0);
@@ -119,7 +161,8 @@ public class IhmPlateau extends JPanel{
                 g.drawImage(pions.get(nomJoueurCourant), p.x, p.y, (ImageObserver) observateur);//
             }
         }
-                
+        
+        //dessin de l'animation
         else if (animationEnCours) {
             for (String nomJ : joueurs.keySet()) {
                 //On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
@@ -141,7 +184,25 @@ public class IhmPlateau extends JPanel{
         
     }
     
-    
+    public Point trouveCoordonneesMaison(int numCase, int nbMaison) {
+        Point p = new Point();
+        
+        if (numCase <= 10) {//LIGNE BAS
+            p.x = (119+74*(10-numCase))+14*nbMaison;
+            p.y = 785;
+        } else if (numCase <= 20) {//LIGNE GAUCHE
+            p.x = 91;
+            p.y = (119+74*(20-numCase))+14*nbMaison;
+        } else if (numCase <= 30) {//LIGNE HAUTE
+            p.x = (119+74*(numCase-22))+14*nbMaison;
+            p.y = 91;
+        } else {//LIGNE DROITE
+            p.x = 785;
+            p.y = (119+74*(numCase-32))+14*nbMaison;
+        }
+        
+        return p;
+    }
     
     //Donne les coordonnées précises du pion après qu'il ai avancé 
     //public Point avancerPion(HashMap<String, Integer> j) throws InterruptedException {
@@ -301,6 +362,7 @@ public class IhmPlateau extends JPanel{
                         if (prison) {
                             prisonnier = prison;
                         }
+                        else prisonnier = false;
                     }
                     else {
                         repaint();
@@ -309,6 +371,18 @@ public class IhmPlateau extends JPanel{
         });
         if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {//
             timer.start();
+        }
+    }
+    
+    public void ajoutMaison(int numCase) {//Il faudra construire une maison ou un hotel (nbMaison = 5) sur la case
+        //TODO: Créer un  hashMap<numCase, nbMaison> [appartenant à la classe] qui va permettre le dessin à chaque actualisation de paint
+        //Actualiser l'hashMap avec cette fonction
+        //Dans paint, avant le dessin des joueurs, dessiner les maisons selon l'hashMap
+        
+        if (maisons.get(numCase) == null) {//Si cette propriete ne comportais aucune maison
+            maisons.put(numCase, 1);//elle doit maintenant en comporter une.
+        } else {
+            maisons.replace(numCase, maisons.get(numCase)+1);//on ajoute une maison si la propriéte en possedait déjà
         }
     }
 }
