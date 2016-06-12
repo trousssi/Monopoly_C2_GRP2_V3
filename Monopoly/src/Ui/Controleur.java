@@ -55,9 +55,9 @@ public class Controleur {
         
         
         public static int lancerDes() {
-            //return RANDOM.nextInt(6)+1;
-            Scanner sc = new Scanner(System.in);
-            return sc.nextInt();
+            return RANDOM.nextInt(6)+1;
+            //Scanner sc = new Scanner(System.in);
+            //return sc.nextInt();
             
         }
         
@@ -431,6 +431,14 @@ public class Controleur {
     
     public ArrayList<Joueur> getJoueurs() {
         return this.monopoly.getJoueurs();
+    }
+    
+    public int getNbMaison() {
+        return this.monopoly.getMaison();
+    }
+    
+    public int getNbHotel() {
+        return this.monopoly.getHotel();
     }
 
 }

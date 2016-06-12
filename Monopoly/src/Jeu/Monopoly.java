@@ -281,4 +281,13 @@ public class Monopoly {
         this.Hotel++;
     }
 
+    public int getMaison() {
+        return Maison;
+    }
+
+    public int getHotel() {
+        return Hotel;
+    }
+
+    
 }

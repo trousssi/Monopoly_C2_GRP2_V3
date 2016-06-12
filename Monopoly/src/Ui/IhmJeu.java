@@ -10,6 +10,7 @@ import Jeu.Joueur;
 import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -63,11 +64,16 @@ public class IhmJeu extends JFrame{
     private int conteurJsuivant = 0;
     private int conteurRejouer = 0;
     private int conteurConstruire = 0;
+    private JLabel nbmaison;
+    private JLabel nbhotel;
+    private Color fond = new Color(218,233,212);
+
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
         plateau = new IhmPlateau(noms);
-
+        this.getContentPane().setBackground(fond);
         controle = new JPanel();
+        controle.setBackground(fond);
         
         
         this.setLayout(new BorderLayout());
@@ -77,6 +83,26 @@ public class IhmJeu extends JFrame{
         this.conteurnon = 0;
         this.conteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
+        
+        JPanel panelJoueur = new JPanel();
+        panelJoueur.setBackground(fond);
+        this.nbmaison = new JLabel();
+        this.nbhotel = new JLabel();
+        
+        panelJoueur.add(nbmaison);
+        panelJoueur.add(nbhotel);
+        this.add(panelJoueur, BorderLayout.SOUTH);
+        
+        String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
+        int numCouleur = 0;
+        for (String n : noms) {
+           JLabel l = new JLabel("<html><font color = "+ couleur[numCouleur] + " >" + n + "      </font></html>");
+           
+           //l.set(Color.getColor(couleur[numCouleur]));
+            panelJoueur.add(l);
+            numCouleur++;
+        }
+        
         this.initJoueur();
         this.initInfos();
     }
@@ -85,6 +111,7 @@ public class IhmJeu extends JFrame{
     
     private JPanel controle() {
         this.infos = new JPanel();
+        infos.setBackground(fond);
         this.controle.add(infos);
         this.infos.setLayout(new GridLayout(16, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
@@ -93,6 +120,10 @@ public class IhmJeu extends JFrame{
     
     private void initJoueur() {
         
+        
+        this.getContentPane().setBackground(fond);
+
+   
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
         cash = new JLabel();
@@ -106,7 +137,9 @@ public class IhmJeu extends JFrame{
          
     }
     private void initInfos() {
+        
         this.panelDes = new JPanel();
+        panelDes.setBackground(fond);
         this.infos.add(this.panelDes);
         this.labelDe1 = new JLabel();
         this.labelDe2 = new JLabel();
@@ -124,6 +157,7 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelInfoCase);
         
         panelRep = new JPanel();
+        panelRep.setBackground(fond);
         this.infos.add(panelRep);
         oui = new JButton("oui");
         non = new JButton("non");
@@ -139,6 +173,7 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelInfoDouble);
         
         JPanel boutonsProp = new JPanel();
+        boutonsProp.setBackground(fond);
         boutonsProp.setLayout(new GridLayout(1,2));
         this.infos.add(boutonsProp);
         this.construire = new JButton("Construire");
@@ -164,6 +199,9 @@ public class IhmJeu extends JFrame{
     public void displayJoueur(Joueur j, int nbdouble) {
         //IhmMonopoly test = new IhmMonopoly(j);
         //this.add(test, BorderLayout.WEST);
+        
+         
+        this.MajJoueur(j);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -196,6 +234,8 @@ public class IhmJeu extends JFrame{
     private void MajJoueur(Joueur j) {
         this.cash.setText("Cash : " + j.getCash());
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
+        this.nbmaison.setText("Maison disponibles : " + this.observateur.getNbMaison() + "  ");
+        this.nbhotel.setText("Hotel disponibles : " + this.observateur.getNbHotel()+"   ");
     }
     
     

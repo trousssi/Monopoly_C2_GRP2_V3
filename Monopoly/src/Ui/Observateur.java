@@ -56,4 +56,8 @@ public interface Observateur {
     public boolean sortiePrisonCarte(Joueur j);
     
     public void sortiePrison();
+    
+    public int getNbMaison();
+    
+    public int getNbHotel();
 }

@@ -6,6 +6,7 @@
 package Ui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.util.HashSet;
 import javax.swing.JFrame;
 import java.awt.GridLayout;
@@ -32,6 +33,8 @@ public class IhmInitOrdreJeu extends JFrame {
     private JPanel panelNom;
     private HashMap<String, int[]> resLancerDes = new HashMap<>(); 
     public static final Random RANDOM = new Random();
+    private Color fond = new Color(218,233,212);
+
     
     
     public IhmInitOrdreJeu(HashSet<String> joueurs) {
@@ -41,12 +44,17 @@ public class IhmInitOrdreJeu extends JFrame {
     }
     
     private void initUIComponents() {
+        this.setBackground(fond);
+        this.getContentPane().setBackground(fond);
+
         this.setSize(LONGUEUR_BASE,HAUTEUR_PAR_JOUEUR*joueurs.size());
         this.setLayout(new BorderLayout());
         lancerDes = new JButton("Lancer les dés");
         
         this.panelNom = new JPanel();
+        panelNom.setBackground(fond);
         this.panelDes = new JPanel();
+        panelDes.setBackground(fond);
         this.add(panelNom, BorderLayout.WEST);
         this.add(panelDes, BorderLayout.EAST);
 
@@ -98,8 +106,11 @@ public class IhmInitOrdreJeu extends JFrame {
             int[] res = this.resLancerDes.get(nomJ);
             
             JPanel panelDesJoueur = new JPanel();
+            panelDesJoueur.setBackground(fond);
             JPanel panelDe1 = new JPanel();
+            panelDe1.setBackground(fond);
             JPanel panelDe2 = new JPanel();
+            panelDe2.setBackground(fond);
             this.panelDes.add(panelDesJoueur);
             panelDesJoueur.add(panelDe1);
             panelDesJoueur.add(panelDe2);
