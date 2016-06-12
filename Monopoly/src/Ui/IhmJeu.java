@@ -54,6 +54,7 @@ public class IhmJeu extends JFrame{
     private JLabel labelinfoCarte2;
     private Carreau DepartJcourant;
     private JButton construire;
+    private JButton afficherProp;
     private JLabel labelCaseDep;
     private int conteurlanceDes;
     private int conteuroui;
@@ -136,10 +137,15 @@ public class IhmJeu extends JFrame{
         this.labelInfoDouble = new JLabel();
         this.infos.add(this.labelInfoDouble);
         
-        
+        JPanel boutonsProp = new JPanel();
+        boutonsProp.setLayout(new GridLayout(1,2));
+        this.infos.add(boutonsProp);
         this.construire = new JButton("Construire");
-        this.infos.add(this.construire);
         this.construire.setVisible(false);
+        boutonsProp.add(this.construire);
+        this.afficherProp = new JButton("Afficher vos propriétés");
+        this.afficherProp.setVisible(false);
+        boutonsProp.add(this.afficherProp);
         
         
         jSuivant = new JButton("Joueur Suivant");
@@ -207,9 +213,10 @@ public class IhmJeu extends JFrame{
             
             if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
-                    if  (res.getNomCarte().length() > 52) {
-                        this.labelinfoCarte.setText(res.getNomCarte().substring(0, 53));
-                        this.labelinfoCarte2.setText(res.getNomCarte().substring(53, 104));
+                    if  (res.getNomCarte().contains("|")) {
+                        String[] nomCarteTronque = res.getNomCarte().split("|");
+                        this.labelinfoCarte.setText(nomCarteTronque[0]);
+                        this.labelinfoCarte2.setText(nomCarteTronque[1]);
                     } else {
                        this.labelinfoCarte.setText(res.getNomCarte());
                     }
@@ -387,6 +394,7 @@ public class IhmJeu extends JFrame{
             });
         }
         this.construire.setVisible(true);
+        this.afficherProp.setVisible(true);
          this.setVisible(true);
     }
     
