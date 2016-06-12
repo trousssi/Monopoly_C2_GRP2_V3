@@ -2,6 +2,7 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
+import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -225,5 +226,10 @@ public final class IHM implements Observateur{
     
     public void sortiePrison() {
         this.ihmJeu.sortiePrison();
+    }
+
+    @Override
+    public boolean peutConstruire(Joueur j, ProprieteAConstruire prop) {
+        return controleur.peutConstruire(j, prop);
     }
 }

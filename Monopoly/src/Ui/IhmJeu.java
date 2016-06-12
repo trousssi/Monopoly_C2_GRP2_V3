@@ -7,6 +7,7 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
+import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -51,8 +52,10 @@ public class IhmJeu extends JFrame{
     private JButton jSuivant;
     private JButton rejouer;
     private JLabel labelinfoCarte;
+    private JLabel labelinfoCarte2;
     private Carreau DepartJcourant;
     private JButton construire;
+    private JButton afficherProp;
     private JLabel labelCaseDep;
     private int conteurlanceDes;
     private int conteuroui;
@@ -83,7 +86,7 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(15, 1));
+        this.infos.setLayout(new GridLayout(16, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
         return this.controle;
     }
@@ -114,6 +117,8 @@ public class IhmJeu extends JFrame{
         this.infos.add(this.labelCaseDep);
         this.labelinfoCarte = new JLabel();
         this.infos.add(this.labelinfoCarte);
+        this.labelinfoCarte2 = new JLabel();
+        this.infos.add(this.labelinfoCarte2);
         
         this.labelInfoCase = new JLabel();
         this.infos.add(this.labelInfoCase);
@@ -133,10 +138,15 @@ public class IhmJeu extends JFrame{
         this.labelInfoDouble = new JLabel();
         this.infos.add(this.labelInfoDouble);
         
-        
+        JPanel boutonsProp = new JPanel();
+        boutonsProp.setLayout(new GridLayout(1,2));
+        this.infos.add(boutonsProp);
         this.construire = new JButton("Construire");
-        this.infos.add(this.construire);
         this.construire.setVisible(false);
+        boutonsProp.add(this.construire);
+        this.afficherProp = new JButton("Afficher vos propriétés");
+        this.afficherProp.setVisible(false);
+        boutonsProp.add(this.afficherProp);
         
         
         jSuivant = new JButton("Joueur Suivant");
@@ -204,7 +214,14 @@ public class IhmJeu extends JFrame{
             
             if(res.getNomCarreau() != null && res.getProprietairePropriete() == null) { // Autre Carreau
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
-                    this.labelinfoCarte.setText(res.getNomCarte());
+                    if  (res.getNomCarte().contains("!")) {
+                        String[] nomCarteTronque = res.getNomCarte().split("!");
+                        System.out.println(nomCarteTronque[0]);
+                        this.labelinfoCarte.setText(nomCarteTronque[0]);
+                        this.labelinfoCarte2.setText(nomCarteTronque[1]);
+                    } else {
+                       this.labelinfoCarte.setText(res.getNomCarte());
+                    }
                     if (res.isDeplace()) { // Carte deplacement
                         if (res.getDeplacement() != 0) { // deplacement normal
                             
@@ -241,7 +258,7 @@ public class IhmJeu extends JFrame{
             //Propriete --> Acheter ou payer le loyer
             else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
                 //System.out.println("Loyer = " + res.getLoyerPropriete());//Nom déjà affiché + paiement obligatoire du loyer
-                this.labelInfoCase.setText("Vous avez Payer " + res.getLoyerPropriete() + " à " + res.getProprietairePropriete().getNom());
+                this.labelInfoCase.setText("Vous avez Payé " + res.getLoyerPropriete() + "€" + " à " + res.getProprietairePropriete().getNom());
                 this.observateur.Reponse(0, j, res);
                 
             }
@@ -378,8 +395,24 @@ public class IhmJeu extends JFrame{
                 }
             });
         }
+        
         this.construire.setVisible(true);
-         this.setVisible(true);
+        this.construire.setEnabled(false);
+        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
+        this.afficherProp.setVisible(true);
+        this.afficherProp.setEnabled(false);
+        this.afficherProp.setToolTipText("Vous ne possédez pas de propriétés");
+        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+            if (observateur.peutConstruire(j, prop)) {
+                this.construire.setEnabled(true);
+                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
+            }
+        }
+        if (j.getProprietesAconstruire().size() > 0 || j.getGares().size() > 0 || j.getCompagnies().size() > 0) {
+            this.afficherProp.setEnabled(true);
+            this.afficherProp.setToolTipText("Affichez vos propriétés");
+        }
+        this.setVisible(true);
     }
     
     public void effacer() {
