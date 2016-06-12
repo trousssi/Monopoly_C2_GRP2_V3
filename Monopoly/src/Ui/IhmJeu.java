@@ -80,6 +80,7 @@ public class IhmJeu extends JFrame{
         this.conteurnon = 0;
         this.conteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
+        
         JPanel panelJoueur = new JPanel();
         this.add(panelJoueur, BorderLayout.SOUTH);
         
@@ -92,6 +93,7 @@ public class IhmJeu extends JFrame{
             panelJoueur.add(l);
             numCouleur++;
         }
+        
         this.initJoueur();
         this.initInfos();
     }
@@ -107,6 +109,12 @@ public class IhmJeu extends JFrame{
     }
     
     private void initJoueur() {
+        
+        this.nbmaison = new JLabel();
+        this.nbhotel = new JLabel();
+        
+        this.infos.add(nbmaison);
+        this.infos.add(nbhotel);
         
         this.nbmaison = new JLabel();
         this.nbhotel = new JLabel();
@@ -185,6 +193,7 @@ public class IhmJeu extends JFrame{
         //IhmMonopoly test = new IhmMonopoly(j);
         //this.add(test, BorderLayout.WEST);
         
+         
         this.MajJoueur(j);
         this.DepartJcourant = j.getPositionCourante();
         
@@ -231,7 +240,7 @@ public class IhmJeu extends JFrame{
             this.dDouble = d1 == d2;
             this.MajJoueur(j);
             
-            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant);
+            this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant, res.isEnPrison());
             
             this.labelDe1.setIcon(new ImageIcon("src/Data/"+d1+".png"));
             this.labelDe2.setIcon(new ImageIcon("src/Data/"+d2+".png"));

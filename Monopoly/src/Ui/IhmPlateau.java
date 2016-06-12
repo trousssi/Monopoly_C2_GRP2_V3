@@ -44,6 +44,7 @@ public class IhmPlateau extends JPanel{
     private int[] nbJoueursParCases;
     private String nomJoueurCourant;
     
+    private boolean prisonnier = false;
     private boolean animationEnCours;
     
     public IhmPlateau(HashSet<String> noms) throws InterruptedException   {
@@ -101,7 +102,6 @@ public class IhmPlateau extends JPanel{
         
         this.initListeCase();//Il y 0 joueurs à dessiner pour le moment
         Point p;
-        System.out.println("anim = "+ animationEnCours);
         if (!animationEnCours) {//Si on ne fait pas d'animation
             for (String nomJ : joueurs.keySet()) {
                 nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
@@ -110,7 +110,14 @@ public class IhmPlateau extends JPanel{
                 
                 g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);//On dessine le pion avec les coordonnées calculées
             }
-            
+            if (prisonnier) {
+                joueurs.replace(nomJoueurCourant, 11);
+                nbJoueursParCases[joueurs.get(nomJoueurCourant)-1]--;
+                p = trouveCoordonneesCase((nomJoueurCourant), 0);
+                p = positionnePionSurCase(joueurs.get(nomJoueurCourant), nbJoueursParCases[joueurs.get(nomJoueurCourant)-1], p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
+                
+                g.drawImage(pions.get(nomJoueurCourant), p.x, p.y, (ImageObserver) observateur);//
+            }
         }
                 
         else if (animationEnCours) {
@@ -119,13 +126,14 @@ public class IhmPlateau extends JPanel{
                 if (nomJoueurCourant.equals(nomJ)) {
                     nbJoueursParCases[joueurs.get(nomJ)-1]--;//Le joueur ne sera plus sur cette case
                     p = trouveCoordonneesCase((nomJ), 1);//Ce joueur doit avancer
-                    nbJoueursParCases[joueurs.get(nomJ)-1]++;//Il a avancer sur celle-ci
+                    nbJoueursParCases[joueurs.get(nomJ)-1]++;//Il a avancé sur celle-ci
                 }
                 else {
                     nbJoueursParCases[joueurs.get(nomJ)-1]++;
                     p = trouveCoordonneesCase((nomJ), 0);
                 }
                 p = positionnePionSurCase(joueurs.get(nomJ), nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
+                
                 
                 g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);                  
             }
@@ -145,7 +153,6 @@ public class IhmPlateau extends JPanel{
         if (mode == 1) { //Si on doit avancer
             numCase = this.numCarreauSuivant(numCase);//La case doit être la suivante
             joueurs.replace(nomJ, numCase);//Le joueur doit être mit à jour
-            System.out.println("Joueur = " + nomJ + "case = " + numCase);
         }
         
         if(numCase == 1) {//CASE DEPART
@@ -156,7 +163,11 @@ public class IhmPlateau extends JPanel{
             x = BASE-74*(numCase-1);
             y = 844;
         }
-        else if (numCase == 11) {//VISITE PRISON 
+        else if (numCase == 11 && this.prisonnier) {//PRISON
+            x = 40;
+            y = 801;
+        }
+        else if (numCase == 11 ) {//VISITE PRISON 
             x = 5;
             y = BASE;
         }
@@ -193,102 +204,110 @@ public class IhmPlateau extends JPanel{
     }
     
     //Sélectionne les coordonnées d'affichage du pion sur la case
-    private Point positionnePionSurCase(int numCase, int nbJoueurCase, int xPion1, int yPion1) {
-        int ESPACEMENT = 2; // Espacement en pixel entre 2 pion cote à cote
-        int LARGEUR_PION = 21; // Largeur d'un pion en pixels
-        int EMPILEMENT = 13; // Décalage en pixels entre deux pions qui s'empilent vers le bas
-        int HAUTEUR_PION = 26; // Hauteur d'un pion en pixels
-        int CHANGE_LIGNE = 3; // Conctante définissant le nombre de pions par ligne 
+    private Point positionnePionSurCase(int numCase, int nbJoueurCase, int x, int y) {
+        Point p = new Point(x, y);
+        boolean ligneBas = numCase >= 2 && numCase <= 10;
+        boolean ligneHaut = numCase >= 22 && numCase <= 30;
+        boolean enPrison = numCase==11 && this.prisonnier;
         
-        if(numCase == 1) {//CASE DEPART 
-            for (int i=1; i<nbJoueurCase; i++) {
-                xPion1 += ESPACEMENT + LARGEUR_PION;
-                if (nbJoueurCase >= CHANGE_LIGNE) {  
-                    yPion1 += ESPACEMENT + HAUTEUR_PION; 
-                }  
-            }
-            
-        } else if(numCase <= 10) { //LIGNE BAS
-            for (int i=1; i<nbJoueurCase; i++) {
-                yPion1 += EMPILEMENT;
-                if (nbJoueurCase >= CHANGE_LIGNE) {   
-                    xPion1 += LARGEUR_PION + ESPACEMENT; 
-                }  
-            }
-
-        } else if (numCase == 11) {//VISITE PRISON 
-            for (int i=1; i<nbJoueurCase; i++) {
-                yPion1 += EMPILEMENT;
-            }
-            
-        } else if (numCase <= 20) {//LIGNE GAUCHE
-            for (int i=1; i<nbJoueurCase; i++) {                    
-                xPion1 += LARGEUR_PION + ESPACEMENT;
-                if (nbJoueurCase >= CHANGE_LIGNE) { 
-                    yPion1 += EMPILEMENT;
-                }  
-            }
-            
-        } else if (numCase == 21) {//PARC GRATUIT
-            for (int i=1; i<nbJoueurCase; i++) {                    
-                xPion1 += ESPACEMENT + LARGEUR_PION;
-                if (nbJoueurCase >= CHANGE_LIGNE) { 
-                   yPion1 += ESPACEMENT + HAUTEUR_PION; 
-                }  
-            }
-            
-        } else if (numCase <= 30) {//LIGNE HAUT
-            for (int i=1; i<nbJoueurCase; i++) {                    
-                yPion1 += EMPILEMENT;
-                if (nbJoueurCase >= CHANGE_LIGNE) { 
-                   xPion1 += LARGEUR_PION + ESPACEMENT; 
-                }  
-            }
-            
-        } else if (numCase == 31) {//ALLER EN PRISON
-            for (int i=1; i<nbJoueurCase; i++) {                    
-                xPion1 += ESPACEMENT + LARGEUR_PION;
-                if (nbJoueurCase >= CHANGE_LIGNE) { 
-                   yPion1 += ESPACEMENT + HAUTEUR_PION;
-                }  
-            }
-            
-        } else if (numCase <= 40) {//LIGNE DROITE
-            for (int i=1; i<nbJoueurCase; i++) {                    
-                xPion1 += LARGEUR_PION + ESPACEMENT;
-                if (nbJoueurCase >= CHANGE_LIGNE) { 
-                   yPion1 += EMPILEMENT;
-                }  
-            }
+        
+        if (ligneBas || ligneHaut || enPrison) {
+            p = ensembleJoueursHorizontal(nbJoueurCase, x, y);
+        } else if(!enPrison && numCase == 11) {//Visite de la prison
+            if (nbJoueurCase != 1) p.y = y+15*(nbJoueurCase-1);
+        } else {
+            p = ensembleJoueursVertical(nbJoueurCase, x, y);
         }
+                
+        return p;
+    }
+    
+    private Point ensembleJoueursVertical(int nbJoueurCase, int x, int y) {
+        //Va retourner un point de sorte à ce que les joueurs puissent se placer en un groupe compact.
+        //La position du joueur est calculé selon les coordonnés du premier joueur
+        /* Les pions seront dispositionnés de la sorte :
+        **   J1 J2
+        **   J3 J4
+        **   J5 J6
+        */
+        int DEC_HOR = 20;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
+        int DEC_VERT = 20;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
+        switch(nbJoueurCase) { 
+            case 2 :
+                x += DEC_HOR; 
+                break;
+            case 3 :
+                y += DEC_VERT;
+                break;
+            case 4 :
+                x += DEC_HOR; 
+                y += DEC_VERT;
+                break;
+            case 5 :
+                y += 2*DEC_VERT;
+                break;
+            case 6 :
+                x += DEC_HOR;
+                y += 2*DEC_VERT;
+                break;
+        }
+        return new Point(x, y);
+    }
+    
+    private Point ensembleJoueursHorizontal(int nbJoueurCase, int x, int y) {
+        /* Les pions seront dispositionnés de la sorte :
+        **   J1 J2 J3
+        **   J4 J5 J6
+        */
         
-        
-        return new Point(xPion1,yPion1);
+        int DEC_HOR = 23;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
+        int DEC_VERT = 20;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
+        switch(nbJoueurCase) { 
+            case 2 :
+                x += DEC_HOR; 
+                break;
+            case 3 :
+                x += 2*DEC_HOR;
+                break;
+            case 4 :
+                y += DEC_VERT;
+                break;
+            case 5 :
+                x += DEC_HOR; 
+                y += DEC_VERT;
+                break;
+            case 6 :
+                x += 2*DEC_HOR;
+                y += DEC_VERT;
+                break;
+        }
+        return new Point(x, y);
     }
 
-    public void recupDonneesJoueur(Joueur j, Carreau positionCourante, Carreau anciennePosition) {
+    public void recupDonneesJoueur(Joueur j, Carreau positionCourante, Carreau anciennePosition, boolean prison) {
         //numCarreauCourant = anciennePosition.getNumero();
+        
         nomJoueurCourant = j.getNom();
         int numCarreauDestination = positionCourante.getNumero();
         
+        
         animationEnCours = true;
-        System.out.println("nomJoueurCourant = " + nomJoueurCourant + "numCarreauDestination" + numCarreauDestination);
-        timer = new Timer(+400, new ActionListener() {
+        timer = new Timer(+400, new ActionListener() {//Toutes les 400 ms on va repeindre
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    System.out.println("Test");
                     if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
-                        System.out.println("FinTest");
                         timer.stop();
                         animationEnCours = false;
+                        if (prison) {
+                            prisonnier = prison;
+                        }
                     }
                     else {
                         repaint();
                     } 
                 }
         });
-        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {
-            System.out.println("START Timer");
+        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {//
             timer.start();
         }
     }
