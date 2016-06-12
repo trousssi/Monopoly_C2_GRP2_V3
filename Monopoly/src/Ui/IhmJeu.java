@@ -63,6 +63,8 @@ public class IhmJeu extends JFrame{
     private int conteurJsuivant = 0;
     private int conteurRejouer = 0;
     private int conteurConstruire = 0;
+    private JLabel nbmaison;
+    private JLabel nbhotel;
     
     public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
         plateau = new IhmPlateau(noms);
@@ -77,6 +79,20 @@ public class IhmJeu extends JFrame{
         this.conteurnon = 0;
         this.conteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
+        
+        JPanel panelJoueur = new JPanel();
+        this.add(panelJoueur, BorderLayout.SOUTH);
+        
+        String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
+        int numCouleur = 0;
+        for (String n : noms) {
+           JLabel l = new JLabel("<html><font color = "+ couleur[numCouleur] + " >" + n + "      </font></html>");
+           
+           //l.set(Color.getColor(couleur[numCouleur]));
+            panelJoueur.add(l);
+            numCouleur++;
+        }
+        
         this.initJoueur();
         this.initInfos();
     }
@@ -86,12 +102,18 @@ public class IhmJeu extends JFrame{
     private JPanel controle() {
         this.infos = new JPanel();
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(16, 1));
+        this.infos.setLayout(new GridLayout(18, 1));
         this.infos.add(new JLabel("---------          Contrôle             -----------"));
         return this.controle;
     }
     
     private void initJoueur() {
+        
+        this.nbmaison = new JLabel();
+        this.nbhotel = new JLabel();
+        
+        this.infos.add(nbmaison);
+        this.infos.add(nbhotel);
         
         nomJoueur = new JLabel();
         nomCarte = new JLabel();
@@ -164,6 +186,9 @@ public class IhmJeu extends JFrame{
     public void displayJoueur(Joueur j, int nbdouble) {
         //IhmMonopoly test = new IhmMonopoly(j);
         //this.add(test, BorderLayout.WEST);
+        
+         
+        this.MajJoueur(j);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -196,6 +221,8 @@ public class IhmJeu extends JFrame{
     private void MajJoueur(Joueur j) {
         this.cash.setText("Cash : " + j.getCash());
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
+        this.nbmaison.setText("Maison disponibles : " + this.observateur.getNbMaison());
+        this.nbhotel.setText("Hotel disponibles : " + this.observateur.getNbHotel());
     }
     
     
