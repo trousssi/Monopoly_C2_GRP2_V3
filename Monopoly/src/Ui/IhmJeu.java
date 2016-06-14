@@ -290,6 +290,9 @@ public class IhmJeu extends JFrame{
                 else if ("Taxe de Luxe".equals(res.getNomCarreau())) {
                     this.labelinfoCarte.setText("Vous Payez 100€ de Taxe");
                 }
+                else if ("Départ".equals(res.getNomCarte())) {
+                    this.observateur.Reponse(0, j, res);
+                }
                 else if (res.isEnPrison()) {
                     this.labelinfoCarte.setText("Vous Allez en Prison");
                     this.observateur.Reponse(6, j, res);
@@ -405,7 +408,13 @@ public class IhmJeu extends JFrame{
         
     }
     
-    public void notification(String message, Joueur j) {
+    public int notification(String message, Joueur j) {
+        if (message == "deplacement" ) {
+            IhmBoiteMessage.afficherBoiteDialogue("Deplacement, l'action de la case vas être lancé", "info");
+            this.effacer();
+            this.majJoueur(j);
+        }
+        else{
         this.labelInfoReponce.setText(message);
         this.majJoueur(j);
         if (!this.dDouble || j.getToursEnPrison() != -1) {
@@ -465,7 +474,10 @@ public class IhmJeu extends JFrame{
             this.afficherProp.setToolTipText("Affichez vos propriétés");
         }
         this.setVisible(true);
+        }
+        return this.nbdouble;
     }
+        
     
     public void effacer() {
         /*this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
