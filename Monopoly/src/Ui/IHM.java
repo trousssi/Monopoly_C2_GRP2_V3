@@ -249,4 +249,10 @@ public final class IHM implements Observateur{
     public void retourAuJeu() {
         ihmFinTour.setVisible(false);
     }
+    
+    @Override
+    public void construire(ProprieteAConstruire p, Joueur j) {
+        controleur.construire(p, j);
+    }
+
 }
