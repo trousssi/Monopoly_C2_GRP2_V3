@@ -30,4 +30,9 @@ public class Groupe {
         }
         return minMaison;
     }
+
+        public CouleurPropriete getCouleur() {
+            return couleur;
+        }
+    
 }

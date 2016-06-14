@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -457,28 +458,51 @@ public class IhmJeu extends JFrame{
             });
         }
         
-        this.construire.setVisible(true);
-        this.construire.setEnabled(false);
-        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
         this.afficherProp.setVisible(true);
         this.afficherProp.setEnabled(false);
         this.afficherProp.setToolTipText("Vous ne possédez pas de propriétés");
-        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
-            if (observateur.peutConstruire(j, prop)) {
-                this.construire.setEnabled(true);
-                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
-            }
-        }
         if (j.getProprietesAconstruire().size() > 0 || j.getGares().size() > 0 || j.getCompagnies().size() > 0) {
             this.afficherProp.setEnabled(true);
             this.afficherProp.setToolTipText("Affichez vos propriétés");
         }
+        ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
+        IhmJeu ihmJeu = this;
+        construire.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IhmPropriete ihmProp = new IhmPropriete(j, props, ihmJeu);
+                ihmProp.setObservateur(observateur);
+            }
+        });
         this.setVisible(true);
         }
         return this.nbdouble;
     }
         
+    public ArrayList<ProprieteAConstruire> calculIhmConst (Joueur j) {
+        ArrayList<ProprieteAConstruire> props = new ArrayList<>();
+        this.construire.setVisible(true);
+        this.construire.setEnabled(false);
+        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
+        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+            if (observateur.peutConstruire(j, prop)) {
+                props.add(prop);
+                this.construire.setEnabled(true);
+                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
+            }
+        }
+        return props;
+    }
     
+    public void refreshConst(Joueur j) {
+        ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
+        if (props.size() != 0) {
+            IhmPropriete ihmProp = new IhmPropriete(j, props, this);
+            ihmProp.setObservateur(observateur);
+        }
+        
+    }
+
     public void effacer() {
         /*this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
         this.labelDe2.setIcon(new ImageIcon("src/Data/deVide.png"));
@@ -536,6 +560,7 @@ public class IhmJeu extends JFrame{
     void setObservateur(Observateur observateur) {
         this.observateur = observateur; //To change body of generated methods, choose Tools | Templates.
     }
+
     
    
 }

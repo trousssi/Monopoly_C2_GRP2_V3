@@ -422,7 +422,7 @@ public final class IhmPlateau extends JPanel{
         }
     }
     
-    public HashMap<String, Color> getCouleurJoueurs() {
+    /*public HashMap<String, Color> getCouleurJoueurs() {
         return couleurJoueurs;    
-    }
+    }*/
 }
