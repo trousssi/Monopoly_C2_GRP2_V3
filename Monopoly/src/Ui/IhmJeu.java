@@ -293,6 +293,12 @@ public class IhmJeu extends JFrame{
                 else if ("Départ".equals(res.getNomCarreau())) {
                     this.observateur.Reponse(0, j, res);
                 }
+                else if ("Simple Visite / En Prison".equals(res.getNomCarreau())) {
+                    this.observateur.Reponse(0, j, res);
+                }
+                else if ("Parc Gratuit".equals(res.getNomCarreau())) {
+                    this.observateur.Reponse(0, j, res);
+                }
                 else if (res.isEnPrison()) {
                     this.labelinfoCarte.setText("Vous Allez en Prison");
                     this.observateur.Reponse(6, j, res);
