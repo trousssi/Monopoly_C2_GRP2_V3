@@ -34,7 +34,7 @@ public class IhmFinTour extends JFrame {
     private final int LONGUEUR_PAR_JOUEUR = 200;
     private Observateur observateur;
     private ArrayList<Joueur> joueurs;
-    private HashMap<Joueur, String> couleurJoueurs;
+    private HashMap<Joueur, String> couleurJoueurs = new HashMap<>();
     String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
     
     JPanel panelStats;
