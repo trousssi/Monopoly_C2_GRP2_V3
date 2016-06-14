@@ -475,7 +475,7 @@ public class IhmJeu extends JFrame{
         construire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IhmPropriete ihmProp = new IhmPropriete(j, props, ihmJeu);
+                IhmConstruire ihmProp = new IhmConstruire(j, props, ihmJeu);
                 ihmProp.setObservateur(observateur);
             }
         });
@@ -502,7 +502,7 @@ public class IhmJeu extends JFrame{
     public void refreshConst(Joueur j) {
         ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
         if (props.size() != 0) {
-            IhmPropriete ihmProp = new IhmPropriete(j, props, this);
+            IhmConstruire ihmProp = new IhmConstruire(j, props, this);
             ihmProp.setObservateur(observateur);
         }
         
