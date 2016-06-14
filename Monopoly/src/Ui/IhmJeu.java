@@ -11,7 +11,6 @@ import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,9 +18,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -298,6 +294,12 @@ public class IhmJeu extends JFrame{
                 else if ("Départ".equals(res.getNomCarreau())) {
                     this.observateur.Reponse(0, j, res);
                 }
+                else if ("Simple Visite / En Prison".equals(res.getNomCarreau())) {
+                    this.observateur.Reponse(0, j, res);
+                }
+                else if ("Parc Gratuit".equals(res.getNomCarreau())) {
+                    this.observateur.Reponse(0, j, res);
+                }
                 else if (res.isEnPrison()) {
                     this.labelinfoCarte.setText("Vous Allez en Prison");
                     this.observateur.Reponse(6, j, res);
@@ -462,18 +464,9 @@ public class IhmJeu extends JFrame{
             });
         }
         
-        this.construire.setVisible(true);
-        this.construire.setEnabled(false);
-        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
         this.afficherProp.setVisible(true);
         this.afficherProp.setEnabled(false);
         this.afficherProp.setToolTipText("Vous ne possédez pas de propriétés");
-        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
-            if (observateur.peutConstruire(j, prop)) {
-                this.construire.setEnabled(true);
-                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
-            }
-        }
         if (j.getProprietesAconstruire().size() > 0 || j.getGares().size() > 0 || j.getCompagnies().size() > 0) {
             this.afficherProp.setEnabled(true);
             this.afficherProp.setToolTipText("Affichez vos propriétés");
@@ -483,7 +476,7 @@ public class IhmJeu extends JFrame{
         construire.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                IhmPropriete ihmProp = new IhmPropriete(j, props, ihmJeu);
+                IhmConstruire ihmProp = new IhmConstruire(j, props, ihmJeu);
                 ihmProp.setObservateur(observateur);
             }
         });
@@ -510,7 +503,7 @@ public class IhmJeu extends JFrame{
     public void refreshConst(Joueur j) {
         ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
         if (props.size() != 0) {
-            IhmPropriete ihmProp = new IhmPropriete(j, props, this);
+            IhmConstruire ihmProp = new IhmConstruire(j, props, this);
             ihmProp.setObservateur(observateur);
         }
         
