@@ -5,6 +5,7 @@ import Jeu.Joueur;
 import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 import javax.swing.JFrame;
@@ -237,7 +238,7 @@ public final class IHM implements Observateur{
     
     @Override
     public boolean sortiePrisonCarte(Joueur j) {
-        return true;
+        return IhmBoiteMessage.afficherBoiteDialogue("Voulez vous utiliser votre carte Sortie de Prison", "ouinon");
     }
     
     @Override
@@ -262,7 +263,7 @@ public final class IHM implements Observateur{
     
     public void passeTour() {
         this.numJoueur=0;
-        ihmFinTour = new IhmFinTour(numTour, controleur.getJoueurs());
+        ihmFinTour = new IhmFinTour(numTour, controleur.getJoueurs(), ihmJeu.getCouleurJoueurs());
         ihmFinTour.setObservateur(this);
         this.numTour++;
     }

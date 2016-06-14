@@ -40,7 +40,9 @@ public final class IhmPlateau extends JPanel{
     Observateur observateur;
     
     private HashMap<String, BufferedImage> pions; //Liste des pions
-    private HashMap<String, Integer> joueurs; //Liste des joueurs avec String: nom joueur et Integer: numéro Carreau courant
+    private HashMap<String, Integer> joueurs; //Liste des joueurs avec String: nom joueur et Integer: numéro Carreau courant       
+    private HashMap<String, String> couleurJoueurs;
+
     private int[] nbJoueursParCases;//Sert à éviter la superposition de pions lors de l'affichage
     private String nomJoueurCourant;
     
@@ -54,6 +56,7 @@ public final class IhmPlateau extends JPanel{
         pions = new HashMap<>();
         joueurs = new HashMap<>();
         maisons = new HashMap<>();
+        couleurJoueurs = new HashMap<>();
         prisonniers = new HashSet<>();
         prisonnierNePeutPlusBouger = new HashSet<>();
         nbJoueursParCases = new int[40];
@@ -65,6 +68,7 @@ public final class IhmPlateau extends JPanel{
             try {
                 joueurs.put(nomJ, 1); //positionnés sur le carreau de départ
                 pions.put(nomJ, ImageIO.read(new File("src/Data/pion" + couleur[numCouleur] + ".png")));
+                couleurJoueurs.put(nomJ, couleur[numCouleur]);
                 numCouleur++;
             } catch (IOException ex) {//Exception au niveau de la lecture d'iamge
                 ex.printStackTrace();
@@ -443,6 +447,10 @@ public final class IhmPlateau extends JPanel{
         } else {
             maisons.replace(numCase, maisons.get(numCase)+1);//on ajoute une maison si la propriéte en possedait déjà
         }
+    }
+
+    public HashMap<String, String> getCouleurJoueurs() {
+        return couleurJoueurs;    
     }
     
 }

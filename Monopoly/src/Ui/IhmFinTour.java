@@ -12,6 +12,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -28,17 +29,30 @@ public class IhmFinTour extends JFrame {
     private final int LONGUEUR_PAR_JOUEUR = 200;
     private Observateur observateur;
     private ArrayList<Joueur> joueurs;
+    private HashMap<Joueur, String> couleurJoueurs = new HashMap<>();
     String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
     
     JPanel panelStats;
 
-    public IhmFinTour(int numTour, ArrayList<Joueur> joueurs) {
+    public IhmFinTour(int numTour, ArrayList<Joueur> joueurs, HashMap<String, String> couleurJoueurs) {
         super();
         this.joueurs = joueurs;
-        this.afficher(numTour); 
-        this.initUIComponents();
-        this.setAlwaysOnTop(true);
-        this.setLocationRelativeTo(null);
+        for (int i = 0; i< joueurs.size(); i++) {
+            //Transfert des couleurs en String en couleurs en hexadecimal
+            String couleur = couleurJoueurs.get(joueurs.get(i).getNom()); 
+            String couleurJoueur = null;
+            switch (couleur) {
+                case "Rouge":   couleurJoueur = this.couleur[0];break;
+                case "Bleu" :   couleurJoueur = this.couleur[1];break; 
+                case "Vert" :   couleurJoueur = this.couleur[2];break;
+                case "Marron" : couleurJoueur = this.couleur[3];break;
+                case "Violet" : couleurJoueur = this.couleur[4];break;  
+                case "Orange" : couleurJoueur = this.couleur[5];break;   
+            }
+            this.couleurJoueurs.put(joueurs.get(i), couleurJoueur);
+        }
+        afficher(numTour); 
+        initUIComponents();
     }
     
     public void initUIComponents() {
@@ -62,7 +76,7 @@ public class IhmFinTour extends JFrame {
                 panelJoueurCourant.setBorder(BorderFactory.createMatteBorder(3, 0, 3, 3, Color.BLACK));
             }
             //Affichage du nom
-            JLabel labelNom = new JLabel("<html><font color = " + couleur[i] + " >" + joueurs.get(i).getNom() + "      </font></html>");
+            JLabel labelNom = new JLabel("<html><font color = " + couleurJoueurs.get(joueurs.get(i)) + " >" + joueurs.get(i).getNom() + "      </font></html>");
             labelNom.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
             labelNom.setHorizontalAlignment(JLabel.CENTER);
             labelNom.setVerticalAlignment(JLabel.CENTER);
@@ -106,6 +120,8 @@ public class IhmFinTour extends JFrame {
        this.setTitle("Statistiques de fin du tour n°" + numTour);
        this.setVisible(true);
        this.setBackground(fond);
+       this.setAlwaysOnTop(true);
+       this.setLocationRelativeTo(null);
     }
     
 }
