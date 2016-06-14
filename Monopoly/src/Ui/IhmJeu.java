@@ -93,7 +93,7 @@ public class IhmJeu extends JFrame{
         panelJoueur.add(nbHotel);
         this.add(panelJoueur, BorderLayout.SOUTH);
         
-        String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
+        String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
         int numCouleur = 0;
         for (String n : noms) {
            JLabel l = new JLabel("<html><font color = "+ couleur[numCouleur] + " >" + n + "      </font></html>");
