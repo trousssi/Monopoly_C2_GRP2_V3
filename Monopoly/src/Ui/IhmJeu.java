@@ -113,7 +113,7 @@ public class IhmJeu extends JFrame{
         this.infos = new JPanel();
         infos.setBackground(fond);
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(16, 1));
+        this.infos.setLayout(new GridLayout(17, 1));
         this.infos.add(new JLabel("----------------------------Contrôle----------------------------"));
         return this.controle;
     }
@@ -256,9 +256,10 @@ public class IhmJeu extends JFrame{
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
                     if  (res.getNomCarte().contains("!")) {
                         String[] nomCarteTronque = res.getNomCarte().split("!");
-                        System.out.println(nomCarteTronque[0]);
+                        
                         this.labelinfoCarte.setText(nomCarteTronque[0]);
                         this.labelinfoCarte2.setText(nomCarteTronque[1]);
+                        this.observateur.Reponse(0, j, res);
                     } else {
                        this.labelinfoCarte.setText(res.getNomCarte());
                        this.observateur.Reponse(0, j, res);
@@ -286,11 +287,13 @@ public class IhmJeu extends JFrame{
                 }
                 else if ("Impôt sur le revenu".equals(res.getNomCarreau())) {
                     this.labelinfoCarte.setText("Vous Payez 200€ d'impots");
+                    this.observateur.Reponse(0, j, res);
                 }
                 else if ("Taxe de Luxe".equals(res.getNomCarreau())) {
                     this.labelinfoCarte.setText("Vous Payez 100€ de Taxe");
+                    this.observateur.Reponse(0, j, res);
                 }
-                else if ("Départ".equals(res.getNomCarte())) {
+                else if ("Départ".equals(res.getNomCarreau())) {
                     this.observateur.Reponse(0, j, res);
                 }
                 else if (res.isEnPrison()) {
