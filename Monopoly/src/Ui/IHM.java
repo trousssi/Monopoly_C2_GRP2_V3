@@ -250,7 +250,7 @@ public final class IHM implements Observateur{
         ihmFinTour.setVisible(false);
     }
     
-    @Override
+  
     public void construire(ProprieteAConstruire p, Joueur j) {
         controleur.construire(p, j);
     }
