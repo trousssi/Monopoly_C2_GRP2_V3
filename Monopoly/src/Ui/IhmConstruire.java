@@ -21,13 +21,13 @@ import javax.swing.JPanel;
  *
  * @author Jérémy
  */
-public class IhmPropriete  extends JFrame{
+public class IhmConstruire  extends JFrame{
     private ArrayList<ProprieteAConstruire> proprietes;
     private Joueur j;
     private Observateur observateur;
     private IhmJeu ihmJeu;
     
-    public IhmPropriete(Joueur j, ArrayList<ProprieteAConstruire> proprietes, IhmJeu ihmJeu) {
+    public IhmConstruire(Joueur j, ArrayList<ProprieteAConstruire> proprietes, IhmJeu ihmJeu) {
         super();
         this.proprietes = proprietes;
         this.j = j;
