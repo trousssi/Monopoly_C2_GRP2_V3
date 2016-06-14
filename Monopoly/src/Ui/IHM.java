@@ -188,8 +188,8 @@ public final class IHM implements Observateur{
         this.controleur.action(cas, j, res);
     }
     
-    public void notification(String message, Joueur j) {
-        this.ihmJeu.notification(message, j);
+    public int notification(String message, Joueur j) {
+        return this.ihmJeu.notification(message, j);
     }
     
     public void joueurSuivant(Joueur j){
@@ -212,10 +212,22 @@ public final class IHM implements Observateur{
             this.ihmJeu.setVisible(false);
             IhmBoiteMessage.afficherBoiteDialogue(this.controleur.getJoueur(0).getNom() + " a Gagné !!", "info");
         }
+        
     }
     
     public void rejouer(Joueur j,int nbdouble) {
+         if (j.getCash() < 0) {
+            this.controleur.perte(j);
+            
+        }
+        
+        if (controleur.getJoueurs().size() > 1) {
         this.ihmJeu.displayJoueur(j, nbdouble);
+        }
+        else {
+            this.ihmJeu.setVisible(false);
+            IhmBoiteMessage.afficherBoiteDialogue(this.controleur.getJoueur(0).getNom() + " a Gagné !!", "info");
+        }
     }
     
     public boolean sortiePrisonCarte(Joueur j) {
@@ -249,4 +261,10 @@ public final class IHM implements Observateur{
     public void retourAuJeu() {
         ihmFinTour.setVisible(false);
     }
+    
+  
+    public void construire(ProprieteAConstruire p, Joueur j) {
+        controleur.construire(p, j);
+    }
+
 }

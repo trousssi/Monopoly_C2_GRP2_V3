@@ -45,13 +45,15 @@ public interface Observateur {
     
     public void Reponse(int cas, Joueur j, Jeu.Resultat res);
     
-    public void notification(String message,Joueur j);
+    public int notification(String message,Joueur j);
      
     public void joueurSuivant(Joueur j);
      
     public void rejouer(Joueur j,int nbdouble);
     
     public boolean peutConstruire (Joueur j, ProprieteAConstruire prop);
+    
+    public void construire(ProprieteAConstruire p, Joueur j);
     
     public boolean sortiePrisonCarte(Joueur j);
     

@@ -25,11 +25,13 @@ public class IhmPropriete  extends JFrame{
     private ArrayList<ProprieteAConstruire> proprietes;
     private Joueur j;
     private Observateur observateur;
+    private IhmJeu ihmJeu;
     
-    public IhmPropriete(Joueur j, ArrayList<ProprieteAConstruire> proprietes) {
+    public IhmPropriete(Joueur j, ArrayList<ProprieteAConstruire> proprietes, IhmJeu ihmJeu) {
         super();
         this.proprietes = proprietes;
         this.j = j;
+        this.ihmJeu = ihmJeu;
         if (proprietes != null) {
             initUIComponents(proprietes);
             afficher();
@@ -49,7 +51,7 @@ public class IhmPropriete  extends JFrame{
             propriete.setLayout(new BorderLayout());
             JPanel couleur = new JPanel();
             propriete.add(couleur, BorderLayout.WEST);
-            couleur.setBackground(Color.red);
+            couleur.setBackground(p.get(i).getGroupe().getCouleur().getColor());
             JPanel nom = new JPanel();
             propriete.add(nom, BorderLayout.CENTER);
             JLabel nomProp = new JLabel(p.get(i).getNomCarreau());
@@ -67,8 +69,9 @@ public class IhmPropriete  extends JFrame{
                     String nomPropriete = propriete.getName();
                     for (ProprieteAConstruire p : proprietes) {
                         if (nomPropriete.equals(p.getNomCarreau())) {
-                            //observateur.construire(p, j);
+                            observateur.construire(p, j);
                             System.out.println("PROP CONSTRUITE" + p.getNomCarreau());
+                            refresh();
                         }
                     }
                 }
@@ -92,10 +95,16 @@ public class IhmPropriete  extends JFrame{
                 public void mouseExited(MouseEvent e) {
                     
                 }
+
             });
         }
     }
          
+    private void refresh() {
+        this.setVisible(false);
+        ihmJeu.refreshConst(j);
+    }
+
     public void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(500, 300);

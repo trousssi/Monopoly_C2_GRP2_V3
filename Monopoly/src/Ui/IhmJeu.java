@@ -14,6 +14,8 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -88,7 +90,7 @@ public class IhmJeu extends JFrame{
         panelJoueur.add(nbHotel);
         this.add(panelJoueur, BorderLayout.SOUTH);
         
-        String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
+        String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
         int numCouleur = 0;
         for (String n : noms) {
            JLabel l = new JLabel("<html><font color = "+ couleur[numCouleur] + " >" + n + "      </font></html>");
@@ -108,7 +110,7 @@ public class IhmJeu extends JFrame{
         this.infos = new JPanel();
         infos.setBackground(fond);
         this.controle.add(infos);
-        this.infos.setLayout(new GridLayout(16, 1));
+        this.infos.setLayout(new GridLayout(17, 1));
         this.infos.add(new JLabel("----------------------------Contrôle----------------------------"));
         return this.controle;
     }
@@ -251,9 +253,10 @@ public class IhmJeu extends JFrame{
                 if (res.getNomCarte() != null && res.getNomCarreau() != null) { // Carreau avec Tirage de Carte
                     if  (res.getNomCarte().contains("!")) {
                         String[] nomCarteTronque = res.getNomCarte().split("!");
-                        System.out.println(nomCarteTronque[0]);
+                        
                         this.labelinfoCarte.setText(nomCarteTronque[0]);
                         this.labelinfoCarte2.setText(nomCarteTronque[1]);
+                        this.observateur.Reponse(0, j, res);
                     } else {
                        this.labelinfoCarte.setText(res.getNomCarte());
                        this.observateur.Reponse(0, j, res);
@@ -281,9 +284,14 @@ public class IhmJeu extends JFrame{
                 }
                 else if ("Impôt sur le revenu".equals(res.getNomCarreau())) {
                     this.labelinfoCarte.setText("Vous Payez 200€ d'impots");
+                    this.observateur.Reponse(0, j, res);
                 }
                 else if ("Taxe de Luxe".equals(res.getNomCarreau())) {
                     this.labelinfoCarte.setText("Vous Payez 100€ de Taxe");
+                    this.observateur.Reponse(0, j, res);
+                }
+                else if ("Départ".equals(res.getNomCarreau())) {
+                    this.observateur.Reponse(0, j, res);
                 }
                 else if (res.isEnPrison()) {
                     this.labelinfoCarte.setText("Vous Allez en Prison");
@@ -400,7 +408,13 @@ public class IhmJeu extends JFrame{
         
     }
     
-    public void notification(String message, Joueur j) {
+    public int notification(String message, Joueur j) {
+        if (message == "deplacement" ) {
+            IhmBoiteMessage.afficherBoiteDialogue("Deplacement, l'action de la case vas être lancé", "info");
+            this.effacer();
+            this.majJoueur(j);
+        }
+        else{
         this.labelInfoReponce.setText(message);
         this.majJoueur(j);
         if (!this.dDouble || j.getToursEnPrison() != -1) {
@@ -443,25 +457,51 @@ public class IhmJeu extends JFrame{
             });
         }
         
-        this.construire.setVisible(true);
-        this.construire.setEnabled(false);
-        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
         this.afficherProp.setVisible(true);
         this.afficherProp.setEnabled(false);
         this.afficherProp.setToolTipText("Vous ne possédez pas de propriétés");
-        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
-            if (observateur.peutConstruire(j, prop)) {
-                this.construire.setEnabled(true);
-                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
-            }
-        }
         if (j.getProprietesAconstruire().size() > 0 || j.getGares().size() > 0 || j.getCompagnies().size() > 0) {
             this.afficherProp.setEnabled(true);
             this.afficherProp.setToolTipText("Affichez vos propriétés");
         }
+        ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
+        IhmJeu ihmJeu = this;
+        construire.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IhmPropriete ihmProp = new IhmPropriete(j, props, ihmJeu);
+                ihmProp.setObservateur(observateur);
+            }
+        });
         this.setVisible(true);
+        }
+        return this.nbdouble;
+    }
+        
+    public ArrayList<ProprieteAConstruire> calculIhmConst (Joueur j) {
+        ArrayList<ProprieteAConstruire> props = new ArrayList<>();
+        this.construire.setVisible(true);
+        this.construire.setEnabled(false);
+        this.construire.setToolTipText("Vous ne pouvez pas construire de maison/hôtel");
+        for (ProprieteAConstruire prop : j.getProprietesAconstruire()) {
+            if (observateur.peutConstruire(j, prop)) {
+                props.add(prop);
+                this.construire.setEnabled(true);
+                this.construire.setToolTipText("Construisez des maisons/hôtels sur vos propriétés");
+            }
+        }
+        return props;
     }
     
+    public void refreshConst(Joueur j) {
+        ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
+        if (props.size() != 0) {
+            IhmPropriete ihmProp = new IhmPropriete(j, props, this);
+            ihmProp.setObservateur(observateur);
+        }
+        
+    }
+
     public void effacer() {
         /*this.labelDe1.setIcon(new ImageIcon("src/Data/deVide.png"));
         this.labelDe2.setIcon(new ImageIcon("src/Data/deVide.png"));
@@ -520,6 +560,7 @@ public class IhmJeu extends JFrame{
     void setObservateur(Observateur observateur) {
         this.observateur = observateur; //To change body of generated methods, choose Tools | Templates.
     }
+
     
    
 }
