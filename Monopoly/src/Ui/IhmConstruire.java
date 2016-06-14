@@ -78,6 +78,7 @@ public class IhmConstruire  extends JFrame{
                     for (ProprieteAConstruire p : proprietes) {
                         if (nomPropriete.equals(p.getNomCarreau())) {
                             observateur.construire(p, j);
+                            ihmJeu.ajoutMaison(p.getNumero());
                             //System.out.println("PROP CONSTRUITE" + p.getNomCarreau());
                             refresh();
                         }
