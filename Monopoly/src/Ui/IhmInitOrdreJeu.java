@@ -7,15 +7,15 @@ package Ui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.util.HashSet;
-import javax.swing.JFrame;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -136,8 +136,7 @@ public class IhmInitOrdreJeu extends JFrame {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setTitle("Détermination de l'ordre de jeu");
-        
-        
+        setLocationRelativeTo(null);
     }
 
     public void setObservateur(Observateur observateur) {

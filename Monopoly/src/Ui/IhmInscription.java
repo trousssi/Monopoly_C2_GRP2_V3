@@ -157,7 +157,8 @@ public class IhmInscription extends JFrame  {
     public void afficher() {
         setSize(400, 250);
         setTitle("Inscription des joueurs");
-        setVisible(true);                        
+        setVisible(true);
+        setLocationRelativeTo(null);
     }
     
     public boolean vérifierNomJoueurs() {

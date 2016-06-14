@@ -5,18 +5,15 @@
  */
 package Ui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.HashSet;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -48,9 +45,10 @@ public class IhmMenu extends JFrame  {
      * Rend visible la fenetre
      */
     public void afficher() { 
-        setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
-        setVisible(true);                     
+        this.setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
+        this.setSize(500, 300);
+        this.setLocationRelativeTo(null);
+        this.setVisible(true);                     
     }  
     
     private void initUIComponents() {
