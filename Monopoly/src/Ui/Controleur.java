@@ -272,13 +272,16 @@ public class Controleur {
             if (j.getProprietesAconstruire().contains(prop)) {
                 if (prop.getNbHotel() < 1 ) {
                     if ((prop.getNbMaison() < 4 && monopoly.resteMaison()) || (prop.getNbMaison() == 4 && monopoly.resteHotel())) {
-                        if (prop.possedeToutesPropGroupe(j) && j.peuxPayer(prop.getPrixMaison()) && prop.getNbMaison() == prop.getGroupe().getMinMaison()) {
+                        if (prop.possedeToutesPropGroupe(j) && j.peuxPayer(prop.getPrixMaison()) && (prop.getNbMaison() == prop.getGroupe().getMinMaison())) {
                             peut = true;
                         }
                     }
                 }
             }
-            
+            System.out.println("Maison " + prop.getNomCarreau() + " " + prop.getNbMaison());
+            System.out.println("Hotel " + prop.getNomCarreau() + " " + prop.getNbHotel());
+            System.out.println("");
+            System.out.println("");
             return peut;
         }
         

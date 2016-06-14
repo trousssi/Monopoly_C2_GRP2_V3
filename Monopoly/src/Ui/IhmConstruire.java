@@ -9,13 +9,19 @@ import Jeu.Joueur;
 import Jeu.ProprieteAConstruire;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EtchedBorder;
 
 /**
  *
@@ -26,6 +32,7 @@ public class IhmConstruire  extends JFrame{
     private Joueur j;
     private Observateur observateur;
     private IhmJeu ihmJeu;
+    private static int propHeight = 50;
     
     public IhmConstruire(Joueur j, ArrayList<ProprieteAConstruire> proprietes, IhmJeu ihmJeu) {
         super();
@@ -44,9 +51,10 @@ public class IhmConstruire  extends JFrame{
 
     
     private void initUIComponents(ArrayList<ProprieteAConstruire> p) {
-        this.setLayout(new GridLayout(p.size(),1));
+        this.setLayout(new GridLayout(p.size()+1,1));
         for (int i=0; i<p.size(); i++) {
             JPanel propriete = new JPanel();
+            propriete.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             this.add(propriete);
             propriete.setLayout(new BorderLayout());
             JPanel couleur = new JPanel();
@@ -59,7 +67,7 @@ public class IhmConstruire  extends JFrame{
             JPanel prix = new JPanel();
             propriete.add(prix, BorderLayout.EAST);
             JLabel prixProp = new JLabel(Integer.toString(p.get(i).getPrixMaison()));
-            nom.add(prixProp);
+            prix.add(prixProp);
             propriete.setName(p.get(i).getNomCarreau());
             
             
@@ -70,7 +78,7 @@ public class IhmConstruire  extends JFrame{
                     for (ProprieteAConstruire p : proprietes) {
                         if (nomPropriete.equals(p.getNomCarreau())) {
                             observateur.construire(p, j);
-                            System.out.println("PROP CONSTRUITE" + p.getNomCarreau());
+                            //System.out.println("PROP CONSTRUITE" + p.getNomCarreau());
                             refresh();
                         }
                     }
@@ -98,6 +106,18 @@ public class IhmConstruire  extends JFrame{
 
             });
         }
+        JPanel panelQuitter = new JPanel();
+        this.add(panelQuitter);
+        panelQuitter.setLayout(new BorderLayout());
+        JButton quitter = new JButton ("Quitter");
+        panelQuitter.add(quitter, BorderLayout.EAST);
+        JFrame ihmConstruire = this;
+        quitter.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ihmConstruire.setVisible(false);
+            }
+        });
     }
          
     private void refresh() {
@@ -107,7 +127,7 @@ public class IhmConstruire  extends JFrame{
 
     public void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
-        setSize(500, 300);
+        setSize(500, propHeight+propHeight*proprietes.size());
         setVisible(true);                     
 
     }

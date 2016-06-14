@@ -60,7 +60,7 @@ public class ProprieteAConstruire extends Propriete {
     }
     
     public int getNbHotel() {
-        return this.maison;
+        return this.hotel;
     }
 
     public void addMaison() {
@@ -76,7 +76,7 @@ public class ProprieteAConstruire extends Propriete {
     }
 
     public void addHotel() {
-       this.maison++;
+       this.hotel++;
     }
     
     

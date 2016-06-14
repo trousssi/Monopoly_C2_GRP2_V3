@@ -471,6 +471,15 @@ public class IhmJeu extends JFrame{
             this.afficherProp.setEnabled(true);
             this.afficherProp.setToolTipText("Affichez vos propriétés");
         }
+        
+        afficherProp.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                IhmPropriete ihmProp = new IhmPropriete(j);
+            }
+        });
+        
+        
         ArrayList<ProprieteAConstruire> props = calculIhmConst(j);
         IhmJeu ihmJeu = this;
         construire.addActionListener(new ActionListener() {

@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -63,6 +64,7 @@ public final class IhmPlateau extends JPanel{
         prisonniers = new HashSet<>();
         prisonnierNePeutPlusBouger = new HashSet<>();
         nbJoueursParCases = new int[40];
+        this.setBorder(BorderFactory.createMatteBorder(3, 3, 3, 3, Color.BLACK));
         
         String couleur[] ={"Rouge", "Bleu", "Vert", "Marron", "Violet", "Orange"};
         int numCouleur = 0;
