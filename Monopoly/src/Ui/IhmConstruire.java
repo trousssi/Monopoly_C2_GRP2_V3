@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import static javafx.scene.paint.Color.color;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -33,6 +34,7 @@ public class IhmConstruire  extends JFrame{
     private Observateur observateur;
     private IhmJeu ihmJeu;
     private static int propHeight = 50;
+    private Color color = new Color(218,233,212);
     
     public IhmConstruire(Joueur j, ArrayList<ProprieteAConstruire> proprietes, IhmJeu ihmJeu) {
         super();
@@ -51,9 +53,30 @@ public class IhmConstruire  extends JFrame{
 
     
     private void initUIComponents(ArrayList<ProprieteAConstruire> p) {
-        this.setLayout(new GridLayout(p.size()+1,1));
+        this.setTitle("Construire");
+        this.setLayout(new GridLayout(p.size()+2,1));
+        JPanel panelTexte = new JPanel();
+        panelTexte.setBackground(color);
+        panelTexte.add(new JLabel("Cliquez sur une propriété pour acheter"));
+        JPanel panelInfo = new JPanel();
+        panelInfo.setBackground(color);
+        panelInfo.setLayout(new GridLayout());
+        JPanel infoGroupe = new JPanel();
+        infoGroupe.setBackground(color);
+        panelInfo.add(infoGroupe, BorderLayout.WEST);
+        panelInfo.add((new JLabel("Groupe")), BorderLayout.WEST);
+        JPanel infoProp = new JPanel();
+        infoProp.setBackground(color);
+        panelInfo.add(infoProp, BorderLayout.CENTER);
+        panelInfo.add((new JLabel("Propriété")), BorderLayout.CENTER);
+        JPanel infoPrix = new JPanel();
+        infoPrix.setBackground(color);
+        panelInfo.add(infoPrix, BorderLayout.EAST);
+        panelInfo.add((new JLabel("Prix")), BorderLayout.EAST);
+        this.add(panelInfo);
         for (int i=0; i<p.size(); i++) {
             JPanel propriete = new JPanel();
+            
             propriete.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             this.add(propriete);
             propriete.setLayout(new BorderLayout());
@@ -61,10 +84,12 @@ public class IhmConstruire  extends JFrame{
             propriete.add(couleur, BorderLayout.WEST);
             couleur.setBackground(p.get(i).getGroupe().getCouleur().getColor());
             JPanel nom = new JPanel();
+            nom.setBackground(color);
             propriete.add(nom, BorderLayout.CENTER);
             JLabel nomProp = new JLabel(p.get(i).getNomCarreau());
             nom.add(nomProp);
             JPanel prix = new JPanel();
+            prix.setBackground(color);
             propriete.add(prix, BorderLayout.EAST);
             JLabel prixProp = new JLabel(Integer.toString(p.get(i).getPrixMaison()));
             prix.add(prixProp);
@@ -108,6 +133,7 @@ public class IhmConstruire  extends JFrame{
             });
         }
         JPanel panelQuitter = new JPanel();
+        panelQuitter.setBackground(color);
         this.add(panelQuitter);
         panelQuitter.setLayout(new BorderLayout());
         JButton quitter = new JButton ("Quitter");
@@ -129,6 +155,8 @@ public class IhmConstruire  extends JFrame{
     public void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(500, propHeight+propHeight*proprietes.size());
+        this.setLocationRelativeTo(null);
+        this.setBackground(color);
         setVisible(true);                     
 
     }

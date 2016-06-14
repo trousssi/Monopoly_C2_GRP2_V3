@@ -53,7 +53,7 @@ public class IhmMenu extends JFrame  {
     
     private void initUIComponents() {
         
-       
+        this.setTitle("MONOPOLY");
         Color fond = new Color(207,238,204);
         this.getContentPane().setBackground(fond);
         

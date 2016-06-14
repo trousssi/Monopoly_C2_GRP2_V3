@@ -29,7 +29,7 @@ import javax.swing.border.TitledBorder;
 public class IhmPropriete extends JFrame {
     private Joueur j;
     private static int propHeight = 100;
-    
+    private Color color = new Color(218,233,212);
     
     public IhmPropriete (Joueur j) {
         super();
@@ -39,8 +39,10 @@ public class IhmPropriete extends JFrame {
     }
 
     private void initUIComponents() {
+        this.setTitle("Liste de vos propriétés");
         this.setLayout(new GridLayout(4,1));
         JPanel propsConstruire = new JPanel();
+        propsConstruire.setBackground(color);
         TitledBorder titrePropConstruire = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Propriétés à Construire");
         titrePropConstruire.setTitleJustification(TitledBorder.LEFT);
         propsConstruire.setBorder(titrePropConstruire);
@@ -52,6 +54,7 @@ public class IhmPropriete extends JFrame {
         } else {
             for (ProprieteAConstruire p : j.getProprietesAconstruire()) {
                 JPanel proprieteAConst = new JPanel();
+                proprieteAConst.setBackground(color);
                 proprieteAConst.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
                 propsConstruire.add(proprieteAConst);
                 proprieteAConst.setLayout(new BorderLayout());
@@ -59,13 +62,15 @@ public class IhmPropriete extends JFrame {
                 proprieteAConst.add(couleur, BorderLayout.WEST);
                 couleur.setBackground(p.getGroupe().getCouleur().getColor());
                 JPanel nom = new JPanel();
+                nom.setBackground(color);
                 proprieteAConst.add(nom, BorderLayout.CENTER);
                 JLabel nomProp = new JLabel(p.getNomCarreau());
                 nom.add(nomProp);
             }
         }
         
-        JPanel compagnies = new JPanel();        
+        JPanel compagnies = new JPanel();  
+        compagnies.setBackground(color);
         TitledBorder titreCompagnie = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Compagnies");
         titreCompagnie.setTitleJustification(TitledBorder.LEFT);
         compagnies.setBorder(titreCompagnie);
@@ -77,6 +82,7 @@ public class IhmPropriete extends JFrame {
             compagnies.setLayout(new GridLayout(j.getCompagnies().size(),1));
             for (Compagnie c : j.getCompagnies()) {
                 JPanel compagnie = new JPanel();
+                compagnie.setBackground(color);
                 compagnie.setLayout(new BorderLayout());
                 JLabel nomCompagnie = new JLabel(c.getNomCarreau());
                 compagnies.add(nomCompagnie, BorderLayout.CENTER);
@@ -84,6 +90,7 @@ public class IhmPropriete extends JFrame {
         }
         
         JPanel gares = new JPanel();
+        gares.setBackground(color);
         TitledBorder titreGare = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.BLACK), "Gares");
         titreGare.setTitleJustification(TitledBorder.LEFT);
         gares.setBorder(titreGare);
@@ -95,16 +102,19 @@ public class IhmPropriete extends JFrame {
         } else {
             for (Gare g : j.getGares()) {
                 JPanel gare = new JPanel();
+                gare.setBackground(color);
                 gare.setLayout(new BorderLayout());
-                JLabel nomGare= new JLabel(g.getNomCarreau());
+                JLabel nomGare = new JLabel(g.getNomCarreau());
                 gares.add(nomGare, BorderLayout.CENTER);
             }
         }
         
         JPanel panelQuitter = new JPanel();
         this.add(panelQuitter);
+        panelQuitter.setBackground(color);
         panelQuitter.setLayout(new BorderLayout());
         JPanel panelQuitterEst = new JPanel();
+        panelQuitterEst.setBackground(color);
         panelQuitter.add(panelQuitterEst, BorderLayout.EAST);
         JButton quitter = new JButton("Quitter");
         panelQuitterEst.add(quitter, BorderLayout.NORTH);
@@ -122,6 +132,7 @@ public class IhmPropriete extends JFrame {
     private void afficher() {
         setDefaultCloseOperation(javax.swing.JFrame.EXIT_ON_CLOSE);
         setSize(500, 2*propHeight+propHeight*(j.getProprietesAconstruire().size()+j.getCompagnies().size()+j.getGares().size()));
+        this.setLocationRelativeTo(null);
         setVisible(true);                     
 
     }

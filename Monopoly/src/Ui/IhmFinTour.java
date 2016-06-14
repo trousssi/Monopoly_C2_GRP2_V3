@@ -30,6 +30,7 @@ public class IhmFinTour extends JFrame {
     private Observateur observateur;
     private ArrayList<Joueur> joueurs;
     private HashMap<Joueur, String> couleurJoueurs = new HashMap<>();
+    private IhmJeu ihmJeu;
     String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
     
     JPanel panelStats;
@@ -37,6 +38,7 @@ public class IhmFinTour extends JFrame {
     public IhmFinTour(int numTour, ArrayList<Joueur> joueurs, HashMap<String, String> couleurJoueurs) {
         super();
         this.joueurs = joueurs;
+        this.ihmJeu = ihmJeu;
         for (int i = 0; i< joueurs.size(); i++) {
             //Transfert des couleurs en String en couleurs en hexadecimal
             String couleur = couleurJoueurs.get(joueurs.get(i).getNom()); 
@@ -96,8 +98,17 @@ public class IhmFinTour extends JFrame {
             labelPosition.setVerticalAlignment(JLabel.CENTER);
             panelJoueurCourant.add(labelPosition);
             
-            panelJoueurCourant.add(new JButton("Voir Propriétés"));
+            
+            JButton voirProp = new JButton("Voir Propriétés");
+            panelJoueurCourant.add(voirProp);
             panelStats.add(panelJoueurCourant);
+            Joueur joueurCourant = joueurs.get(i);
+            voirProp.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    IhmPropriete ihmProp = new IhmPropriete(joueurCourant);
+                }
+            });
         }
         
         
