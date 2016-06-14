@@ -53,7 +53,7 @@ public class IhmInscription extends JFrame  {
         choix = new JPanel();
         
         //Couleur de fond
-        Color fond = new Color(218,233,212);
+        Color fond = new Color(207,238,204);
         this.getContentPane().setBackground(fond);
         gestionJoueurs.setBackground(fond);
         inscriptions.setBackground(fond);
@@ -157,7 +157,8 @@ public class IhmInscription extends JFrame  {
     public void afficher() {
         setSize(400, 250);
         setTitle("Inscription des joueurs");
-        setVisible(true);                        
+        setVisible(true);
+        setLocationRelativeTo(null);
     }
     
     public boolean vérifierNomJoueurs() {
