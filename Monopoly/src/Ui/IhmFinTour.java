@@ -8,10 +8,7 @@ package Ui;
 import Jeu.Joueur;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Graphics;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,8 +17,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
-import javax.swing.border.Border;
 
 /**
  *
@@ -40,8 +35,10 @@ public class IhmFinTour extends JFrame {
     public IhmFinTour(int numTour, ArrayList<Joueur> joueurs) {
         super();
         this.joueurs = joueurs;
-        afficher(numTour); 
-        initUIComponents();
+        this.afficher(numTour); 
+        this.initUIComponents();
+        this.setAlwaysOnTop(true);
+        this.setLocationRelativeTo(null);
     }
     
     public void initUIComponents() {
