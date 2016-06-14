@@ -42,7 +42,7 @@ public class Controleur {
                 //}
                 monopoly.addJoueur(new Joueur(nomPremierJoueur, monopoly.getCarreau(1)));
                 for (String nom : joueurs) {
-                    if (nomPremierJoueur != nom) {
+                    if (!nomPremierJoueur.equals(nom)) {
                         Joueur joueur = new Joueur(nom, monopoly.getCarreau(1)); //On ajoute les joueurs sur la première case du plateau
                         monopoly.addJoueur(joueur);
                     }

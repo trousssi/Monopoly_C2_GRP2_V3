@@ -168,17 +168,13 @@ public final class IHM implements Observateur{
     public void lancerJeu() {
        this.controleur.initPartie(joueurs,ihmInit.getNomPremier());
        this.ihmInit.setVisible(false);
-            try {
-                this.ihmJeu = new IhmJeu(this.joueurs);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(IHM.class.getName()).log(Level.SEVERE, null, ex);
-            }
+           
+       this.ihmJeu = new IhmJeu(this.joueurs);
        this.ihmJeu.setObservateur(this);
        this.ihmJeu.afficher();
+       
        this.numJoueur = 0;
-       this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur),0);
-       
-       
+       this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur),0);      
     }
     
     

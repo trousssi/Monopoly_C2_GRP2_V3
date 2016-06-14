@@ -50,6 +50,7 @@ public class IhmPlateau extends JPanel{
     
     private HashMap<Integer, Integer> maisons;//Clé = numéro de la case, value = nombre de maisons
     private boolean prisonnier = false;
+    private boolean prisonnierPeutEncoreBouger = true;//Avant d'être incarcéré un prisonnier doit continuer de faire son action
     private boolean animationEnCours;
     
     public IhmPlateau(HashSet<String> noms) {
@@ -152,13 +153,15 @@ public class IhmPlateau extends JPanel{
                 
                 g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);//On dessine le pion avec les coordonnées calculées
             }
-            if (prisonnier) {//
-                joueurs.replace(nomJoueurCourant, 11);
-                nbJoueursParCases[joueurs.get(nomJoueurCourant)-1]--;
+            if (prisonnier) {//Si un joueur a été fait prisonnier
+                nbJoueursParCases[joueurs.get(nomJoueurCourant)-1]--;//Il n'est plus ici, on décremente donc le nb de joueurs présent sur cette case
+                joueurs.replace(nomJoueurCourant, 11);//Il ne faudrait pas qu'il séchappe de la case n°11 (= case prison)
+                nbJoueursParCases[11]++;
                 p = trouveCoordonneesCase((nomJoueurCourant), 0);
                 p = positionnePionSurCase(joueurs.get(nomJoueurCourant), nbJoueursParCases[joueurs.get(nomJoueurCourant)-1], p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
                 
-                g.drawImage(pions.get(nomJoueurCourant), p.x, p.y, (ImageObserver) observateur);//
+                g.drawImage(pions.get(nomJoueurCourant), p.x, p.y, (ImageObserver) observateur);
+                prisonnierPeutEncoreBouger = false; //Le joueur ne pourra même plus pouvoir participer aux animations.
             }
         }
         

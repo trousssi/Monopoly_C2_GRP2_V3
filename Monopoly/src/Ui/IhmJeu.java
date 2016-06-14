@@ -58,18 +58,18 @@ public class IhmJeu extends JFrame{
     private JButton construire;
     private JButton afficherProp;
     private JLabel labelCaseDep;
-    private int conteurlanceDes;
-    private int conteuroui;
-    private int conteurnon;
-    private int conteurJsuivant = 0;
-    private int conteurRejouer = 0;
-    private int conteurConstruire = 0;
-    private JLabel nbmaison;
-    private JLabel nbhotel;
+    private int compteurlanceDes;
+    private int compteuroui;
+    private int compteurnon;
+    private int compteurJsuivant = 0;
+    private int compteurRejouer = 0;
+    private int compteurConstruire = 0;
+    private JLabel nbMaison;
+    private JLabel nbHotel;
     private Color fond = new Color(218,233,212);
 
     
-    public IhmJeu(HashSet<String> noms) throws InterruptedException   {        
+    public IhmJeu(HashSet<String> noms) {        
         plateau = new IhmPlateau(noms);
         this.getContentPane().setBackground(fond);
         controle = new JPanel();
@@ -79,18 +79,18 @@ public class IhmJeu extends JFrame{
         this.setLayout(new BorderLayout());
         this.add(plateau, BorderLayout.CENTER);
         
-        conteurlanceDes = 0;
-        this.conteurnon = 0;
-        this.conteurnon = 0;
+        compteurlanceDes = 0;
+        this.compteurnon = 0;
+        this.compteurnon = 0;
         this.add(this.controle(), BorderLayout.EAST);
         
         JPanel panelJoueur = new JPanel();
         panelJoueur.setBackground(fond);
-        this.nbmaison = new JLabel();
-        this.nbhotel = new JLabel();
+        this.nbMaison = new JLabel();
+        this.nbHotel = new JLabel();
         
-        panelJoueur.add(nbmaison);
-        panelJoueur.add(nbhotel);
+        panelJoueur.add(nbMaison);
+        panelJoueur.add(nbHotel);
         this.add(panelJoueur, BorderLayout.SOUTH);
         
         String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
@@ -201,7 +201,7 @@ public class IhmJeu extends JFrame{
         //this.add(test, BorderLayout.WEST);
         
          
-        this.MajJoueur(j);
+        this.majJoueur(j);
         this.DepartJcourant = j.getPositionCourante();
         
         this.nomJoueur.setText("A votre tour " + j.getNom());
@@ -216,11 +216,11 @@ public class IhmJeu extends JFrame{
         lanceDes.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (conteurlanceDes >= 1) {
+                if (compteurlanceDes >= 1) {
                     
                 }
                 else {
-                conteurlanceDes ++;
+                compteurlanceDes ++;
                 lanceDes.setEnabled(false);
                 observateur.lanceDes(j,nbdouble);
                 }
@@ -231,11 +231,11 @@ public class IhmJeu extends JFrame{
         
     }
     
-    private void MajJoueur(Joueur j) {
+    private void majJoueur(Joueur j) {
         this.cash.setText("Cash : " + j.getCash());
         this.nomCarte.setText("Case : " + j.getPositionCourante().getNomCarreau());
-        this.nbmaison.setText("Maison disponibles : " + this.observateur.getNbMaison() + "  ");
-        this.nbhotel.setText("Hotel disponibles : " + this.observateur.getNbHotel()+"   ");
+        this.nbMaison.setText("Maison disponibles : " + this.observateur.getNbMaison() + "  ");
+        this.nbHotel.setText("Hotel disponibles : " + this.observateur.getNbHotel()+"   ");
     }
     
     
@@ -245,7 +245,7 @@ public class IhmJeu extends JFrame{
             
             this.nbdouble = nbdouble;
             this.dDouble = d1 == d2;
-            this.MajJoueur(j);
+            this.majJoueur(j);
             
             this.plateau.recupDonneesJoueur(j, j.getPositionCourante(), this.DepartJcourant, res.isEnPrison());
             
@@ -318,11 +318,11 @@ public class IhmJeu extends JFrame{
                 oui.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (conteuroui >= 1) {
+                        if (compteuroui >= 1) {
                     
                         }
                         else {
-                            conteuroui ++;
+                            compteuroui ++;
                             oui.setEnabled(false);
                             non.setEnabled(false);
                             observateur.Reponse(2, j, res);
@@ -333,11 +333,11 @@ public class IhmJeu extends JFrame{
                 non.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (conteurnon >= 1) {
+                        if (compteurnon >= 1) {
                     
                         }
                         else {
-                            conteurnon ++;
+                            compteurnon ++;
                             oui.setEnabled(false);
                             non.setEnabled(false);
                             observateur.Reponse(0, j, res);
@@ -395,7 +395,7 @@ public class IhmJeu extends JFrame{
     
     public void notification(String message, Joueur j) {
         this.labelInfoReponce.setText(message);
-        this.MajJoueur(j);
+        this.majJoueur(j);
         if (!this.dDouble) {
             jSuivant.setVisible(true);
             jSuivant.setEnabled(true);
@@ -403,11 +403,11 @@ public class IhmJeu extends JFrame{
             jSuivant.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (conteurJsuivant >= 1) {
+                    if (compteurJsuivant >= 1) {
                      
                     }
                     else {
-                        conteurJsuivant ++;
+                        compteurJsuivant ++;
                          effacer();
                         jSuivant.setEnabled(false);
                    
@@ -423,11 +423,11 @@ public class IhmJeu extends JFrame{
             rejouer.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    if (conteurRejouer >= 1) {
+                    if (compteurRejouer >= 1) {
                     
                     }
                     else {
-                        conteurRejouer ++;
+                        compteurRejouer ++;
                         effacer();
                         rejouer.setEnabled(false);
                         observateur.rejouer(j, nbdouble);
@@ -482,12 +482,12 @@ public class IhmJeu extends JFrame{
         this.initJoueur();
         this.initInfos();
         
-        this.conteurlanceDes = 0;
-        this.conteuroui = 0;
-        this.conteurnon = 0;
-        this.conteurJsuivant = 0;
-        this.conteurRejouer = 0;
-        this.conteurConstruire = 0;
+        this.compteurlanceDes = 0;
+        this.compteuroui = 0;
+        this.compteurnon = 0;
+        this.compteurJsuivant = 0;
+        this.compteurRejouer = 0;
+        this.compteurConstruire = 0;
         this.setVisible(true);
     }
     
