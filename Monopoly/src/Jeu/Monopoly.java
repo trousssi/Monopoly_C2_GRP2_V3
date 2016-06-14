@@ -75,8 +75,8 @@ public class Monopoly {
         groupes.put(CouleurPropriete.bleuFonce.toString(), bleuFonce);
         Groupe orange = new Groupe(CouleurPropriete.orange);
         groupes.put(CouleurPropriete.orange.toString(), orange);
-        Groupe mauve = new Groupe(CouleurPropriete.mauve);
-        groupes.put(CouleurPropriete.mauve.toString(), mauve);
+        Groupe mauve = new Groupe(CouleurPropriete.marron);
+        groupes.put(CouleurPropriete.marron.toString(), mauve);
         Groupe violet = new Groupe(CouleurPropriete.violet);
         groupes.put(CouleurPropriete.violet.toString(), violet);
         Groupe bleuCiel = new Groupe(CouleurPropriete.bleuCiel);
