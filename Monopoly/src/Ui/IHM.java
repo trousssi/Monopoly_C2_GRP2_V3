@@ -186,8 +186,8 @@ public final class IHM implements Observateur{
         this.controleur.action(cas, j, res);
     }
     
-    public void notification(String message, Joueur j) {
-        this.ihmJeu.notification(message, j);
+    public int notification(String message, Joueur j) {
+        return this.ihmJeu.notification(message, j);
     }
     
     public void joueurSuivant(Joueur j){
