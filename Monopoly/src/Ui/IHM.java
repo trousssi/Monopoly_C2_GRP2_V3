@@ -220,8 +220,8 @@ public final class IHM implements Observateur{
         return true;
     }
     
-    public void sortiePrison() {
-        this.ihmJeu.sortiePrison();
+    public void sortiePrison(String raison) {
+        this.ihmJeu.sortiePrison(raison);
     }
 
     @Override
