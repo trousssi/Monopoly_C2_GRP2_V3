@@ -7,6 +7,9 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
+import Jeu.Resultat;
+import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -58,7 +61,7 @@ public final class IhmPlateau extends JPanel{
         prisonnierNePeutPlusBouger = new HashSet<>();
         nbJoueursParCases = new int[40];
         
-        String couleur[] ={"Rouge", "Bleu", "Vert", "Jaune", "Violet", "Orange"};
+        String couleur[] ={"Rouge", "Bleu", "Vert", "Marron", "Violet", "Orange"};
         int numCouleur = 0;
         //Initialisation des joueurs et des images de pions
         for (String nomJ : noms) {            
@@ -82,26 +85,7 @@ public final class IhmPlateau extends JPanel{
         } catch (IOException ex) {
             Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        /**
-        ** Test Maison. (à supprimer)
-        */
-        ajoutMaison(2);ajoutMaison(2);ajoutMaison(2);ajoutMaison(2);
-        ajoutMaison(14);ajoutMaison(14);ajoutMaison(14);ajoutMaison(14);
-        ajoutMaison(30);ajoutMaison(30);ajoutMaison(30);ajoutMaison(30);
-        ajoutMaison(38);ajoutMaison(38);ajoutMaison(38);ajoutMaison(38);
-        ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27); //--> 5 maisons = Hotel
-        ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);
-        ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);
-        ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);
-
     }
-    
-    //private void trouveNbJoueursParCase() {
-        //for (String nomJ : joueurs.keySet()) {
-            //nbJoueursParCases[joueurs.get(nomJ)]++;//On ajoute 1 pour la case où se trouve un joueur
-        //}
-    //}
     
     private void initListeCase() {
         for(int i= 0; i<40; i++) {
@@ -436,5 +420,9 @@ public final class IhmPlateau extends JPanel{
         } else {
             maisons.replace(numCase, maisons.get(numCase)+1);//on ajoute une maison si la propriéte en possedait déjà
         }
+    }
+    
+    public HashMap<String, Color> getCouleurJoueurs() {
+        return couleurJoueurs;    
     }
 }

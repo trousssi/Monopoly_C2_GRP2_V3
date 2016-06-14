@@ -33,7 +33,7 @@ public class IhmFinTour extends JFrame {
     private final int LONGUEUR_PAR_JOUEUR = 200;
     private Observateur observateur;
     private ArrayList<Joueur> joueurs;
-    String couleur[] ={"#F41C25", "#083052", "#25980E", "#F4F01D", "#D101FF", "#FF6800"};
+    String couleur[] ={"#F41C25", "#083052", "#25980E", "#5a2400", "#D101FF", "#FF6800"};
     
     JPanel panelStats;
 
@@ -107,7 +107,6 @@ public class IhmFinTour extends JFrame {
 
     public void afficher(int numTour) {
        this.setTitle("Statistiques de fin du tour n°" + numTour);
-       this.setSize(500, 500);
        this.setVisible(true);
        this.setBackground(fond);
     }
