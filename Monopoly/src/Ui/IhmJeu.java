@@ -680,5 +680,9 @@ public class IhmJeu extends JFrame{
     public HashMap<String, String> getCouleurJoueurs() {
         return this.plateau.getCouleurJoueurs();    
     }
+
+    void ajoutMaison(int numero) {
+        plateau.ajoutMaison(numero);
+    }
     
 }
