@@ -261,6 +261,7 @@ public class IhmJeu extends JFrame{
                         this.labelinfoCarte2.setText(nomCarteTronque[1]);
                     } else {
                        this.labelinfoCarte.setText(res.getNomCarte());
+                       this.observateur.Reponse(0, j, res);
                     }
                     if (res.isDeplace()) { // Carte deplacement
                         if (res.getDeplacement() != 0) { // deplacement normal
@@ -293,7 +294,18 @@ public class IhmJeu extends JFrame{
                     this.labelinfoCarte.setText("Vous Allez en Prison");
                     this.observateur.Reponse(6, j, res);
                 }
-                this.observateur.Reponse(0, j, res);
+                
+            }
+            else if (res.getNomCarreau() == null && res.isEnPrison()) {
+                if (res.getDeplacement() == -1) {
+                    this.labelinfoCarte.setText("Vous allez en Prison");
+                    this.observateur.Reponse(0, j, res);
+                }
+                else {
+                        this.labelinfoCarte.setText("Vous êtes en prison");
+                        this.observateur.Reponse(0, j, res);
+                }
+                
             }
             //Propriete --> Acheter ou payer le loyer
             else if (res.getProprietairePropriete() != null && res.getProprietairePropriete() != j) {
@@ -396,7 +408,7 @@ public class IhmJeu extends JFrame{
     public void notification(String message, Joueur j) {
         this.labelInfoReponce.setText(message);
         this.majJoueur(j);
-        if (!this.dDouble) {
+        if (!this.dDouble || j.getToursEnPrison() != -1) {
             jSuivant.setVisible(true);
             jSuivant.setEnabled(true);
             this.nbdouble = 0;
@@ -496,8 +508,9 @@ public class IhmJeu extends JFrame{
         
     }
     
-    public void sortiePrison() {
-        this.labelCaseDep.setText("Vous êtes sorti de prison");
+    public void sortiePrison(String raison) {
+        
+            this.labelCaseDep.setText("Vous êtes sorti de prison,"+ raison);
     }
     
     public void afficher() {
