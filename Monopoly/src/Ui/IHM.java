@@ -231,7 +231,7 @@ public final class IHM implements Observateur{
     }
     
     public boolean sortiePrisonCarte(Joueur j) {
-        return true;
+        return IhmBoiteMessage.afficherBoiteDialogue("Voulez vous utiliser votre carte Sortie de Prison", "ouinon");
     }
     
     public void sortiePrison(String raison) {
