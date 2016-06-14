@@ -55,9 +55,9 @@ public class Controleur {
         
         
         public static int lancerDes() {
-            return RANDOM.nextInt(6)+1;
-            //Scanner sc = new Scanner(System.in);
-            //return sc.nextInt();
+            //return RANDOM.nextInt(6)+1;
+            Scanner sc = new Scanner(System.in);
+            return sc.nextInt();
             
         }
         
@@ -123,7 +123,10 @@ public class Controleur {
                     desDouble = resDes1 == resDes2;               
                     if (nbDouble == 2 && desDouble) {
                         allerEnPrison(j);
-                        
+                        Resultat res = new Resultat();
+                        res.setEnPrison(true);
+                        res.setDeplacement(-1);
+                        this.obs.action(res, j, resDes1, resDes2, nbDouble);
                     } else {
                         
                         if (tourEnPrison(j, desDouble)) {
@@ -249,7 +252,10 @@ public class Controleur {
                     this.allerEnPrison(j);
                     
                     break;
-                   
+                case 7:
+                    // Le Joueur est en Prison
+                    this.obs.notification("", j);
+                break;
             }
         }
 
@@ -384,7 +390,7 @@ public class Controleur {
         if (paye) {
             j.payer(50);
         }
-        this.obs.sortiePrison();
+       
     }
     
 
@@ -395,16 +401,21 @@ public class Controleur {
         if (j.getToursEnPrison() != -1) {
             if (j.getCartesPrison().size() > 0) {utilise = obs.sortiePrisonCarte(j);}
             if (utilise) {
-                sortirDePrison(j, false);            
+                sortirDePrison(j, false); 
+                this.obs.sortiePrison(" Vous avez utilisé une carte");        
                 sorti = true;
+                 
             } else if (dDouble) {
                 sortirDePrison(j, false);
+                 this.obs.sortiePrison(" Vous avez fait un double");
                 sorti = true;
             } else if (j.getToursEnPrison() == 2) {
                 sortirDePrison(j, true);
+                 this.obs.sortiePrison(" Vous avez payé 50€");
                 sorti = true;
             } else {
                 j.tourEnPrison();
+                
             }
         } else {
             sorti = true;
@@ -421,10 +432,7 @@ public class Controleur {
             }
         }
     }
-
-
-   
-
+    
     public Joueur getJoueur(int numJ) {
        return this.monopoly.getJoueurs().get(numJ);
     }

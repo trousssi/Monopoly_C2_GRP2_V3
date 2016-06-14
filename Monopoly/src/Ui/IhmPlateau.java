@@ -28,7 +28,7 @@ import javax.swing.Timer;
  *
  * @author vivierlo
  */
-public class IhmPlateau extends JPanel{
+public final class IhmPlateau extends JPanel{
     
     Timer timer;
     private BufferedImage fondPlateau;
@@ -86,11 +86,15 @@ public class IhmPlateau extends JPanel{
         /**
         ** Test Maison. (à supprimer)
         */
-        ajoutMaison(2); 
-        ajoutMaison(27); ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27); //--> 5 maisons = Hotel
-        ajoutMaison(14);ajoutMaison(14);
+        ajoutMaison(2);ajoutMaison(2);ajoutMaison(2);ajoutMaison(2);
+        ajoutMaison(14);ajoutMaison(14);ajoutMaison(14);ajoutMaison(14);
+        ajoutMaison(30);ajoutMaison(30);ajoutMaison(30);ajoutMaison(30);
+        ajoutMaison(38);ajoutMaison(38);ajoutMaison(38);ajoutMaison(38);
+        ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27);ajoutMaison(27); //--> 5 maisons = Hotel
         ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);ajoutMaison(15);
         ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);ajoutMaison(40);
+        ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);ajoutMaison(4);
+
     }
     
     //private void trouveNbJoueursParCase() {
@@ -126,8 +130,8 @@ public class IhmPlateau extends JPanel{
         Point p = new Point();
         for(int numCase : maisons.keySet()) {//Pour toute les cases
             if (maisons.get(numCase) == 5) {//Dans ce cas on doit construire un hotel
-                p = trouveCoordonneesMaison(numCase, 0);
-                if (p.x == 91 || p.x == 785) {//Les lignes gauche et droite ont un hotel vertical 
+                p = trouveCoordonneesMaison(numCase, 5);
+                if (p.x == 94 || p.x == 787) {//Les lignes gauche et droite ont un hotel vertical 
                     g.drawImage(hotelVertical, p.x, p.y, (ImageObserver) observateur);
                 } else {
                     g.drawImage(hotelHorizontal, p.x, p.y, (ImageObserver) observateur);
@@ -207,20 +211,42 @@ public class IhmPlateau extends JPanel{
     public Point trouveCoordonneesMaison(int numCase, int nbMaison) {
         Point p = new Point();
         
-        if (numCase <= 10) {//LIGNE BAS
-            p.x = (119+74*(10-numCase))+14*nbMaison;
-            p.y = 785;
-        } else if (numCase <= 20) {//LIGNE GAUCHE
-            p.x = 91;
-            p.y = (119+74*(20-numCase))+14*nbMaison;
-        } else if (numCase <= 30) {//LIGNE HAUTE
-            p.x = (119+74*(numCase-22))+14*nbMaison;
-            p.y = 91;
-        } else {//LIGNE DROITE
-            p.x = 785;
-            p.y = (119+74*(numCase-32))+14*nbMaison;
+        if (numCase <= 10) { //LIGNE BAS
+            if (nbMaison<=4) {
+                p.x = (122+74*(10-numCase))+17*nbMaison;
+                p.y = 789;
+            } else {
+                p.x = (124+74*(10-numCase));
+                p.y = 787;
+            }
+            
+        } else if (numCase <= 20) { //LIGNE GAUCHE
+            if (nbMaison<=4) {
+                p.x = 96;
+                p.y = (122+74*(20-numCase))+17*nbMaison;
+            } else {
+                p.x = 94;
+                p.y = (124+74*(20-numCase));
+            }
+            
+        } else if (numCase <= 30) { //LIGNE HAUTE
+            if (nbMaison<=4) {
+                p.x = (122+74*(numCase-22))+17*nbMaison;
+                p.y = 96;
+            } else {
+                p.x = (124+74*(numCase-22));
+                p.y = 94;    
+            }
+            
+        } else { //LIGNE DROITE
+            if (nbMaison<=4) {
+                p.x = 790;
+                p.y = (122+74*(numCase-32))+17*nbMaison;
+            } else {
+                p.x = 787;
+                p.y = (124+74*(numCase-32));
+            }
         }
-        
         return p;
     }
     
@@ -314,8 +340,8 @@ public class IhmPlateau extends JPanel{
         **   J3 J4
         **   J5 J6
         */
-        int DEC_HOR = 20;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
-        int DEC_VERT = 20;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
+        int DEC_HOR = 23;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
+        int DEC_VERT = 23;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
         switch(nbJoueurCase) { 
             case 2 :
                 x += DEC_HOR; 
@@ -376,7 +402,7 @@ public class IhmPlateau extends JPanel{
 
         System.out.println("prison = " + prison);
         animationEnCours = true;
-        timer = new Timer(+400, new ActionListener() {//Toutes les 400 ms on va repeindre
+        timer = new Timer(+1, new ActionListener() {//Toutes les 1 ms on va repeindre
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
@@ -395,7 +421,7 @@ public class IhmPlateau extends JPanel{
                     } 
                 }
         });
-        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {//
+        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {
             timer.start();
         }
     }
