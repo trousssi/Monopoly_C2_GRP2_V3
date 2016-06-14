@@ -6,6 +6,7 @@ import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -241,7 +242,7 @@ public final class IHM implements Observateur{
     
     public void passeTour() {
         this.numJoueur=0;
-        ihmFinTour = new IhmFinTour(numTour, controleur.getJoueurs());
+        ihmFinTour = new IhmFinTour(numTour, controleur.getJoueurs(), ihmJeu.getCouleurJoueurs());
         ihmFinTour.setObservateur(this);
         this.numTour++;
     }

@@ -16,6 +16,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -536,6 +537,9 @@ public class IhmJeu extends JFrame{
     void setObservateur(Observateur observateur) {
         this.observateur = observateur; //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    public HashMap<String, String> getCouleurJoueurs() {
+        return this.plateau.getCouleurJoueurs();    
+    }
    
 }
