@@ -320,8 +320,8 @@ public final class IhmPlateau extends JPanel{
         **   J3 J4
         **   J5 J6
         */
-        int DEC_HOR = 20;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
-        int DEC_VERT = 20;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
+        int DEC_HOR = 23;//Decalement horizontal par rapport au joueur 1 pour être à droite de lui
+        int DEC_VERT = 23;//Decalement vertical par rapport au joueur 1 pour être en dessous de lui
         switch(nbJoueurCase) { 
             case 2 :
                 x += DEC_HOR; 
@@ -382,7 +382,7 @@ public final class IhmPlateau extends JPanel{
         
         
         animationEnCours = true;
-        timer = new Timer(+400, new ActionListener() {//Toutes les 400 ms on va repeindre
+        timer = new Timer(+300, new ActionListener() {//Toutes les 300 ms on va repeindre
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
