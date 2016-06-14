@@ -13,14 +13,16 @@ import java.util.logging.Logger;
 import javax.swing.JFrame;
 
 public final class IHM implements Observateur{
-	private Controleur controleur;
-        private JFrame w;
-        private IhmMenu ihmMenu;
-        private IhmInscription ihmI;
-        private IhmJeu ihmJeu;
-        private IhmInitOrdreJeu ihmInit;
-        private HashSet<String> joueurs;
-        private int numJoueur;
+    private Controleur controleur;
+    private JFrame w;
+    private IhmMenu ihmMenu;
+    private IhmInscription ihmI;
+    private IhmJeu ihmJeu;
+    private IhmInitOrdreJeu ihmInit;
+    private IhmFinTour ihmFinTour;
+    private HashSet<String> joueurs;
+    private int numJoueur;
+    private int numTour = 1;
         
           
     public IHM(Controleur controleur) {
@@ -201,7 +203,7 @@ public final class IHM implements Observateur{
 
             this.numJoueur++;
             if (numJoueur==this.controleur.getJoueurs().size() || this.numJoueur == 0) {  //Si on a fait le tour on recommence et on passe au prochain tour.
-                this.numJoueur=0;          
+                passeTour(); 
             }
 
             this.ihmJeu.displayJoueur(this.controleur.getJoueur(numJoueur), 0);
@@ -236,4 +238,21 @@ public final class IHM implements Observateur{
     public int getNbHotel() {
         return this.controleur.getNbHotel();
     }
+    
+    public void passeTour() {
+        this.numJoueur=0;
+        ihmFinTour = new IhmFinTour(numTour, controleur.getJoueurs());
+        ihmFinTour.setObservateur(this);
+        this.numTour++;
+    }
+    
+    public void retourAuJeu() {
+        ihmFinTour.setVisible(false);
+    }
+    
+    @Override
+    public void construire(ProprieteAConstruire p, Joueur j) {
+        controleur.construire(p, j);
+    }
+
 }

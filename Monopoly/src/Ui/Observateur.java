@@ -60,4 +60,6 @@ public interface Observateur {
     public int getNbMaison();
     
     public int getNbHotel();
+    
+    public void retourAuJeu();
 }

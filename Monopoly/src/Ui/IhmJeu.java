@@ -114,7 +114,7 @@ public class IhmJeu extends JFrame{
         infos.setBackground(fond);
         this.controle.add(infos);
         this.infos.setLayout(new GridLayout(16, 1));
-        this.infos.add(new JLabel("---------          Contrôle             -----------"));
+        this.infos.add(new JLabel("----------------------------Contrôle----------------------------"));
         return this.controle;
     }
     
@@ -321,7 +321,7 @@ public class IhmJeu extends JFrame{
                 this.labelInfoCase.setText("Vous ne pouvez pas acheter " + j.getPositionCourante().getNomCarreau());
                 this.observateur.Reponse(0, j, res);
             }
-            else if (res.getPrixPropriete() != -1) {               // Cas où le joueur peux acheter la propriété
+            else if (res.getPrixPropriete() != -1) { // Cas où le joueur peux acheter la propriété
                 this.labelInfoCase.setText("Voulez-vous acheter " + j.getPositionCourante().getNomCarreau() + " Pour " + res.getPrixPropriete()  +"€ ?");
                 
                 oui.setVisible(true);
