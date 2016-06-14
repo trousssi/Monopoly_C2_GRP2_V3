@@ -168,9 +168,11 @@ public class Monopoly {
                                 if (Integer.parseInt(data.get(i)[3]) == -3) {
                                     CarreauSansAction car = new CarreauSansAction(-3, data.get(i)[1]);
                                     CarteDeplacement dep = new CarteDeplacement(data.get(i)[1], car);
-                                }
-                                CarteDeplacement dep = new CarteDeplacement(data.get(i)[1], carreaux.get(Integer.parseInt(data.get(i)[3])));
                                     cartesChance.put(i, dep);
+                                } else {
+                                    CarteDeplacement dep = new CarteDeplacement(data.get(i)[1], carreaux.get(Integer.parseInt(data.get(i)[3])));
+                                    cartesChance.put(i, dep);
+                                }
                                     //System.out.println(data.get(i)[1] + " prix " + data.get(i)[2] + " déplacement " + Integer.parseInt(data.get(i)[3]));
                             }
                             else if(caseType.compareTo("RE") == 0){
