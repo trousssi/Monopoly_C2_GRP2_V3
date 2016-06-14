@@ -235,21 +235,28 @@ public class Controleur {
                 case 3:
                     //on veut déplacer le joueur sur une case
                     this.avancerJoueur(j, res.getDeplacement());
+                    int nbDouble = this.obs.notification("deplacement", j);
+                    Resultat resu = j.getPositionCourante().action(j, 1, this.monopoly.pickCartes());
+                    this.obs.action(resu, j, 0, 40, nbDouble);
 
                 break;
                 case 4:
                     //on veut reculer le joueur de 3 cases
                     j.setPositionCourante(monopoly.getCarreau(j.getPositionCourante().getNumero()-3));
-                   
+                    int nbDoubles = this.obs.notification("deplacement", j);
+                    Resultat resul = j.getPositionCourante().action(j, 1, this.monopoly.pickCartes());
+                    this.obs.action(resul, j, 0, 40, nbDoubles);
                 break;
                 case 5:
                     // Carte Anniversaire
                     this.anniversaire(j);
+                    this.obs.notification("", j);
                     
                 break;
                 case 6:
                     // Carte Allez en prison
                     this.allerEnPrison(j);
+                    this.obs.notification("", j);
                     
                     break;
                 case 7:
