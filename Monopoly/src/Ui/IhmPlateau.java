@@ -382,7 +382,7 @@ public final class IhmPlateau extends JPanel{
         
         
         animationEnCours = true;
-        timer = new Timer(+300, new ActionListener() {//Toutes les 300 ms on va repeindre
+        timer = new Timer(+1, new ActionListener() {//Toutes les 1 ms on va repeindre
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
@@ -398,7 +398,7 @@ public final class IhmPlateau extends JPanel{
                     } 
                 }
         });
-        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {//
+        if (joueurs.get(nomJoueurCourant) != numCarreauDestination) {
             timer.start();
         }
     }

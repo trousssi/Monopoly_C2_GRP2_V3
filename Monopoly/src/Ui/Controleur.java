@@ -421,10 +421,7 @@ public class Controleur {
             }
         }
     }
-
-
-   
-
+    
     public Joueur getJoueur(int numJ) {
        return this.monopoly.getJoueurs().get(numJ);
     }

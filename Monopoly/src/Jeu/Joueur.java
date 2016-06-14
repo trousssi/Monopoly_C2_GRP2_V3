@@ -90,12 +90,10 @@ public class Joueur {
             return nb;
 	}
 
-    public HashSet<Carte> getCartesPrison() {
-        return cartesPrison;
-    }
+        public HashSet<Carte> getCartesPrison() {
+            return cartesPrison;
+        }
 
-        
-        
         public int getCash() {
             return cash;
         }
