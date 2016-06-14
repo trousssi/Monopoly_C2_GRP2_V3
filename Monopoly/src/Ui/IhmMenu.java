@@ -56,7 +56,7 @@ public class IhmMenu extends JFrame  {
     private void initUIComponents() {
         
        
-        Color fond = new Color(218,233,212);
+        Color fond = new Color(207,238,204);
         this.getContentPane().setBackground(fond);
         
         this.setLayout(new BorderLayout());

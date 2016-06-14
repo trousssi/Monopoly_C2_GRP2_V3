@@ -53,6 +53,8 @@ public interface Observateur {
     
     public boolean peutConstruire (Joueur j, ProprieteAConstruire prop);
     
+    public void construire(ProprieteAConstruire p, Joueur j);
+    
     public boolean sortiePrisonCarte(Joueur j);
     
     public void sortiePrison(String raison);
