@@ -7,9 +7,6 @@ package Ui;
 
 import Jeu.Carreau;
 import Jeu.Joueur;
-import Jeu.Resultat;
-import java.awt.Canvas;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -47,13 +44,13 @@ public final class IhmPlateau extends JPanel{
     private HashMap<String, Integer> joueurs; //Liste des joueurs avec String: nom joueur et Integer: numéro Carreau courant       
     private HashMap<String, String> couleurJoueurs;
 
-    private int[] nbJoueursParCases;
+    private int[] nbJoueursParCases;//Sert à éviter la superposition de pions lors de l'affichage
     private String nomJoueurCourant;
     
     private HashMap<Integer, Integer> maisons;//Clé = numéro de la case, value = nombre de maisons
-    private HashSet<String> prisonniers;
-    private HashSet<String> prisonnierNePeutPlusBouger;//Avant d'être incarcéré un prisonnier doit continuer de faire son action
-    private boolean animationEnCours;
+    private HashSet<String> prisonniers;//Liste des prisonniers
+    private HashSet<String> prisonnierNePeutPlusBouger;//Avant d'être incarcéré un prisonnier doit continuer de faire son animation
+    private boolean animationEnCours;//Tant que le timer n'est pas fini, les pios se déplaçent case par case
     
     public IhmPlateau(HashSet<String> noms) {
         super();
@@ -75,8 +72,8 @@ public final class IhmPlateau extends JPanel{
                 pions.put(nomJ, ImageIO.read(new File("src/Data/pion" + couleur[numCouleur] + ".png")));
                 couleurJoueurs.put(nomJ, couleur[numCouleur]);
                 numCouleur++;
-            } catch (IOException ex) {
-                Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {//Exception au niveau de la lecture d'iamge
+                ex.printStackTrace();
             }
         }    
         
@@ -85,6 +82,7 @@ public final class IhmPlateau extends JPanel{
         
         //Chargement des images
         try {
+            fondPlateau = ImageIO.read(new File("src/Data/plateau.jpg"));
             maison = ImageIO.read(new File("src/Data/maison.png"));
             hotelHorizontal = ImageIO.read(new File("src/Data/hotel_horizontal.png"));
             hotelVertical = ImageIO.read(new File("src/Data/hotel_vertical.png"));
@@ -109,17 +107,12 @@ public final class IhmPlateau extends JPanel{
         super.setSize(d);
         super.paintComponent(g);
         
-        try {
-            fondPlateau = ImageIO.read(new File("src/Data/plateau.jpg"));
-        } catch (IOException ex) {
-            Logger.getLogger(IhmPlateau.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         g.drawImage(fondPlateau, 0, 0, (ImageObserver) observateur); //Background
-        //dessinage des maisons
+        
+        //Dessinage des maisons et des hôtels
         Point p = new Point();
-        for(int numCase : maisons.keySet()) {//Pour toute les cases
-            if (maisons.get(numCase) == 5) {//Dans ce cas on doit construire un hotel
+        for(int numCase : maisons.keySet()) {//Pour toutes les cases
+            if (maisons.get(numCase) == 5) {//5 maisons = construction d'un hôtel
                 p = trouveCoordonneesMaison(numCase, 5);
                 if (p.x == 94 || p.x == 787) {//Les lignes gauche et droite ont un hotel vertical 
                     g.drawImage(hotelVertical, p.x, p.y, (ImageObserver) observateur);
@@ -140,44 +133,40 @@ public final class IhmPlateau extends JPanel{
         if (!animationEnCours) {//Si on ne fait pas d'animation
             for (String nomJ : joueurs.keySet()) {//On dessine tous les joueurs
                 if (!prisonniers.contains(nomJ)) {// sauf les prisonniers (cas à part)
-                    nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
+                    nbJoueursParCases[joueurs.get(nomJ)-1]++;//On ajoute un joueur à dessiner sur la case du joueur
                     p = trouveCoordonneesCase((nomJ), 0);//On trouve les coordonnées du pion
-                    p = positionnePionSurCase(nomJ, nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
+                    p = positionnePionSurCase(nomJ, nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);//On réarrange la position selon le nombre de joueurs présent sur la case
                     
                     g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);//On dessine le pion avec les coordonnées calculées
-                    System.out.println("courant = " + nomJ + "Pos" + p);
                 }
             }
             int nbJoueursEnPrison = 0;
             for(String nomP : prisonniers) {//Pour tous les prisonniers
-                nbJoueursEnPrison++;
-                if (joueurs.get(nomP) != 11) {
+                nbJoueursEnPrison++;//A chaque fois on dessine un joueur en plus
+                if (joueurs.get(nomP) != 11) {//Si le joueur n'était pas encore en prison, il va l'être 
                     nbJoueursParCases[joueurs.get(nomP)-1]--;//Il n'est plus ici, on décremente donc le nb de joueurs présent sur cette case
                     joueurs.replace(nomP, 11);//Il ne faudrait pas qu'il séchappe de la case n°11 (= case prison)
                 }
                 
-                //nbJoueursParCases[11]++;//Il y a un joueur en plus dans la prison
                 p = trouveCoordonneesCase((nomP), 0);
-                p = positionnePionSurCase(nomP, nbJoueursEnPrison, p.x, p.y);//On réarrange ce pion selon le nombre de joueurs présent à dessiner en plus de "nomJ" sur cette case
+                p = positionnePionSurCase(nomP, nbJoueursEnPrison, p.x, p.y);
 
                 g.drawImage(pions.get(nomP), p.x, p.y, (ImageObserver) observateur);
-                System.out.println("Bloqué : " + nomP + "Pos" + p);
-                prisonnierNePeutPlusBouger.add(nomP); //Le joueur ne pourra même plus pouvoir participer aux animations.
+                prisonnierNePeutPlusBouger.add(nomP); //Le joueur ne pourra plus pouvoir participer aux animations
             }            
         }
         
-        //dessin de l'animation
+        //Dessin de l'animation
         else if (animationEnCours) {
             for (String nomJ : joueurs.keySet()) {
-                //On ajoute un joueur à dessiner sur la case où se trouve "nomJ"
-                if (!prisonnierNePeutPlusBouger.contains(nomJ)) {//Animation seulement si le prisonnier peut encore bouger
-                    if (nomJoueurCourant.equals(nomJ)) {
-                        nbJoueursParCases[joueurs.get(nomJ)-1]--;//Le joueur ne sera plus sur cette case
-                        p = trouveCoordonneesCase((nomJ), 1);//Ce joueur doit avancer
-                        nbJoueursParCases[joueurs.get(nomJ)-1]++;//Il a avancé sur celle-ci
+                if (!prisonnierNePeutPlusBouger.contains(nomJ)) {   //Animation seulement si le prisonnier peut encore bouger
+                    if (nomJoueurCourant.equals(nomJ)) {                //Le joueur courant va avancer
+                        nbJoueursParCases[joueurs.get(nomJ)-1]--;           //Il ne sera plus sur cette case
+                        p = trouveCoordonneesCase((nomJ), 1);               // On calcule les coordonnes de la prochaine case et on le fait avancer
+                        nbJoueursParCases[joueurs.get(nomJ)-1]++;           //Il sera sur la case suivante
                     }
                     else {
-                        nbJoueursParCases[joueurs.get(nomJ)-1]++;
+                        nbJoueursParCases[joueurs.get(nomJ)-1]++;       //Il y a un joueur an plus a dessiner sur sa case
                         p = trouveCoordonneesCase((nomJ), 0);
                     }
                     p = positionnePionSurCase(nomJ, nbJoueursParCases[joueurs.get(nomJ)-1], p.x, p.y);
@@ -186,7 +175,7 @@ public final class IhmPlateau extends JPanel{
                     g.drawImage(pions.get(nomJ), p.x, p.y, (ImageObserver) observateur);
                 }
                 int nbJoueursEnPrison = 0;
-                for (String nomP : prisonnierNePeutPlusBouger) {
+                for (String nomP : prisonnierNePeutPlusBouger) {//Dessin des prisonniers qui ne peuvent bouger
                     nbJoueursEnPrison++;
                     p = trouveCoordonneesCase((nomP), 0);
                     p = positionnePionSurCase(nomP, nbJoueursEnPrison, p.x, p.y);
@@ -198,6 +187,10 @@ public final class IhmPlateau extends JPanel{
         
     }
     
+    /*
+    * Renvoie les coordonnes de la maison ou de l'hotel
+    * @param numCase, nbMaison
+    */
     public Point trouveCoordonneesMaison(int numCase, int nbMaison) {
         Point p = new Point();
         
@@ -240,8 +233,10 @@ public final class IhmPlateau extends JPanel{
         return p;
     }
     
-    //Donne les coordonnées précises du pion après qu'il ai avancé 
-    //public Point avancerPion(HashMap<String, Integer> j) throws InterruptedException {
+    /**
+    **Donne les coordonnées précises du pion avant (mode == 0) ou après (mode == 1) qu'il ait avancé 
+    * @param nomJ, mode
+    */
     public Point trouveCoordonneesCase(String nomJ, int mode) { 
         int BASE = 786; // Coordonnées x et y de la case départ pour le 1er pion
         int x = 0, y = 0;        
@@ -292,6 +287,11 @@ public final class IhmPlateau extends JPanel{
         return new Point(x, y);
     }
     
+    /**
+    ** Renvoie le numéro du carreau suivant
+    *  @param numCar
+    *  @return 
+    */
     private int numCarreauSuivant(int numCar) {
         int carreauSuivant = numCar+1;
         carreauSuivant = carreauSuivant % 41;
@@ -300,7 +300,13 @@ public final class IhmPlateau extends JPanel{
         else return carreauSuivant;
     }
     
-    //Sélectionne les coordonnées d'affichage du pion sur la case
+    /**
+     * Renvoie la position d'un pio
+     * @param nomJ
+     * @param nbJoueurCase
+     * @param x
+     * @param y
+     */
     private Point positionnePionSurCase(String nomJ, int nbJoueurCase, int x, int y) {
         Point p = new Point(x, y);
         int numCase = joueurs.get(nomJ);
@@ -321,10 +327,14 @@ public final class IhmPlateau extends JPanel{
                 
         return p;
     }
-    
+    /**
+     * Va retourner un point de sorte à ce que les joueurs puissent se placer en un groupe compact avec une colonne de 3 joueurs.
+     * La position du joueur est calculé selon les coordonnés du premier joueur
+     * @param nbJoueurCase
+     * @param x
+     * @param y
+     */
     private Point ensembleJoueursVertical(int nbJoueurCase, int x, int y) {
-        //Va retourner un point de sorte à ce que les joueurs puissent se placer en un groupe compact.
-        //La position du joueur est calculé selon les coordonnés du premier joueur
         /* Les pions seront dispositionnés de la sorte :
         **   J1 J2
         **   J3 J4
@@ -354,6 +364,13 @@ public final class IhmPlateau extends JPanel{
         return new Point(x, y);
     }
     
+    /**
+     * Va retourner un point de sorte à ce que les joueurs puissent se placer en un groupe compact avec une ligne de 3 joueurs.
+     * La position du joueur est calculé selon les coordonnés du premier joueur
+     * @param nbJoueurCase
+     * @param x
+     * @param y
+     */
     private Point ensembleJoueursHorizontal(int nbJoueurCase, int x, int y) {
         /* Les pions seront dispositionnés de la sorte :
         **   J1 J2 J3
@@ -383,7 +400,13 @@ public final class IhmPlateau extends JPanel{
         }
         return new Point(x, y);
     }
-
+    /**
+     * Recupère les données utiles et lance le dessin
+     * @param j
+     * @param positionCourante
+     * @param anciennePosition
+     * @param prison 
+     */
     public void recupDonneesJoueur(Joueur j, Carreau positionCourante, Carreau anciennePosition, boolean prison) {
         //numCarreauCourant = anciennePosition.getNumero();
         
@@ -392,7 +415,7 @@ public final class IhmPlateau extends JPanel{
 
         System.out.println("prison = " + prison);
         animationEnCours = true;
-        timer = new Timer(+1, new ActionListener() {//Toutes les 1 ms on va repeindre
+        timer = new Timer(+400, new ActionListener() {//Toutes les 1 ms on va repeindre
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     if (joueurs.get(nomJoueurCourant) == numCarreauDestination) {                        
@@ -415,11 +438,11 @@ public final class IhmPlateau extends JPanel{
             timer.start();
         }
     }
-    
+    /**
+     * Ajoute une maison sur une case
+     * @param numCase 
+     */
     public void ajoutMaison(int numCase) {//Il faudra construire une maison ou un hotel (nbMaison = 5) sur la case
-        //TODO: Créer un  hashMap<numCase, nbMaison> [appartenant à la classe] qui va permettre le dessin à chaque actualisation de paint
-        //Actualiser l'hashMap avec cette fonction
-        //Dans paint, avant le dessin des joueurs, dessiner les maisons selon l'hashMap
         
         if (maisons.get(numCase) == null) {//Si cette propriete ne comportais aucune maison
             maisons.put(numCase, 1);//elle doit maintenant en comporter une.

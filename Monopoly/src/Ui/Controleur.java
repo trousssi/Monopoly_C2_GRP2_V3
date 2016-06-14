@@ -1,12 +1,10 @@
 package Ui;
 
 import Jeu.Carreau;
-import Jeu.Carte;
 import Jeu.Joueur;
 import Jeu.Monopoly;
 import Jeu.ProprieteAConstruire;
 import Jeu.Resultat;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
